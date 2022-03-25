@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-Entity::Entity( const Vec2& spawnPos, const Vei2& readPos, int width, int height, int framecount, int animcount, const Surface& sprite, SDL_Renderer* renderer, RectI hitBox )
+Entity::Entity( const Vec2& spawnPos, const Vei2& readPos, int width, int height, int framecount, int animcount, Surface& sprite, SDL_Renderer* renderer, RectI hitBox )
 	:
 	avatar( readPos, width, height, framecount, animcount, sprite, holdTime, renderer),
 	pos(spawnPos),
@@ -28,9 +28,9 @@ Vec2 Entity::GetVel() const
 	return velocity;
 }
 
-void Entity::Draw() 
+void Entity::Draw()
 {
-#ifndef DEBUG
+#ifdef DEBUG
 	SDL_Rect HitBox = (SDL_Rect)GetHitBox();
 	SDL_Renderer* renderer = avatar.GetRenderer();
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
@@ -78,9 +78,9 @@ void Entity::ApplyDamage()
 	state.Damage();
 }
 
-RectI Entity::GetHitBox() const
+RectF Entity::GetHitBox() const
 {
-	return hitBox.GetDisplaced((Vei2)pos);
+	return RectF(hitBox).GetDisplaced(pos);
 }
 
 void Entity::SetAnim( int animIndex )

@@ -50,5 +50,7 @@ private:
 
 	std::vector<Entity> enemies;
 
+	std::vector<Projectile> projectiles;
+
 	const int nEnemies = 3;
 };

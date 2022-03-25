@@ -1,6 +1,5 @@
 //Using SDL, SDL_image, standard math, and strings
 #include <SDL.h>
-#include <string>
 #include "Game.h"
 
 int main( int argc, char* args[] )

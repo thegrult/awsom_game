@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Projectile.h"
 
 class Protagonist {
 public:
@@ -13,7 +14,20 @@ public:
 	void ClampToRect( RectI rect );
 
 	void ApplyDamage();
+	Projectile Shoot();
+	bool IsOnCooldown() const {
+		return coolDownTimer > 0;
+	}
 private:
+	enum direction {
+		down,
+		left,
+		up,
+		right
+	};
+	int direc = down;
+	float coolDownTimer = 0.0f;
+	float coolDown = 0.5f;
 	Surface sprite;
 	Entity entity;
 };

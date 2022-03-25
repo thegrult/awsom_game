@@ -23,6 +23,9 @@ public:
 	void FreeData();
 	bool LoadData( const std::string& filename );
 	void SetRenderer( SDL_Renderer* renderer );
+	SDL_Renderer* GetRenderer() const {
+		return renderer;
+	}
 private:
 	SDL_Renderer* renderer = nullptr;
 	SDL_Texture* texture = nullptr;

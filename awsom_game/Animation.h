@@ -7,10 +7,12 @@
 class Animation
 {
 public:
-	Animation( const Vei2& pos,int width,int height,int count,const Surface& sprite,float holdTime, SDL_Renderer* renderer );
+	Animation( const Vei2& pos,int width,int height,int count, Surface& sprite,float holdTime, SDL_Renderer* renderer );
 	void SetDeltaPos( const Vei2& deltaPos ) {
 		srcDeltaPos = deltaPos;
 	}
+
+	void operator=( const Animation& rhs );
 	void Draw( const Vei2& pos ) const;
 	void Update( float dt );
 	void SetRenderer( SDL_Renderer* newRenderer );
@@ -22,7 +24,7 @@ private:
 	void Advance();
 private:
 	SDL_Renderer* renderer = nullptr;
-	const Surface& sprite;
+	Surface& sprite;
 	std::vector<RectI> frames;
 	Vei2 srcDeltaPos = { 0, 0 };
 	int iCurFrame = 0;

@@ -9,7 +9,6 @@ Game::Game()
 	elia = new Protagonist( { float( SCREEN_WIDTH / 2), float(SCREEN_HEIGHT / 2 )},  gRenderer );
 
 	for (int i = 0; i < nEnemies; i++) {
-		//for some reason while in debug mode starts reading a couple of pixels to the left, or maybe it's the other way around...
 		enemies.push_back( Entity{ { xDist( rng ), yDist( rng ) }, { 256,0 }, 32, 32, 8, 4, spriteSheet, gRenderer, {11, 21, 24, 32} } );
 	}
 }
@@ -67,13 +66,11 @@ bool Game::UpdateGame( const float dt )
 	else {
 		elia->SetDirection( { 0,0 } );
 	}
-	
-	if (keyStates[SDL_SCANCODE_SPACE])
-	{
 
+	if (keyStates[SDL_SCANCODE_SPACE]) {
+		if(!elia->IsOnCooldown())
+		projectiles.emplace_back( std::move(elia->Shoot()) );
 	}
-
-
 
 	elia->Update( dt );
 
@@ -89,6 +86,37 @@ bool Game::UpdateGame( const float dt )
 			e.ApplyDamage();
 		}
 	}
+
+	for (Projectile& p : projectiles) {
+		if (p.IsExploding()) {
+			printf( "yes" );
+		}
+	}
+
+	projectiles.erase( 
+		std::remove_if( 
+			projectiles.begin(), projectiles.end(),
+				[]( Projectile p ) {
+					return p.ToBeRemoved();
+				} ), projectiles.end()
+	);
+
+	for (int i = 0; i < projectiles.size(); i++) {
+		
+		projectiles[i].Update(dt);
+
+		RectF phitbox = projectiles[i].GetHitBox();
+
+		for (Entity& e : enemies) {
+			if (e.GetHitBox().IsOverlappingWith( phitbox )) {
+				projectiles[i].Hits();
+				e.ApplyDamage();
+			}
+		}
+	}
+
+
+
 
 	return quit;
 }
@@ -106,6 +134,10 @@ void Game::Draw()
 
 	for (Entity& e : enemies) {
 		e.Draw();
+	}
+
+	for (const Projectile& p : projectiles) {
+		p.Draw();
 	}
 
 	//Update screen

@@ -1,6 +1,6 @@
 #include "Animation.h"
 
-Animation::Animation( const Vei2& pos, int width, int height, int count, const Surface& sprite, float holdTime, SDL_Renderer* renderer )
+Animation::Animation( const Vei2& pos, int width, int height, int count, Surface& sprite, float holdTime, SDL_Renderer* renderer )
 	:
 	sprite( sprite ),
 	holdTime( holdTime ),
@@ -12,6 +12,17 @@ Animation::Animation( const Vei2& pos, int width, int height, int count, const S
 	{
 		frames.push_back( { Vei2( pos.x + i * width , pos.y ), width, height } );
 	}
+}
+
+void Animation::operator=( const Animation& rhs )
+{
+	renderer = rhs.GetRenderer();
+	sprite = rhs.sprite;
+	frames = rhs.frames;
+	srcDeltaPos = rhs.srcDeltaPos;
+	holdTime = rhs.holdTime;
+	height = rhs.height;
+	width = rhs.width;
 }
 
 void Animation::Draw( const Vei2& pos ) const
