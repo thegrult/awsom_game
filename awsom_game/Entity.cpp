@@ -30,7 +30,7 @@ Vec2 Entity::GetVel() const
 
 void Entity::Draw()
 {
-#ifdef DEBUG
+#ifdef _DEBUG
 	SDL_Rect HitBox = (SDL_Rect)GetHitBox();
 	SDL_Renderer* renderer = avatar.GetRenderer();
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );

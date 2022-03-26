@@ -1,36 +1,21 @@
 #include "Projectile.h"
 
 Projectile::Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int normalFramesCount, int explosionFrameCount,
-						float holdTime, Surface& sprite, SDL_Renderer* renderer, RectI hitBox, float range, Vec2 velocity )
+	float holdTime, Surface& sprite, SDL_Renderer* renderer, RectI hitBox, float range, Vec2 velocity )
 	:
-	range(range),
-	startPos(spawnPos),
+	range( range ),
+	startPos( spawnPos - Vec2( (float)spritewidth / 2, (float)spriteheight / 2 ) ),
 	animation( readPos, spritewidth, spriteheight, normalFramesCount, sprite, holdTime, renderer ),
-	explanim( readPos + Vei2(spritewidth * normalFramesCount,0), spritewidth, spriteheight, explosionFrameCount, sprite, holdTime, renderer ),
-	expldur(explosionFrameCount*holdTime),
-	pos(spawnPos),
-	hitBox(hitBox),
-	vel(velocity)
-{
-}
-
-void Projectile::operator=( const Projectile& rhs )
-{
-	range = rhs.range;
-	startPos = rhs.startPos;
-	animation = rhs.animation;
-	explanim = rhs.explanim;
-	expldur = rhs.expldur;
-	pos = rhs.pos;
-	hitBox = rhs.hitBox;
-	vel = rhs.vel;
-	isExploding = rhs.isExploding;
-	toRemove = rhs.toRemove;
-}
+	explanim( readPos + Vei2( spritewidth * normalFramesCount, 0 ), spritewidth, spriteheight, explosionFrameCount, sprite, holdTime, renderer ),
+	expldur( explosionFrameCount* holdTime ),
+	pos( spawnPos - Vec2( (float)spritewidth / 2, (float)spriteheight / 2 ) ),
+	hitBox( hitBox ),
+	vel( velocity )
+{}
 
 void Projectile::Draw() const
 {
-	if (isExploding)
+	if (IsExploding())
 		explanim.Draw( (Vei2)pos );
 	else
 		animation.Draw( (Vei2)pos );

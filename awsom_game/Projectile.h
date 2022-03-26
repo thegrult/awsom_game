@@ -10,8 +10,6 @@ public:
 	Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int normalFramesCount, int explosionFramesCount, float holdTime, Surface& sprite,
 				SDL_Renderer* renderer, RectI hitBox, float range, Vec2 velocity );
 
-	void operator=( const Projectile& rhs );
-
 	void Draw() const;
 
 	void Update( float dt );

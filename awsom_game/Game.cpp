@@ -20,9 +20,11 @@ Game::~Game()
 
 bool Game::Go()
 {
+//#ifdef _DEBUG
+//	const float dt = 1.0f / 60.0f;
+//#else // DEBUG
 	const float dt = ft.Mark();
-	//const float dt = 1.0f / 60.0f;
-
+//#endif
 	bool quit = UpdateGame( dt );
 	Draw();
 	return quit;
