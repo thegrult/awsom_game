@@ -20,11 +20,13 @@ Game::~Game()
 
 bool Game::Go()
 {
-//#ifdef _DEBUG
-//	const float dt = 1.0f / 60.0f;
-//#else // DEBUG
+#ifdef _DEBUG
+	float dt = ft.Mark();
+	if (dt > 1.0f / 30.0f)
+		dt = 1.0f / 30.0f;
+#else // DEBUG
 	const float dt = ft.Mark();
-//#endif
+#endif
 	bool quit = UpdateGame( dt );
 	Draw();
 	return quit;
@@ -86,12 +88,6 @@ bool Game::UpdateGame( const float dt )
 		if (elia->GetHitBox().IsOverlappingWith( e.GetHitBox() )) {
 			elia->ApplyDamage();
 			e.ApplyDamage();
-		}
-	}
-
-	for (Projectile& p : projectiles) {
-		if (p.IsExploding()) {
-			printf( "yes" );
 		}
 	}
 
