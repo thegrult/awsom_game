@@ -11,6 +11,8 @@ Game::Game()
 	for (int i = 0; i < nEnemies; i++) {
 		enemies.push_back( Entity{ { xDist( rng ), yDist( rng ) }, { 256,0 }, 32, 32, 8, 4, spriteSheet, gRenderer, {11, 21, 24, 32} } );
 	}
+
+	Mix_PlayMusic( music, -1 );
 }
 
 Game::~Game()
@@ -55,6 +57,8 @@ bool Game::UpdateGame( const float dt )
 		}
 	}
 
+
+
 	if (keyStates[SDL_SCANCODE_UP]) {
 		elia->SetDirection( { 0,-1 } );
 	}
@@ -72,8 +76,11 @@ bool Game::UpdateGame( const float dt )
 	}
 
 	if (keyStates[SDL_SCANCODE_SPACE]) {
-		if(!elia->IsOnCooldown())
-		projectiles.emplace_back( std::move(elia->Shoot()) );
+		if (!elia->IsOnCooldown())
+		{
+			projectiles.emplace_back( std::move( elia->Shoot() ) );
+			Mix_PlayChannel( -1, sfxshoot, 0 );
+		}
 	}
 
 	elia->Update( dt );
@@ -109,6 +116,7 @@ bool Game::UpdateGame( const float dt )
 			if (e.GetHitBox().IsOverlappingWith( phitbox )) {
 				projectiles[i].Hits();
 				e.ApplyDamage();
+				Mix_PlayChannel( -1, sfxexplosion, 0 );
 			}
 		}
 	}
@@ -148,7 +156,7 @@ bool Game::init()
 	bool success = true;
 
 	//Initialize SDL
-	if (SDL_Init( SDL_INIT_VIDEO ) < 0)
+	if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0)
 	{
 		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
 		success = false;
@@ -189,9 +197,19 @@ bool Game::init()
 					printf( "SDL_image could not initialize! SDL_mage Error: %s\n", IMG_GetError() );
 					success = false;
 				}
+
+				//Initialize SDL_mixer
+				//1st argument is sound frequency, Sample format, n of hardware channels, sample size (in bytes)
+				if (Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0)
+				{
+					printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+					success = false;
+				}
 			}
 		}
 	}
+
+	
 
 	return success;
 }
@@ -208,9 +226,26 @@ bool Game::loadMedia()
 		printf( "Failed to load sprite sheet texture!\n" );
 		success = false;
 	}
-	else
+
+	music = Mix_LoadMUS( "audio\\SuperMarioBros.wav" );
+	if (music == NULL)
 	{
-		//do stuff
+		printf( "Failed to load music! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	sfxshoot = Mix_LoadWAV( "audio/smb_fireball.wav" );
+	if (sfxshoot == NULL)
+	{
+		printf( "Failed to load shooting sfx! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	sfxexplosion = Mix_LoadWAV( "audio/smb_fireworks.wav" );
+	if (sfxexplosion == NULL)
+	{
+		printf( "Failed to load explosion sfx! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
 	}
 
 	return success;
@@ -220,6 +255,10 @@ void Game::close()
 {
 	//Free loaded images
 	spriteSheet.FreeData();
+	Mix_FreeChunk( sfxshoot );
+	Mix_FreeChunk( sfxexplosion );
+	sfxshoot = NULL;
+	sfxexplosion = NULL;
 
 	//Destroy window	
 	SDL_DestroyRenderer( gRenderer );
@@ -228,7 +267,9 @@ void Game::close()
 	gRenderer = NULL;
 
 	//Quit SDL subsystems
+	Mix_Quit();
 	IMG_Quit();
+
 	SDL_Quit();
 }
 

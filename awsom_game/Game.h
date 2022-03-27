@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include "Entity.h"
 #include "Protagonist.h"
 #include "FrameTimer.h"
@@ -33,6 +34,11 @@ private:
 	//The window renderer
 	SDL_Renderer* gRenderer = NULL;
 
+	//sounds and music
+	Mix_Music* music = NULL;
+
+	Mix_Chunk* sfxshoot = NULL;
+	Mix_Chunk* sfxexplosion = NULL;
 	//Event handler
 	SDL_Event e;
 
@@ -44,7 +50,7 @@ private:
 	//utilities
 	FrameTimer ft;
 	Surface spriteSheet;
-
+private:
 	//actual game stuff
 	Protagonist* elia;
 
