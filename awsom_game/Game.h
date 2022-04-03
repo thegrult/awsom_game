@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include "Window.h"
 #include "Entity.h"
 #include "Protagonist.h"
 #include "FrameTimer.h"
@@ -29,7 +30,7 @@ private:
 	const int SCREEN_HEIGHT = 480;
 
 	//The window we'll be rendering to
-	SDL_Window* gWindow = NULL;
+	Window window;
 
 	//The window renderer
 	SDL_Renderer* gRenderer = NULL;

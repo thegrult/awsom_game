@@ -12,6 +12,7 @@ Game::Game()
 		enemies.push_back( Entity{ { xDist( rng ), yDist( rng ) }, { 256,0 }, 32, 32, 8, 4, spriteSheet, gRenderer, {11, 21, 24, 32} } );
 	}
 
+	//starts music with indefinite loops
 	Mix_PlayMusic( music, -1 );
 }
 
@@ -170,8 +171,7 @@ bool Game::init()
 		}
 
 		//Create window
-		gWindow = SDL_CreateWindow( "awsom gaem", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-		if (gWindow == NULL)
+		if (!window.init( SCREEN_WIDTH, SCREEN_HEIGHT ))
 		{
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
 			success = false;
@@ -179,7 +179,7 @@ bool Game::init()
 		else
 		{
 			//Create renderer for window
-			gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED );
+			gRenderer = window.createRenderer();
 			if (gRenderer == NULL)
 			{
 				printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -260,11 +260,8 @@ void Game::close()
 	sfxshoot = NULL;
 	sfxexplosion = NULL;
 
-	//Destroy window	
-	SDL_DestroyRenderer( gRenderer );
-	SDL_DestroyWindow( gWindow );
-	gWindow = NULL;
-	gRenderer = NULL;
+	//Destroy window
+	window.free();
 
 	//Quit SDL subsystems
 	Mix_Quit();
