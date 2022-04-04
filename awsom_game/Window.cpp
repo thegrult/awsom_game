@@ -97,14 +97,19 @@ void Window::free()
 	renderer = NULL;
 }
 
-int Window::GetWidth()
+int Window::GetWidth() const
 {
 	return width;
 }
 
-int Window::GetHeight()
+int Window::GetHeight() const
 {
 	return height;
+}
+
+RectI Window::GetWindowRect() const
+{
+	return RectI( 0, GetWidth(), 0, GetHeight() );
 }
 
 bool Window::HasMouseFocus()

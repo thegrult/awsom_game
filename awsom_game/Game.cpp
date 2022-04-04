@@ -27,7 +27,7 @@ bool Game::Go()
 	float dt = ft.Mark();
 	if (dt > 1.0f / 30.0f)
 		dt = 1.0f / 30.0f;
-#else // DEBUG
+#else // RELEASE \/
 	const float dt = ft.Mark();
 #endif
 	bool quit = UpdateGame( dt );
@@ -54,6 +54,9 @@ bool Game::UpdateGame( const float dt )
 			break;
 		case SDL_QUIT:
 			quit = true;
+			break;
+		case SDL_WINDOWEVENT:
+			window.handleEvent( e );
 			break;
 		}
 	}
@@ -272,5 +275,5 @@ void Game::close()
 
 RectI Game::GetScreenRect() const
 {
-	return RectI( { 0,0 },SCREEN_WIDTH, SCREEN_HEIGHT );
+	return window.GetWindowRect();
 }

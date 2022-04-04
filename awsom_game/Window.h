@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include "Rect.h"
 
 class Window {
 public:
@@ -19,8 +20,10 @@ public:
     void free();
 
     //Window dimensions
-    int GetWidth();
-    int GetHeight();
+    int GetWidth() const;
+    int GetHeight() const;
+
+    RectI GetWindowRect() const;
 
     //Window focii
     bool HasMouseFocus();
