@@ -18,10 +18,12 @@ public:
 	void SetAvatarRenderer( SDL_Renderer* newRenderer );
 
 	void ClampToRect( RectF rect );
-	void ApplyDamage();
+	void ApplyDamage( int dmg );
+	int GetAtk() const { return atk; }
+	bool IsDead() const { return state.isDead(); }
 private:
 	//graphic things
-	const float holdTime = 0.1f;
+	static constexpr float holdTime = 0.1f;
 	Avatar avatar;
 
 	//state machine for invicibility and damage effect
@@ -29,7 +31,7 @@ private:
 	public:
 		enum class states {
 			Normal,
-			Damaged,
+			Invincible,
 			Died,
 			Total
 		};
@@ -38,13 +40,13 @@ private:
 		float stateTime;
 		float invDur = 0.5f;
 		void Damage() {
-			state = states::Damaged;
+			state = states::Invincible;
 		}
-		bool isDamaged() const{
-			return state == states::Damaged;
+		bool isInvincible() const{
+			return state == states::Invincible;
 		}
 		void Update( float dt ) {
-			if (state == states::Damaged) {
+			if (state == states::Invincible) {
 				stateTime += dt;
 				if (stateTime >= invDur) {
 					stateTime = 0.0f;

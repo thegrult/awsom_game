@@ -97,8 +97,24 @@ bool Game::UpdateGame( const float dt )
 		e.ClampToRect( GetScreenRect().GetExpanded( toleranceregion ) );
 
 		if (elia->GetHitBox().IsOverlappingWith( e.GetHitBox() )) {
-			elia->ApplyDamage();
-			e.ApplyDamage();
+			elia->ApplyDamage(e.GetAtk());
+			e.ApplyDamage(elia->GetAtk());
+		}
+	}
+
+
+	for (int i = 0; i < projectiles.size(); i++) {
+		
+		projectiles[i].Update(dt);
+
+		RectF phitbox = projectiles[i].GetHitBox();
+
+		for (Entity& e : enemies) {
+			if (e.GetHitBox().IsOverlappingWith( phitbox )) {
+				projectiles[i].Hits();
+				e.ApplyDamage(projectiles[i].GetDmg());
+				Mix_PlayChannel( -1, sfxexplosion, 0 );
+			}
 		}
 	}
 
@@ -110,23 +126,13 @@ bool Game::UpdateGame( const float dt )
 				} ), projectiles.end()
 	);
 
-	for (int i = 0; i < projectiles.size(); i++) {
-		
-		projectiles[i].Update(dt);
-
-		RectF phitbox = projectiles[i].GetHitBox();
-
-		for (Entity& e : enemies) {
-			if (e.GetHitBox().IsOverlappingWith( phitbox )) {
-				projectiles[i].Hits();
-				e.ApplyDamage();
-				Mix_PlayChannel( -1, sfxexplosion, 0 );
-			}
-		}
-	}
-
-
-
+	enemies.erase(
+		std::remove_if(
+			enemies.begin(), enemies.end(),
+			[]( Entity e ) {
+				return e.IsDead();
+			} ), enemies.end()
+				);
 
 	return quit;
 }

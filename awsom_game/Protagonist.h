@@ -13,11 +13,12 @@ public:
 	RectI GetHitBox() const;
 	void ClampToRect( RectI rect );
 
-	void ApplyDamage();
+	void ApplyDamage( int dmg );
 	Projectile Shoot();
 	bool IsOnCooldown() const {
 		return coolDownTimer > 0;
 	}
+	int GetAtk() const { return entity.GetAtk(); }
 private:
 	enum direction {
 		down,

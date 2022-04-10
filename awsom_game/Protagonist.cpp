@@ -51,9 +51,9 @@ void Protagonist::ClampToRect( RectI rect )
 	entity.ClampToRect( rect );
 }
 
-void Protagonist::ApplyDamage()
+void Protagonist::ApplyDamage( int dmg )
 {
-	entity.ApplyDamage();
+	entity.ApplyDamage( dmg );
 }
 
 Projectile Protagonist::Shoot()
@@ -74,5 +74,5 @@ Projectile Protagonist::Shoot()
 		velocity.x = bulletSpeed;
 	}
 
-	return Projectile( entity.GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f, sprite, sprite.GetRenderer(), { 12, 21, 9, 19 }, 200.0f, velocity );
+	return Projectile( entity.GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f, sprite, sprite.GetRenderer(), { 12, 21, 9, 19 }, 200.0f, velocity, GetAtk() );
 }

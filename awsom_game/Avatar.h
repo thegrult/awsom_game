@@ -21,8 +21,8 @@ public:
 	}
 private:
 	int animIndex = 0;
-	const int width;
-	const int height;
-	const int animCount;
+	int width;
+	int height;
+	int animCount;
 	Animation animation;
 };

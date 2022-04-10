@@ -37,7 +37,7 @@ void Entity::Draw()
 	SDL_RenderDrawRect( renderer, &HitBox );
 #endif // DEBUG
 
-	if (state.isDamaged()) {
+	if (state.isInvincible()) {
 		const int index = avatar.CurIndex();
 		avatar.SetAnim( index + avatar.NAnim() );
 		avatar.Draw( (Vei2)pos );
@@ -73,9 +73,16 @@ void Entity::ClampToRect( RectF rect )
 	}
 }
 
-void Entity::ApplyDamage()
+void Entity::ApplyDamage( int dmg )
 {
-	state.Damage();
+	if (!state.isInvincible()) {
+		hp -= dmg;
+		state.Damage();
+
+		if (hp <= 0) {
+			state.Dead();
+		}
+	}
 }
 
 RectF Entity::GetHitBox() const

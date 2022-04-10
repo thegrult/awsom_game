@@ -1,7 +1,7 @@
 #include "Projectile.h"
 
 Projectile::Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int normalFramesCount, int explosionFrameCount,
-	float holdTime, Surface& sprite, SDL_Renderer* renderer, RectI hitBox, float range, Vec2 velocity )
+	float holdTime, Surface& sprite, SDL_Renderer* renderer, RectI hitBox, float range, Vec2 velocity, int dmg )
 	:
 	range( range ),
 	startPos( spawnPos - Vec2( (float)spritewidth / 2, (float)spriteheight / 2 ) ),
@@ -10,7 +10,8 @@ Projectile::Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewid
 	expldur( explosionFrameCount* holdTime ),
 	pos( spawnPos - Vec2( (float)spritewidth / 2, (float)spriteheight / 2 ) ),
 	hitBox( hitBox ),
-	vel( velocity )
+	vel( velocity ),
+	dmg(dmg)
 {}
 
 void Projectile::Draw() const
