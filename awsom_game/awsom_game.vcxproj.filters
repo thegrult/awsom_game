@@ -94,5 +94,8 @@
     <Image Include="imgs\background32x32.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="imgs\bgtiles.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

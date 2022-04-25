@@ -89,7 +89,6 @@ bool Game::UpdateGame( const float dt )
 
 	elia->Update( dt );
 
-	const int toleranceregion = -50;
 	elia->ClampToRect( GetScreenRect().GetExpanded(toleranceregion) );
 
 	for (Entity&e : enemies) {
@@ -140,7 +139,7 @@ bool Game::UpdateGame( const float dt )
 void Game::Draw()
 {
 	//Clear screen
-	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0xFF, 0xFF );
+	
 	SDL_RenderClear( gRenderer );
 
 	bg->Draw();
@@ -157,6 +156,14 @@ void Game::Draw()
 	for (const Projectile& p : projectiles) {
 		p.Draw();
 	}
+
+#ifdef _DEBUG
+	SDL_Rect border = (SDL_Rect)GetScreenRect().GetExpanded( toleranceregion );
+	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
+	SDL_RenderDrawRect( gRenderer, &border );
+	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0xFF, 0xFF );
+#endif //  _DEBUG
+
 
 	//Update screen
 	SDL_RenderPresent( gRenderer );

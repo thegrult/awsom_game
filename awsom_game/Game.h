@@ -54,6 +54,8 @@ private:
 	Surface spriteSheet;
 	Surface backgroundsheet;
 private:
+	const int toleranceregion = -50;
+
 	Background* bg = nullptr;
 
 	//actual game stuff

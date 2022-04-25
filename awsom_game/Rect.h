@@ -73,6 +73,16 @@ public:
 		  return _Vec2<T>( (left + right) / 2.0f, (top + bottom) / 2.0f );
 	}
 
+	T GetHalfWidth() const
+	{
+		return (right - left) / 2;
+	}
+
+	T GetHalfHeight() const
+	{
+		return (bottom - top) / 2;
+	}
+
 	operator SDL_Rect() const{
 		return SDL_Rect{ int( left ), int( top ), int( right-left ), int( bottom-top ) };
 	}

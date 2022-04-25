@@ -55,21 +55,19 @@ void Entity::SetAvatarRenderer( SDL_Renderer* newRenderer )
 
 void Entity::ClampToRect( RectF rect )
 {
-	if (pos.x <= rect.left) {
-		pos.x = rect.left + 0.1f;
+	RectF hbx = GetHitBox();
+	if (hbx.left <= rect.left) {
+		pos.x += rect.left - hbx.left + 0.1f;
 	}
-	else if (pos.x >= rect.right) {
-		pos.x = rect.right - 0.1f;
+	else if (hbx.right >= rect.right) {
+		pos.x += rect.right - hbx.right - 0.1f;
 	}
 
-	if (pos.y <= rect.top) {
-		pos.y = rect.top;
+	if (hbx.top <= rect.top) {
+		pos.y += rect.top - hbx.top + 0.1f;
 	}
-	else if (pos.y >= rect.bottom) {
-		pos.y = rect.bottom - 0.1f;
-	}
-	else if (pos.y >= rect.bottom) {
-		pos.y = rect.bottom;
+	else if (hbx.bottom >= rect.bottom) {
+		pos.y += rect.bottom - hbx.bottom - 0.1f;
 	}
 }
 

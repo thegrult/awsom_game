@@ -13,7 +13,7 @@ Window::Window()
 
 bool Window::init(int swidth, int sheight)
 {
-	window = SDL_CreateWindow( "awsom gaem", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, swidth, sheight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+	window = SDL_CreateWindow( "awsom gaem", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, swidth, sheight, SDL_WINDOW_SHOWN );
 	if (window) {
 		hasMouseFocus = true;
 		hasKeyboardFocus = true;
@@ -87,7 +87,7 @@ void Window::handleEvent( SDL_Event& e )
 		if (e.key.keysym.sym == SDLK_F11) {
 			isFullScreen = !isFullScreen;
 			if(isFullScreen)
-				SDL_SetWindowFullscreen( window, SDL_WINDOW_FULLSCREEN_DESKTOP );
+				SDL_SetWindowFullscreen( window, SDL_WINDOW_FULLSCREEN );
 			else
 				SDL_SetWindowFullscreen( window, 0 );
 		}
