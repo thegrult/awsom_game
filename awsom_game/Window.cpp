@@ -84,8 +84,13 @@ void Window::handleEvent( SDL_Event& e )
 		}
 	}
 	else if (e.type == SDL_KEYDOWN) {
-		if(e.key.keysym.sym == SDL_SCANCODE_F11)
-		isFullScreen = !isFullScreen;
+		if (e.key.keysym.sym == SDLK_F11) {
+			isFullScreen = !isFullScreen;
+			if(isFullScreen)
+				SDL_SetWindowFullscreen( window, SDL_WINDOW_FULLSCREEN_DESKTOP );
+			else
+				SDL_SetWindowFullscreen( window, 0 );
+		}
 	}
 }
 

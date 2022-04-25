@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Avatar.cpp" />
+    <ClCompile Include="Background.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FrameTimer.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -163,6 +164,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Avatar.h" />
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="Game.h" />
@@ -174,6 +176,7 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="imgs\background32x32.png" />
     <Image Include="imgs\w_g_sprites.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

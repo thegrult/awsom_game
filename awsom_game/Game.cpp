@@ -8,6 +8,8 @@ Game::Game()
 	
 	elia = new Protagonist( { float( SCREEN_WIDTH / 2), float(SCREEN_HEIGHT / 2 )},  gRenderer );
 
+	bg = new Background( backgroundsheet, 32, 32, { 74,0 } );
+
 	for (int i = 0; i < nEnemies; i++) {
 		enemies.push_back( Entity{ { xDist( rng ), yDist( rng ) }, { 256,0 }, 32, 32, 8, 4, spriteSheet, gRenderer, {11, 21, 24, 32} } );
 	}
@@ -55,10 +57,8 @@ bool Game::UpdateGame( const float dt )
 		case SDL_QUIT:
 			quit = true;
 			break;
-		case SDL_WINDOWEVENT:
-			window.handleEvent( e );
-			break;
 		}
+		window.handleEvent( e );
 	}
 
 
@@ -142,6 +142,8 @@ void Game::Draw()
 	//Clear screen
 	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0xFF, 0xFF );
 	SDL_RenderClear( gRenderer );
+
+	bg->Draw();
 
 	//draw character
 	elia->Draw();
@@ -230,9 +232,16 @@ bool Game::loadMedia()
 
 	//Load sprite sheet texture
 	spriteSheet.SetRenderer( gRenderer );
-	if (!spriteSheet.LoadData( "imgs/w_g_sprites.png" ))
+	if (!spriteSheet.LoadData( "imgs\\w_g_sprites.png" ))
 	{
 		printf( "Failed to load sprite sheet texture!\n" );
+		success = false;
+	}
+
+	backgroundsheet.SetRenderer( gRenderer );
+	if (!backgroundsheet.LoadData( "imgs\\background32x32.png" ))
+	{
+		printf( "Failed to load background sheet texture!\n" );
 		success = false;
 	}
 
@@ -243,14 +252,14 @@ bool Game::loadMedia()
 		success = false;
 	}
 
-	sfxshoot = Mix_LoadWAV( "audio/smb_fireball.wav" );
+	sfxshoot = Mix_LoadWAV( "audio\\smb_fireball.wav" );
 	if (sfxshoot == NULL)
 	{
 		printf( "Failed to load shooting sfx! SDL_mixer Error: %s\n", Mix_GetError() );
 		success = false;
 	}
 
-	sfxexplosion = Mix_LoadWAV( "audio/smb_fireworks.wav" );
+	sfxexplosion = Mix_LoadWAV( "audio\\smb_fireworks.wav" );
 	if (sfxexplosion == NULL)
 	{
 		printf( "Failed to load explosion sfx! SDL_mixer Error: %s\n", Mix_GetError() );

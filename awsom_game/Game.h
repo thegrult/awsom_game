@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "Protagonist.h"
 #include "FrameTimer.h"
+#include "Background.h"
 #include <random>
 
 class Game {
@@ -51,9 +52,12 @@ private:
 	//utilities
 	FrameTimer ft;
 	Surface spriteSheet;
+	Surface backgroundsheet;
 private:
+	Background* bg = nullptr;
+
 	//actual game stuff
-	Protagonist* elia;
+	Protagonist* elia = nullptr;
 
 	std::vector<Entity> enemies;
 
