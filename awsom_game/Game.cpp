@@ -8,7 +8,43 @@ Game::Game()
 	
 	elia = new Protagonist( { float( SCREEN_WIDTH / 2), float(SCREEN_HEIGHT / 2 )},  gRenderer );
 
-	bg = new Background( backgroundsheet, 32, 32, { 74,0 } );
+	std::string bgs = 
+		"AZZZZZZZZZZZZZZZZZZA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"AAAAAAAAAAAAAAAAAAAA";
+
+	bg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 },20,15, bgs );
+
+	std::string fgs = 
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZAAAAAAAAAAAAAAAAAAZ"
+		"ZZZZZZZZZZZZZZZZZZZZ";
+
+	fg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, 20, 15, fgs );
 
 	for (int i = 0; i < nEnemies; i++) {
 		enemies.push_back( Entity{ { xDist( rng ), yDist( rng ) }, { 256,0 }, 32, 32, 8, 4, spriteSheet, gRenderer, {11, 21, 24, 32} } );
@@ -28,7 +64,7 @@ bool Game::Go()
 #ifdef _DEBUG
 	float dt = ft.Mark();
 	if (dt > 1.0f / 30.0f)
-		dt = 1.0f / 30.0f;
+		dt = 0.001f;
 #else // RELEASE \/
 	const float dt = ft.Mark();
 #endif
@@ -61,33 +97,16 @@ bool Game::UpdateGame( const float dt )
 		window.handleEvent( e );
 	}
 
-
-
-	if (keyStates[SDL_SCANCODE_UP]) {
-		elia->SetDirection( { 0,-1 } );
-	}
-	else if (keyStates[SDL_SCANCODE_DOWN]) {
-		elia->SetDirection( { 0,1 } );
-	}
-	else if (keyStates[SDL_SCANCODE_LEFT]) {
-		elia->SetDirection( { -1,0 } );
-	}
-	else if (keyStates[SDL_SCANCODE_RIGHT]) {
-		elia->SetDirection( { 1,0 } );
-	}
-	else {
-		elia->SetDirection( { 0,0 } );
-	}
+	elia->Update( dt, keyStates );
 
 	if (keyStates[SDL_SCANCODE_SPACE]) {
-		if (!elia->IsOnCooldown())
+		Projectile p = elia->Shoot();
+		if (!Projectile::IsNull(p))
 		{
-			projectiles.emplace_back( std::move( elia->Shoot() ) );
+			projectiles.emplace_back( std::move( p ) );
 			Mix_PlayChannel( -1, sfxshoot, 0 );
 		}
 	}
-
-	elia->Update( dt );
 
 	elia->ClampToRect( GetScreenRect().GetExpanded(toleranceregion) );
 
@@ -133,6 +152,8 @@ bool Game::UpdateGame( const float dt )
 			} ), enemies.end()
 				);
 
+	printf( "%f", dt);
+
 	return quit;
 }
 
@@ -164,7 +185,7 @@ void Game::Draw()
 	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0xFF, 0xFF );
 #endif //  _DEBUG
 
-
+	fg->Draw();
 	//Update screen
 	SDL_RenderPresent( gRenderer );
 }
@@ -246,7 +267,7 @@ bool Game::loadMedia()
 	}
 
 	backgroundsheet.SetRenderer( gRenderer );
-	if (!backgroundsheet.LoadData( "imgs\\background32x32.png" ))
+	if (!backgroundsheet.LoadData( "imgs\\bgtiles.png" ))
 	{
 		printf( "Failed to load background sheet texture!\n" );
 		success = false;

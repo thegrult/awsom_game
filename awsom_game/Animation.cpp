@@ -2,7 +2,7 @@
 
 Animation::Animation( const Vei2& pos, int width, int height, int count, Surface& sprite, float holdTime, SDL_Renderer* renderer )
 	:
-	sprite( sprite ),
+	sprite( &sprite ),
 	holdTime( holdTime ),
 	renderer(renderer),
 	width(width),
@@ -34,7 +34,7 @@ void Animation::Draw( const Vei2& pos ) const
 
 	SDL_Rect srcRect( frames[iCurFrame].GetDisplaced( srcDeltaPos ) );
 
-	SDL_RenderCopy( renderer, sprite.Data(), &srcRect, &renderQuad );
+	SDL_RenderCopy( renderer, sprite->Data(), &srcRect, &renderQuad );
 }
 
 void Animation::Update( float dt )
@@ -54,7 +54,7 @@ void Animation::SetRenderer( SDL_Renderer* newRenderer )
 
 const Surface& Animation::GetSprite()
 {
-	return sprite;
+	return *sprite;
 }
 
 void Animation::Advance()

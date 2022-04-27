@@ -30,13 +30,6 @@ Vec2 Entity::GetVel() const
 
 void Entity::Draw()
 {
-#ifdef _DEBUG
-	SDL_Rect HitBox = (SDL_Rect)GetHitBox();
-	SDL_Renderer* renderer = avatar.GetRenderer();
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
-	SDL_RenderDrawRect( renderer, &HitBox );
-#endif // DEBUG
-
 	if (state.isInvincible()) {
 		const int index = avatar.CurIndex();
 		avatar.SetAnim( index + avatar.NAnim() );
@@ -46,6 +39,13 @@ void Entity::Draw()
 	else {
 		avatar.Draw( (Vei2)pos );
 	}
+
+#ifdef _DEBUG
+	SDL_Rect HitBox = (SDL_Rect)GetHitBox();
+	SDL_Renderer* renderer = avatar.GetRenderer();
+	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
+	SDL_RenderDrawRect( renderer, &HitBox );
+#endif // DEBUG
 }
 
 void Entity::SetAvatarRenderer( SDL_Renderer* newRenderer )

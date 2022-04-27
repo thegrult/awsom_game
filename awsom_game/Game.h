@@ -54,9 +54,10 @@ private:
 	Surface spriteSheet;
 	Surface backgroundsheet;
 private:
-	const int toleranceregion = -50;
+	const int toleranceregion = -32;
 
 	Background* bg = nullptr;
+	Background* fg = nullptr;
 
 	//actual game stuff
 	Protagonist* elia = nullptr;

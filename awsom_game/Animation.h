@@ -24,7 +24,7 @@ private:
 	void Advance();
 private:
 	SDL_Renderer* renderer = nullptr;
-	Surface& sprite;
+	Surface* sprite;
 	std::vector<RectI> frames;
 	Vei2 srcDeltaPos = { 0, 0 };
 	int iCurFrame = 0;
