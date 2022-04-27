@@ -23,13 +23,7 @@ private:
 		return coolDownTimer > 0;
 	}
 private:
-	enum direction {
-		down,
-		left,
-		up,
-		right
-	};
-	int direc = down;
+	Vec2 dir = { 0.0f,0.0f };
 	float coolDownTimer = 0.0f;
 	float coolDown = 0.5f;
 	Surface sprite;
