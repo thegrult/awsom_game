@@ -13,22 +13,25 @@ void Protagonist::Update( float dt, const Uint8* kbd )
 		coolDownTimer -= dt;
 	else coolDownTimer = 0;
 
+	Vec2 direc = { 0.0f,0.0f };
 
+	if (kbd[SDL_SCANCODE_W]) {
+		direc.y -= 1.0f;
+	}
+	if (kbd[SDL_SCANCODE_S]) {
+		direc.y += 1.0f;
+	}
+	if (kbd[SDL_SCANCODE_A]) {
+		direc.x -= 1.0f;
+	}
+	if (kbd[SDL_SCANCODE_D]) {
+		direc.x += 1.0f;
+	}
 
-	if (kbd[SDL_SCANCODE_UP]) {
-		SetDirection( { 0,-1 } );
-	}
-	else if (kbd[SDL_SCANCODE_DOWN]) {
-		SetDirection( { 0,1 } );
-	}
-	else if (kbd[SDL_SCANCODE_LEFT]) {
-		SetDirection( { -1,0 } );
-	}
-	else if (kbd[SDL_SCANCODE_RIGHT]) {
-		SetDirection( { 1,0 } );
-	}
-	else {
-		SetDirection( { 0,0 } );
+	SetDirection( direc );
+
+	if (direc != Vec2( 0.0f, 0.0f )) {
+		dir = direc;
 	}
 }
 
@@ -36,21 +39,23 @@ void Protagonist::SetDirection( const Vec2& dir )
 {
 	entity.SetDirection( dir );
 
+	int animindex = 0;
+
 	if (dir.y < -0.05f) {
-		direc = up;
-		entity.SetAnim( 4 );
+		animindex += 6;
 	}
 	else if (dir.y > 0.05f) {
-		direc = down;
-		entity.SetAnim( 0 );
+		animindex += 3;
 	}
-	else if (dir.x < -0.05f) {
-		direc = left;
-		entity.SetAnim( 6 );
+	if (dir.x < -0.05f) {
+		animindex += 2;
 	}
 	else if (dir.x > 0.05f) {
-		direc = right;
-		entity.SetAnim( 2 );
+		animindex += 1;
+	}
+
+	if (animindex != 0) {
+		entity.SetAnim( animindex );
 	}
 }
 
@@ -78,23 +83,12 @@ Projectile Protagonist::Shoot()
 {
 	if (!IsOnCooldown()) {
 		coolDownTimer += coolDown;
-		Vec2 velocity = { 0.0f,0.0f };
-		float bulletSpeed = 20.0f;
-		if (direc == up) {
-			velocity.y = -bulletSpeed;
-		}
-		else if (direc == down) {
-			velocity.y = bulletSpeed;
-		}
-		else if (direc == left) {
-			velocity.x = -bulletSpeed;
-		}
-		else if (direc == right) {
-			velocity.x = bulletSpeed;
-		}
+		float bulletSpeed = 100.0f;
+
+		const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
 
 		return Projectile( entity.GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
-			&sprite, sprite.GetRenderer(), { 12, 21, 21, 31 }, 200.0f, velocity, GetAtk() );
+			&sprite, sprite.GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk() );
 	}
 	else return Projectile::Null();
 }

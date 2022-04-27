@@ -70,7 +70,7 @@ public:
 
 	_Vec2<T> GetCenter() const
 	{
-		  return _Vec2<T>( (left + right) / 2.0f, (top + bottom) / 2.0f );
+		  return _Vec2<T>( (left + right) / (T)2, (top + bottom) / (T)2 );
 	}
 
 	T GetHalfWidth() const
