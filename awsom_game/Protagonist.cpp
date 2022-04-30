@@ -1,14 +1,14 @@
 #include "Protagonist.h"
 
-Protagonist::Protagonist( Vec2 spawnPos, SDL_Renderer* renderer )
+Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite, SDL_Renderer* renderer )
 	:
-	sprite( "imgs/w_g_sprites.png", renderer ),
-	entity( spawnPos, {0,0}, 32, 32, 8, 9, sprite, renderer, { 12, 20, 24, 32 } )
+	entity( spawnPos, {0,0}, 32, 32, 8, 9, sprite, renderer, { 12, 20, 24, 32 } ),
+	sprite(sprite)
 {}
 
 void Protagonist::Update( float dt, const Uint8* kbd )
 {
-	entity.Update( dt );
+	
 	if (coolDownTimer > 0)
 		coolDownTimer -= dt;
 	else coolDownTimer = 0;
@@ -30,14 +30,19 @@ void Protagonist::Update( float dt, const Uint8* kbd )
 
 	SetDirection( (Vec2)direc );
 
-	if (direc != Vei2( 0.0f, 0.0f )) {
+	if (direc != Vei2( 0, 0 )) {
 		dir = (Vec2)direc;
 	}
+
+	if (kbd[SDL_SCANCODE_LSHIFT]) {
+		Dash();
+	}
+	entity.Update( dt );
 }
 
 void Protagonist::SetDirection( const Vec2& dir )
 {
-	entity.SetDirection( dir );
+	entity.SetVel( dir.GetNormalized() * walkingSpeed );
 
 	//selects the animation based on direction (right = +1, left = +2, down = +3, up = +6), when dmged +9 
 	int animindex = 0;
@@ -58,6 +63,12 @@ void Protagonist::SetDirection( const Vec2& dir )
 	if (animindex != 0) {
 		entity.SetAnim( animindex );
 	}
+}
+
+void Protagonist::Dash()
+{
+
+	entity.SetVel( dir.GetNormalized() * rollSpeed );
 }
 
 void Protagonist::Draw()
@@ -89,7 +100,22 @@ Projectile Protagonist::Shoot()
 		const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
 
 		return Projectile( entity.GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
-			&sprite, sprite.GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk() );
+			sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk() );
 	}
 	else return Projectile::Null();
+}
+
+void Protagonist::Action::SetAction( int act, float actDur )
+{
+	action = act;
+	actionTimer = actDur;
+}
+
+void Protagonist::Action::Update( float dt )
+{
+	actionTimer += dt;
+	if (actionTimer >= actionDur) {
+		actionTimer = 0.0f;
+		action = walking;
+	}
 }

@@ -7,7 +7,7 @@
 class Animation
 {
 public:
-	Animation( const Vei2& pos,int width,int height,int count, Surface& sprite,float holdTime, SDL_Renderer* renderer );
+	Animation( const Vei2& pos,int width,int height,int count, Surface* sprite,float holdTime, SDL_Renderer* renderer );
 	void SetDeltaPos( const Vei2& deltaPos ) {
 		srcDeltaPos = deltaPos;
 	}

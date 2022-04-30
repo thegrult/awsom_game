@@ -57,6 +57,16 @@ Surface& Surface::operator=( Surface&& rhs ) noexcept
 	return *this;
 }
 
+Surface::~Surface()
+{
+	if (texture != nullptr) {
+		SDL_DestroyTexture( texture );
+		texture = nullptr;
+		width = 0;
+		height = 0;
+	}
+}
+
 int Surface::GetWidth() const
 {
 	return width;

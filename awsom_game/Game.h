@@ -51,8 +51,8 @@ private:
 
 	//utilities
 	FrameTimer ft;
-	Surface spriteSheet;
-	Surface backgroundsheet;
+	Surface* spriteSheet = nullptr;
+	Surface* backgroundsheet = nullptr;
 private:
 	const int toleranceregion = -32;
 

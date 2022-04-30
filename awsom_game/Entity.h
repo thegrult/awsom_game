@@ -4,21 +4,19 @@
 class Entity {
 public:
 	//hitbox is considered in frame space
-	Entity( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int framecount, int animcount, Surface& sprite, SDL_Renderer* renderer, RectI hitBox );
+	Entity( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int framecount, int animcount, Surface* sprite, SDL_Renderer* renderer, RectI hitBox );
 
 	void Draw();
 
 	void Update( const float dt );
-	void SetDirection( const Vec2& dir );
+	void SetVel( const Vec2& vel );
 	Vec2 GetVel() const;
 	RectF GetHitBox() const;
 	void SetAnim( int animIndex );
 
-	//I don't think this is used anymore, could maybe remove it as it is no longer needed due to better handling of the media loading/unloading
-	void SetAvatarRenderer( SDL_Renderer* newRenderer );
-
 	void ClampToRect( RectF rect );
 	void ApplyDamage( int dmg );
+	void ApplyInvincibility( float dur );
 	int GetAtk() const { return atk; }
 	bool IsDead() const { return state.isDead(); }
 private:
@@ -32,33 +30,44 @@ private:
 		enum class states {
 			Normal,
 			Invincible,
-			Died,
+			Damaged,
+			Dead,
 			Total
 		};
-	public:
+	private:
 		states state = states::Normal;
 		float stateTime;
-		float invDur = 0.5f;
-		void Damage() {
-			state = states::Invincible;
+		float effectDur = 0.5f;
+	public:
+		void Damage( float dur) {
+			state = states::Damaged;
+			effectDur = dur;
 		}
-		bool isInvincible() const{
+		bool IsDamaged() {
+			return state == states::Damaged;
+		}
+		void ApplyInvincibility( float dur ) {
+			state = states::Invincible;
+			effectDur = dur;
+		}
+		bool IsInvincible() const{
 			return state == states::Invincible;
 		}
 		void Update( float dt ) {
-			if (state == states::Invincible) {
+			if (state != states::Normal && state != states::Dead) {
 				stateTime += dt;
-				if (stateTime >= invDur) {
+				if (stateTime >= effectDur) {
 					stateTime = 0.0f;
+					effectDur = 0.0f;
 					state = states::Normal;
 				}
 			}
 		}
 		void Dead() {
-			state = states::Died;
+			state = states::Dead;
 		}
 		bool isDead()const {
-			return state == states::Died;
+			return state == states::Dead;
 		}
 	};
 
@@ -70,5 +79,4 @@ private:
 
 	int hp = 10;
 	int atk = 2;
-	float speed = 50.0f;
 };
