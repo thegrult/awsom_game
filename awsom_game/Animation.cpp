@@ -1,8 +1,8 @@
 #include "Animation.h"
 
-Animation::Animation( const Vei2& pos, int width, int height, int count, Surface& sprite, float holdTime, SDL_Renderer* renderer )
+Animation::Animation( const Vei2& pos, int width, int height, int count, Surface* sprite, float holdTime, SDL_Renderer* renderer )
 	:
-	sprite( &sprite ),
+	sprite( sprite ),
 	holdTime( holdTime ),
 	renderer(renderer),
 	width(width),

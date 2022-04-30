@@ -1,6 +1,6 @@
 #include "Background.h"
 
-Background::Background( Surface sprite, int width, int height, Vei2 readPos, Vei2 drawStartPos, int gridw, int gridh, std::string map )
+Background::Background( Surface* sprite, int width, int height, Vei2 readPos, Vei2 drawStartPos, int gridw, int gridh, std::string map )
 	:
 	sprite(sprite),
 	tilew(width),
@@ -24,7 +24,7 @@ void Background::Draw()
 	for (int y = 0; y < gridh; y++) {
 		for (int x = 0; x < gridw; x++) {
 			SDL_Rect clip = SDL_Rect( tiles[x + y * gridw] );
-			sprite.Draw( Vei2( x * tilew, y * tileh ) + drawStartPos, &clip );
+			sprite->Draw( Vei2( x * tilew, y * tileh ) + drawStartPos, &clip );
 		}
 	}
 }

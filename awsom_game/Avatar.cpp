@@ -1,6 +1,6 @@
 #include "Avatar.h"
 
-Avatar::Avatar( const Vei2& pos, int width, int height, int framecount, int animcount, Surface& sprite, float holdTime, SDL_Renderer* renderer )
+Avatar::Avatar( const Vei2& pos, int width, int height, int framecount, int animcount, Surface* sprite, float holdTime, SDL_Renderer* renderer )
 	:
 	width(width),
 	height(height),

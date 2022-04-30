@@ -6,7 +6,7 @@ Game::Game()
 	//BEWARE! gRenderer is null before the call to loadMedia!
 	loadMedia();
 	
-	elia = new Protagonist( { float( SCREEN_WIDTH / 2), float(SCREEN_HEIGHT / 2 )},  gRenderer );
+	elia = new Protagonist( { float( SCREEN_WIDTH / 2), float(SCREEN_HEIGHT / 2 )}, spriteSheet, gRenderer );
 
 	std::string bgs = 
 		"AZZZZZZZZZZZZZZZZZZA"
@@ -259,15 +259,17 @@ bool Game::loadMedia()
 	bool success = true;
 
 	//Load sprite sheet texture
-	spriteSheet.SetRenderer( gRenderer );
-	if (!spriteSheet.LoadData( "imgs\\w_g_sprites.png" ))
+	spriteSheet = new Surface;
+	spriteSheet->SetRenderer( gRenderer );
+	if (!spriteSheet->LoadData( "imgs\\sprites.png" ))
 	{
 		printf( "Failed to load sprite sheet texture!\n" );
 		success = false;
 	}
 
-	backgroundsheet.SetRenderer( gRenderer );
-	if (!backgroundsheet.LoadData( "imgs\\bgtiles.png" ))
+	backgroundsheet = new Surface;
+	backgroundsheet->SetRenderer( gRenderer );
+	if (!backgroundsheet->LoadData( "imgs\\bgtiles.png" ))
 	{
 		printf( "Failed to load background sheet texture!\n" );
 		success = false;
@@ -300,7 +302,8 @@ bool Game::loadMedia()
 void Game::close()
 {
 	//Free loaded images
-	spriteSheet.FreeData();
+	delete spriteSheet;
+	delete backgroundsheet;
 	Mix_FreeChunk( sfxshoot );
 	Mix_FreeChunk( sfxexplosion );
 	sfxshoot = NULL;

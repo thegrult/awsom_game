@@ -15,6 +15,7 @@ public:
 	Surface& operator=( Surface&& rhs ) noexcept;
 	Surface& operator=( const Surface& ) = default;
 	Surface() = default;
+	~Surface();
 	int GetWidth() const;
 	int GetHeight() const;
 	SDL_Rect GetRect() const;
