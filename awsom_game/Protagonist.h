@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "Projectile.h"
+#include <vector>
 
 class Protagonist {
 public:
@@ -27,21 +28,23 @@ private:
 private:
 	//state machine
 	struct Action {
-		enum {
+		enum{
 			walking,
 			dashing
 		};
 		int action = walking;
 		float actionDur = 0.5f;
 		float actionTimer = 0.0f;
-		void SetAction( int action, float actDur );
+		bool SetAction( int action, float actDur, float coolDown = 0.0f );
 		void Update( float dt );
+		std::vector<std::pair<int, float>> cooldowns;
 	};
 
 	//used for giving direction to the bullets and dashing
 	Vec2 dir = { 0.0f,0.0f };
 
 private:
+	Action action;
 	//some stats for our protagonist
 	float coolDownTimer = 0.0f;
 	float coolDown = 0.5f;
