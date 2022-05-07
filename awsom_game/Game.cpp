@@ -11,21 +11,21 @@ Game::Game()
 	std::string bgs = 
 		"AZZZZZZZZZZZZZZZZZZA"
 		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBYBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBSBBBA"
+		"ABBBSBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBTBBBBBBBBBBBA"
 		"ABBBBBBBBBBBBBBBBBBA"
 		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBUBBBBBBBBBBA"
 		"ABBBBBBBBBBBBBBBBBBA"
-		"ABBBBBBBBBBBBBBBBBBA"
-		"ABBBBBBBBBBBBBBBBBBA"
-		"ABBBBBBBBBBBBBBBBBBA"
-		"ABBBBBBBBBBBBBBBBBBA"
-		"ABBBBBBBBBBBBBBBBBBA"
-		"ABBBBBBBBBBBBBBBBBBA"
-		"ABBBBBBBBBBBBBBBBBBA"
+		"ABBBBBBBBBBVBBBBBBBA"
 		"ABBBBBBBBBBBBBBBBBBA"
 		"ABBBBBBBBBBBBBBBBBBA"
 		"AAAAAAAAAAAAAAAAAAAA";
 
-	bg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 },20,15, bgs );
+	bg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, 20, 15, bgs );
 
 	std::string fgs = 
 		"ZAAAAAAAAAAAAAAAAAAZ"
@@ -118,19 +118,41 @@ bool Game::UpdateGame( const float dt )
 			elia->ApplyDamage(e.GetAtk());
 			e.ApplyDamage(elia->GetAtk());
 		}
+
+		if (bg->IsColliding( e.GetHitBox() )) {
+			e.ApplyDamage( 1 );
+		}
 	}
 
+	if (bg->IsColliding( elia->GetHitBox() )) {
+		elia->ApplyDamage( 1 );
+	}
 
-	for (auto p : projectiles) {
-		
-		p.Update(dt);
+	//for (auto p : projectiles)
+	//{
+	//	p.Update(dt);
 
-		RectF phitbox = p.GetHitBox();
+	//	RectF phitbox = p.GetHitBox();
+	
+	//	for (Entity& e : enemies) {
+	//		if (e.GetHitBox().IsOverlappingWith( phitbox )) {
+	//			p.Hits();
+	//			e.ApplyDamage(p.GetDmg());
+	//			Mix_PlayChannel( -1, sfxexplosion, 0 );
+	//		}
+	//	}
+	//}
+
+	for (int i = 0; i < projectiles.size(); i++)
+	{
+		projectiles[i].Update( dt );
+
+		RectF phitbox = projectiles[i].GetHitBox();
 
 		for (Entity& e : enemies) {
 			if (e.GetHitBox().IsOverlappingWith( phitbox )) {
-				p.Hits();
-				e.ApplyDamage(p.GetDmg());
+				projectiles[i].Hits();
+				e.ApplyDamage( projectiles[i].GetDmg() );
 				Mix_PlayChannel( -1, sfxexplosion, 0 );
 			}
 		}

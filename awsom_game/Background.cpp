@@ -2,20 +2,26 @@
 
 Background::Background( Surface* sprite, int width, int height, Vei2 readPos, Vei2 drawStartPos, int gridw, int gridh, std::string map )
 	:
-	sprite(sprite),
-	tilew(width),
-	tileh(height),
-	gridw(gridw),
-	gridh(gridh),
-	drawStartPos(drawStartPos)
+	sprite( sprite ),
+	tilew( width ),
+	tileh( height ),
+	gridw( gridw ),
+	gridh( gridh ),
+	drawStartPos( drawStartPos )
 {
 	tiles.reserve( gridw * gridh );
 
 	auto mi = map.cbegin();
 	
 	for (int n = 0; n < gridw * gridh; n++, mi++) {
-		int i = *mi - 'A';
-		tiles.push_back({ Vei2(i * width, 0) + readPos, width, height });
+		auto entry = BgStringConverter::Convert( *mi );
+		tiles.push_back( std::move( entry.first.GetDisplaced( readPos ) ) );
+		if (!entry.second.IsDegenerate())
+		{
+			int y = n / gridw;
+			int x = n % gridw;
+			obstacles.push_back( std::move( entry.second.GetDisplaced( {x * width, y*height}) ) );
+		}
 	}
 }
 
@@ -27,4 +33,13 @@ void Background::Draw()
 			sprite->Draw( Vei2( x * tilew, y * tileh ) + drawStartPos, &clip );
 		}
 	}
+}
+
+bool Background::IsColliding( RectI hitBox )
+{
+	return std::any_of( obstacles.begin(), obstacles.end(), 
+		[&hitBox]( RectI ob )
+		{
+			return ob.IsOverlappingWith( hitBox );
+		});
 }

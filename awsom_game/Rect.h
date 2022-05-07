@@ -83,6 +83,11 @@ public:
 		return (bottom - top) / 2;
 	}
 
+	bool IsDegenerate() const
+	{
+		return left > right || top > bottom;
+	}
+
 	operator SDL_Rect() const{
 		return SDL_Rect{ int( left ), int( top ), int( right-left ), int( bottom-top ) };
 	}
