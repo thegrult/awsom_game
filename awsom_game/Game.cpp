@@ -65,7 +65,7 @@ bool Game::Go()
 	float dt = ft.Mark();
 	if (dt > 1.0f / 30.0f)
 		dt = 0.001f;
-#else // RELEASE \/
+#else // RELEASE
 	const float dt = ft.Mark();
 #endif
 	bool quit = UpdateGame( dt );
@@ -121,16 +121,16 @@ bool Game::UpdateGame( const float dt )
 	}
 
 
-	for (int i = 0; i < projectiles.size(); i++) {
+	for (auto p : projectiles) {
 		
-		projectiles[i].Update(dt);
+		p.Update(dt);
 
-		RectF phitbox = projectiles[i].GetHitBox();
+		RectF phitbox = p.GetHitBox();
 
 		for (Entity& e : enemies) {
 			if (e.GetHitBox().IsOverlappingWith( phitbox )) {
-				projectiles[i].Hits();
-				e.ApplyDamage(projectiles[i].GetDmg());
+				p.Hits();
+				e.ApplyDamage(p.GetDmg());
 				Mix_PlayChannel( -1, sfxexplosion, 0 );
 			}
 		}
@@ -150,7 +150,7 @@ bool Game::UpdateGame( const float dt )
 			[]( Entity e ) {
 				return e.IsDead();
 			} ), enemies.end()
-				);
+	);
 
 	printf( "%f", dt);
 
@@ -160,7 +160,6 @@ bool Game::UpdateGame( const float dt )
 void Game::Draw()
 {
 	//Clear screen
-	
 	SDL_RenderClear( gRenderer );
 
 	bg->Draw();

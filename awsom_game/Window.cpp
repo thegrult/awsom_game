@@ -36,12 +36,6 @@ void Window::handleEvent( SDL_Event& e )
 	if (e.type == SDL_WINDOWEVENT) {
 		switch (e.window.event)
 		{
-		case SDL_WINDOWEVENT_SIZE_CHANGED:
-			width = e.window.data1;
-			height = e.window.data2;
-			SDL_RenderPresent( renderer );
-			break;
-
 			//Repaint on exposure
 		case SDL_WINDOWEVENT_EXPOSED:
 			SDL_RenderPresent( renderer );
