@@ -29,7 +29,8 @@ void Background::Draw()
 {
 	for (int y = 0; y < gridh; y++) {
 		for (int x = 0; x < gridw; x++) {
-			SDL_Rect clip = SDL_Rect( tiles[x + y * gridw] );
+			const auto j = tiles[x + y * gridw];
+			SDL_Rect clip = { j.TopLeft().x, j.TopLeft().y, j.GetDim().x, j.GetDim().y };
 			sprite->Draw( Vei2( x * tilew, y * tileh ) + drawStartPos, &clip );
 		}
 	}

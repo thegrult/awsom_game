@@ -108,7 +108,7 @@ bool Game::UpdateGame( const float dt )
 		}
 	}
 
-	elia->ClampToRect( GetScreenRect().GetExpanded(toleranceregion) );
+	//elia->ClampToRect( GetScreenRect().GetExpanded(toleranceregion) );
 
 	for (Entity&e : enemies) {
 		e.Update( dt );
@@ -119,13 +119,50 @@ bool Game::UpdateGame( const float dt )
 			e.ApplyDamage(elia->GetAtk());
 		}
 
-		if (bg->IsColliding( e.GetHitBox() )) {
-			e.ApplyDamage( 1 );
+		{
+			auto bgobs = bg->GetObstacles();
+			auto hbx = e.GetHitBox();
+
+			for (auto ob : bgobs) {
+				if (ob.IsOverlappingWith( hbx )) {
+					e.ApplyDamage( 1 );
+					e.CollideRect( ob );
+				}
+			}
+		}
+		{
+			auto bgobs = fg->GetObstacles();
+			auto hbx = e.GetHitBox();
+
+			for (auto ob : bgobs) {
+				if (ob.IsOverlappingWith( hbx )) {
+					e.ApplyDamage( 1 );
+					e.CollideRect( ob );
+				}
+			}
 		}
 	}
 
-	if (bg->IsColliding( elia->GetHitBox() )) {
-		elia->ApplyDamage( 1 );
+
+	{
+		const auto bgobs = bg->GetObstacles();
+		auto hbx = elia->GetHitBox();
+		for (auto ob : bgobs) {
+			if (ob.IsOverlappingWith( hbx )) {
+				elia->ApplyDamage( 1 );
+				elia->CollideRect( ob );
+			}
+		}
+	}
+	{
+		const auto bgobs = fg->GetObstacles();
+		auto hbx = elia->GetHitBox();
+		for (auto ob : bgobs) {
+			if (ob.IsOverlappingWith( hbx )) {
+				elia->ApplyDamage( 1 );
+				elia->CollideRect( ob );
+			}
+		}
 	}
 
 	//for (auto p : projectiles)
@@ -200,7 +237,8 @@ void Game::Draw()
 	}
 
 #ifdef _DEBUG
-	SDL_Rect border = (SDL_Rect)GetScreenRect().GetExpanded( toleranceregion );
+	const auto j = GetScreenRect().GetExpanded( toleranceregion );
+	SDL_Rect border = { j.TopLeft().x, j.TopLeft().y, j.GetDim().x, j.GetDim().y };
 	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
 	SDL_RenderDrawRect( gRenderer, &border );
 	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0xFF, 0xFF );

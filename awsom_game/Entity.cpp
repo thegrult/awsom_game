@@ -9,6 +9,7 @@ Entity::Entity( const Vec2& spawnPos, const Vei2& readPos, int width, int height
 
 void Entity::Update( const float dt )
 {
+	deltat = dt;
 	if (!IsDead()) {
 		if (velocity != Vec2( 0.0f, 0.0f )) {
 			avatar.Update( dt );
@@ -22,11 +23,6 @@ void Entity::Update( const float dt )
 void Entity::SetVel( const Vec2& vel )
 {
 	velocity = vel;
-}
-
-Vec2 Entity::GetVel() const
-{
-	return velocity;
 }
 
 void Entity::Draw()
@@ -46,7 +42,8 @@ void Entity::Draw()
 	}
 
 #ifdef _DEBUG
-	SDL_Rect HitBox = (SDL_Rect)GetHitBox();
+	const auto j = GetHitBox();
+	SDL_Rect HitBox = { int(j.TopLeft().x), (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
 	SDL_Renderer* renderer = avatar.GetRenderer();
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
 	SDL_RenderDrawRect( renderer, &HitBox );
@@ -69,6 +66,15 @@ void Entity::ClampToRect( RectF rect )
 	else if (hbx.bottom >= rect.bottom) {
 		pos.y += rect.bottom - hbx.bottom - 0.1f;
 	}
+}
+
+void Entity::CollideRect( RectF rect )
+{
+	auto hbx = GetHitBox();
+
+	util::ResolveDynamicRectVsRect( &hbx, velocity, deltat, &rect );
+
+	pos = hbx.TopLeft();
 }
 
 void Entity::ApplyDamage( int dmg )

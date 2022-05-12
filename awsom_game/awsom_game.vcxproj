@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -159,6 +159,7 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Protagonist.cpp" />
     <ClCompile Include="Surface.cpp" />
+    <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +174,7 @@
     <ClInclude Include="Protagonist.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="Utilities.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

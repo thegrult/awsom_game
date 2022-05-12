@@ -1,5 +1,6 @@
 #pragma once
 #include "Avatar.h"
+#include "Utilities.h"
 
 class Entity {
 public:
@@ -9,16 +10,21 @@ public:
 	void Draw();
 
 	void Update( const float dt );
+
 	void SetVel( const Vec2& vel );
-	Vec2 GetVel() const;
-	RectF GetHitBox() const;
 	void SetAnim( int animIndex );
 
 	void ClampToRect( RectF rect );
+	void CollideRect( RectF rect );
 	void ApplyDamage( int dmg );
 	void ApplyInvincibility( float dur );
+
+	RectF GetHitBox() const;
 	int GetAtk() const { return atk; }
 	bool IsDead() const { return state.isDead(); }
+
+private:
+	void DisplaceBy( const Vec2 delta ) {	pos += delta;	}
 private:
 	//graphic things
 	static constexpr float holdTime = 0.1f;
@@ -76,6 +82,8 @@ private:
 	RectI hitBox; //is integer because it is in sprite space
 	Vec2 pos;
 	Vec2 velocity = { 0,0 };
+	//last frame time for rect collision
+	float deltat = 0.0f;
 
 	int hp = 10;
 	int atk = 2;

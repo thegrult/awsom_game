@@ -22,7 +22,9 @@ void Projectile::Draw() const
 		animation.Draw( (Vei2)pos );
 
 #ifdef _DEBUG
-	SDL_Rect HitBox = (SDL_Rect)GetHitBox();
+
+	const auto j = GetHitBox();
+	SDL_Rect HitBox = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
 	SDL_Renderer* renderer = animation.GetRenderer();
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
 	SDL_RenderDrawRect( renderer, &HitBox );

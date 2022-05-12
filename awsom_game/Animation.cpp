@@ -31,8 +31,8 @@ void Animation::Draw( const Vei2& pos ) const
 	SDL_Rect renderQuad = { pos.x, pos.y, width, height };
 
 	//Render to screen
-
-	SDL_Rect srcRect( frames[iCurFrame].GetDisplaced( srcDeltaPos ) );
+	const auto j = frames[iCurFrame].GetDisplaced( srcDeltaPos );
+	SDL_Rect srcRect = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
 
 	SDL_RenderCopy( renderer, sprite->Data(), &srcRect, &renderQuad );
 }

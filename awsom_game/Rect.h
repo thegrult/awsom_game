@@ -30,10 +30,10 @@ public:
 		Rect( topLeft, topLeft + _Vec2<T>( width, height ) )
 	{
 	}
-	Rect( const SDL_Rect& rect )
-		:
-		Rect( {rect.x, rect.y}, rect.w, rect.h )
-	{}
+	//Rect( const SDL_Rect& rect )
+	//	:
+	//	Rect( {rect.x, rect.y}, rect.w, rect.h )
+	//{}
 
 	bool IsOverlappingWith( const Rect& other ) const
 	{
@@ -52,7 +52,7 @@ public:
 			point.y >= top && point.y <= bottom;
 	}
 
-	Rect<T> FromCenter( const _Vec2<T>& center, T halfWidth, T halfHeight )
+	static Rect<T> FromCenter( const _Vec2<T>& center, T halfWidth, T halfHeight )
 	{
 		  const Vec2 half( halfWidth, halfHeight );
 		  return RectF( center - half, center + half );
@@ -83,14 +83,24 @@ public:
 		return (bottom - top) / 2;
 	}
 
+	_Vec2<T> GetDim() const
+	{
+		return { right - left, bottom - top };
+	}
+
+	_Vec2<T> TopLeft() const
+	{
+		return { left, top };
+	}
+
 	bool IsDegenerate() const
 	{
 		return left > right || top > bottom;
 	}
-
-	operator SDL_Rect() const{
-		return SDL_Rect{ int( left ), int( top ), int( right-left ), int( bottom-top ) };
-	}
+	////commenting this out until I find how to make it work
+	//explicit operator SDL_Rect() const{
+	//	return SDL_Rect{ int( left ), int( top ), int( right - left ), int( bottom - top ) };
+	//}
 public:
 	T left;
 	T right;

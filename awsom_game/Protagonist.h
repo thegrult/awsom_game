@@ -17,6 +17,8 @@ public:
 	
 	void ApplyDamage( int dmg );
 	Projectile Shoot();
+
+	void CollideRect( RectF rect ) { entity.CollideRect( rect ); }
 private:
 	void SetDirection( const Vec2& dir );
 
@@ -35,6 +37,7 @@ private:
 		int action = walking;
 		float actionDur = 0.5f;
 		float actionTimer = 0.0f;
+		//cooldown starts counting as soon as the action starts
 		bool SetAction( int action, float actDur, float coolDown = 0.0f );
 		void Update( float dt );
 		std::vector<std::pair<int, float>> cooldowns;
@@ -48,6 +51,7 @@ private:
 	//some stats for our protagonist
 	float coolDownTimer = 0.0f;
 	float coolDown = 0.5f;
+
 	float walkingSpeed = 50.0f;
 	float rollSpeed = 200.0f;
 private:

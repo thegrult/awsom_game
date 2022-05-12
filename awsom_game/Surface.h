@@ -4,7 +4,8 @@
 #include <SDL_image.h>
 #include <string>
 #include <vector>
-#include "Vec2.h"
+#include <assert.h>
+#include "Rect.h"
 
 class Surface
 {

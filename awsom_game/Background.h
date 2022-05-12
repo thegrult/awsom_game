@@ -11,6 +11,10 @@ public:
 	void Draw();
 
 	bool IsColliding( RectI hitBox );
+
+	const std::vector<RectI>& GetObstacles() const {
+		return obstacles;
+	}
 private:
 	const int tilew;
 	const int tileh;
