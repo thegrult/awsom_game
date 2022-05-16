@@ -75,7 +75,7 @@ bool util::DynamicRectVsRect( const RectF* r_dynamic, Vec2& vel, const float fTi
 		return false;
 
 	// Expand target rectangle by source dimensions
-	RectF expanded_target = RectF( r_static.TopLeft() - r_dynamic->GetDim() / 2, (r_static.GetDim() + r_dynamic->GetDim()/2).x, (r_static.GetDim() + r_dynamic->GetDim()/2).y );
+	RectF expanded_target = RectF( r_static.TopLeft() - r_dynamic->GetDim() / 2, (r_static.GetDim() + r_dynamic->GetDim()).x, (r_static.GetDim() + r_dynamic->GetDim()).y );
 
 	if (RayVsRect( r_dynamic->TopLeft() + r_dynamic->GetDim() / 2, vel * fTimeStep, &expanded_target, contact_point, contact_normal, contact_time ))
 		return (contact_time >= 0.0f && contact_time < 1.0f);
@@ -91,8 +91,39 @@ bool util::ResolveDynamicRectVsRect( RectF* r_dynamic, Vec2& vel, const float fT
 	{
 		vel.x += contact_normal.x * std::abs( vel.x ) * (1 - contact_time);
 		vel.y += contact_normal.y * std::abs( vel.y ) * (1 - contact_time);
+
+		*r_dynamic = r_dynamic->GetDisplaced( contact_point - r_dynamic->TopLeft() );
 		return true;
 	}
 
 	return false;
+}
+
+void util::DumbWay( RectF* r_dynamic, Vec2& vel, RectF* r_static )
+{
+	const Vec2 dcenter = r_dynamic->GetCenter();
+	const Vec2 scenter = r_static->GetCenter();
+	Vec2 deltaPos;
+
+
+	if ( dcenter.x > scenter.x ) {
+		deltaPos.x = r_static->right - r_dynamic->left;
+	}
+	else {
+		deltaPos.x = r_static->left - r_dynamic->right;
+	}
+
+	if ( dcenter.y > scenter.y ) {
+		deltaPos.y = r_static->bottom - r_dynamic->top;
+	}
+	else {
+		deltaPos.y = r_static->top - r_dynamic->bottom;
+	}
+
+	if (std::abs( deltaPos.y ) > std::abs( deltaPos.x )) {
+		*r_dynamic = r_dynamic->GetDisplaced( { deltaPos.x, 0.0f } );
+	}
+	else {
+		*r_dynamic = r_dynamic->GetDisplaced( { 0.0f, deltaPos.y } );
+	}
 }

@@ -17,6 +17,8 @@ namespace util {
 		Vec2& contact_point, Vec2& contact_normal, float& contact_time );
 
 	bool ResolveDynamicRectVsRect( RectF* r_dynamic, Vec2& vel, const float fTimeStep, RectF* r_static );
+
+	void DumbWay( RectF* r_dynamic, Vec2& vel, RectF* r_static );
 }
 
 #endif

@@ -72,9 +72,9 @@ void Entity::CollideRect( RectF rect )
 {
 	auto hbx = GetHitBox();
 
-	util::ResolveDynamicRectVsRect( &hbx, velocity, deltat, &rect );
+	util::DumbWay( &hbx, velocity, &rect );
 
-	pos = hbx.TopLeft();
+	SetPos( hbx.TopLeft() );
 }
 
 void Entity::ApplyDamage( int dmg )
@@ -97,6 +97,11 @@ void Entity::ApplyInvincibility( float dur )
 RectF Entity::GetHitBox() const
 {
 	return RectF(hitBox).GetDisplaced(pos);
+}
+
+void Entity::SetPos( const Vec2& nPos )
+{
+	pos = nPos - Vec2(hitBox.TopLeft());
 }
 
 void Entity::SetAnim( int animIndex )

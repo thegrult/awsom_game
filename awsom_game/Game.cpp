@@ -24,6 +24,21 @@ Game::Game()
 		"ABBBBBBBBBBBBBBBBBBA"
 		"ABBBBBBBBBBBBBBBBBBA"
 		"AAAAAAAAAAAAAAAAAAAA";
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ"
+		//"ZZZZZZZZZZZZZZZZZZZZ";
 
 	bg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, 20, 15, bgs );
 
@@ -125,7 +140,7 @@ bool Game::UpdateGame( const float dt )
 
 			for (auto ob : bgobs) {
 				if (ob.IsOverlappingWith( hbx )) {
-					e.ApplyDamage( 1 );
+					//e.ApplyDamage( 1 );
 					e.CollideRect( ob );
 				}
 			}
@@ -136,7 +151,7 @@ bool Game::UpdateGame( const float dt )
 
 			for (auto ob : bgobs) {
 				if (ob.IsOverlappingWith( hbx )) {
-					e.ApplyDamage( 1 );
+					//e.ApplyDamage( 1 );
 					e.CollideRect( ob );
 				}
 			}
@@ -149,7 +164,7 @@ bool Game::UpdateGame( const float dt )
 		auto hbx = elia->GetHitBox();
 		for (auto ob : bgobs) {
 			if (ob.IsOverlappingWith( hbx )) {
-				elia->ApplyDamage( 1 );
+				//elia->ApplyDamage( 1 );
 				elia->CollideRect( ob );
 			}
 		}
@@ -159,11 +174,12 @@ bool Game::UpdateGame( const float dt )
 		auto hbx = elia->GetHitBox();
 		for (auto ob : bgobs) {
 			if (ob.IsOverlappingWith( hbx )) {
-				elia->ApplyDamage( 1 );
+				//elia->ApplyDamage( 1 );
 				elia->CollideRect( ob );
 			}
 		}
 	}
+
 
 	//for (auto p : projectiles)
 	//{

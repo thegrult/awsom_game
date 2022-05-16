@@ -24,6 +24,8 @@ public:
 	bool IsDead() const { return state.isDead(); }
 
 private:
+	void SetPos( const Vec2& nPos );
+
 	void DisplaceBy( const Vec2 delta ) {	pos += delta;	}
 private:
 	//graphic things
