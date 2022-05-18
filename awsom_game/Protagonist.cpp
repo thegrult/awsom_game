@@ -8,11 +8,13 @@ Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite, SDL_Renderer* renderer
 
 void Protagonist::Update( float dt, const Uint8* kbd )
 {
-	if (coolDownTimer > 0)
-		coolDownTimer -= dt;
-	else coolDownTimer = 0;
-	if (action.action == Action::walking) {
+	action.Update( dt );
+	entity.Update( dt );
 
+	if (action.IsDoing( Action::dash )) {
+		entity.SetVel( dir.GetNormalized() * rollSpeed );
+	}
+	else if (action.IsDoing( Action::walk )) {
 		Vei2 direc = { 0,0 };
 
 		if (kbd[SDL_SCANCODE_W]) {
@@ -28,7 +30,7 @@ void Protagonist::Update( float dt, const Uint8* kbd )
 			direc.x += 1;
 		}
 
-		entity.SetVel( Vec2(direc).GetNormalized() * walkingSpeed );
+		entity.SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
 		SetDirection( (Vec2)direc );
 
 		if (direc != Vei2( 0, 0 )) {
@@ -39,11 +41,7 @@ void Protagonist::Update( float dt, const Uint8* kbd )
 			Dash();
 		}
 	}
-	else if (action.action == Action::dashing) {
-		entity.SetVel( dir.GetNormalized() * rollSpeed );
-	}
-	entity.Update( dt );
-	action.Update( dt );
+	else action.SetAction( Action::walk, 1.0f );
 }
 
 void Protagonist::SetDirection( const Vec2& dir )
@@ -71,7 +69,7 @@ void Protagonist::SetDirection( const Vec2& dir )
 
 void Protagonist::Dash()
 {
-	if (action.SetAction( Action::dashing, 0.2f, 1.0f )) {
+	if (action.SetAction( Action::dash, 0.2f, 1.0f )) {
 		entity.ApplyInvincibility( 0.2f );
 	}
 }
@@ -98,8 +96,7 @@ void Protagonist::ApplyDamage( int dmg )
 
 Projectile Protagonist::Shoot()
 {
-	if (!IsOnCooldown()) {
-		coolDownTimer += coolDown;
+	if (action.SetAction( Action::shoot, 0.0f, 0.5f )) {
 		float bulletSpeed = 100.0f;
 
 		const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
@@ -117,26 +114,33 @@ bool Protagonist::Action::SetAction( int act, float actDur, float cooldown )
 		valid = valid && a.first != act;
 	}
 	if (valid) {
-		action = act;
-		actionDur = actDur;
+		active.push_back( { act, actDur } );
 		cooldowns.push_back( { act, cooldown } );
 	}
 	return valid;
 }
 
+bool Protagonist::Action::IsDoing( int action )
+{
+	return std::any_of( active.begin(), active.end(), [&action](std::pair<int,float> p)
+		{
+			return p.first == action;
+		}
+	);
+}
+
 void Protagonist::Action::Update( float dt )
 {
-	if (action != walking) {
-		actionTimer += dt;
-		if (actionTimer >= actionDur) {
-			actionTimer = 0.0f;
-			action = walking;
-		}
-	}
 	for (int i = 0; i < cooldowns.size(); i++) {
 		cooldowns[i].second -= dt;
 		if (cooldowns[i].second <= 0.0f) {
 			cooldowns.erase( cooldowns.begin() + i );
+		}
+	}
+	for (int i = 0; i < active.size(); i++) {
+		active[i].second -= dt;
+		if (active[i].second <= 0.0f) {
+			active.erase( active.begin() + i );
 		}
 	}
 }

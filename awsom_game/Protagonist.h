@@ -22,24 +22,22 @@ public:
 private:
 	void SetDirection( const Vec2& dir );
 
-	bool IsOnCooldown() const {
-		return coolDownTimer > 0;
-	}
-
 	void Dash();
 private:
 	//state machine
-	struct Action {
+	class Action {
+	public:
 		enum{
-			walking,
-			dashing
+			walk,
+			dash,
+			shoot
 		};
-		int action = walking;
-		float actionDur = 0.5f;
-		float actionTimer = 0.0f;
 		//cooldown starts counting as soon as the action starts
 		bool SetAction( int action, float actDur, float coolDown = 0.0f );
+		bool IsDoing( int action );
 		void Update( float dt );
+	private:
+		std::vector<std::pair<int, float>> active;
 		std::vector<std::pair<int, float>> cooldowns;
 	};
 
@@ -49,8 +47,6 @@ private:
 private:
 	Action action;
 	//some stats for our protagonist
-	float coolDownTimer = 0.0f;
-	float coolDown = 0.5f;
 
 	float walkingSpeed = 50.0f;
 	float rollSpeed = 200.0f;
