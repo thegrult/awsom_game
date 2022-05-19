@@ -28,6 +28,8 @@ Surface::Surface( const std::string& path, SDL_Renderer* gRenderer )
 		}
 		else
 		{
+			SDL_SetTextureBlendMode( newTexture, SDL_BLENDMODE_BLEND );
+			SDL_SetTextureAlphaMod( newTexture, 0xff );
 			//Get image dimensions
 			width = loadedSurface->w;
 			height = loadedSurface->h;
@@ -101,6 +103,18 @@ void Surface::Draw( const Vei2& pos, SDL_Rect* clip ) const
 
 	//Render to screen
 	SDL_RenderCopy( renderer, texture, clip, &renderQuad );
+}
+
+void Surface::SetAlpha( const Uint8& newalpha )
+{
+	alpha = newalpha;
+
+	SDL_SetTextureAlphaMod( texture, alpha );
+}
+
+Uint8 Surface::GetAlpha()
+{
+	return alpha;
 }
 
 void Surface::FreeData()

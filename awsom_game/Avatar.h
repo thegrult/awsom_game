@@ -14,6 +14,7 @@ public:
 	}
 	void SetAnim( int animNum );
 	void Draw( const Vei2& drawPos ) const;
+	void DrawBlend( const Vei2& drawPos, const Uint8 alpha );
 	void SetRenderer( SDL_Renderer* newRenderer );
 	void Update( float dt );
 	SDL_Renderer* GetRenderer() const {

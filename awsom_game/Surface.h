@@ -22,6 +22,8 @@ public:
 	SDL_Rect GetRect() const;
 	SDL_Texture* Data() const;
 	void Draw(const Vei2& pos, SDL_Rect* clip = 0) const;
+	void SetAlpha( const Uint8& alpha );
+	Uint8 GetAlpha();
 	void FreeData();
 	bool LoadData( const std::string& filename );
 	void SetRenderer( SDL_Renderer* renderer );
@@ -33,4 +35,5 @@ private:
 	SDL_Texture* texture = nullptr;
 	int width = 0;
 	int height = 0;
+	Uint8 alpha = 0xff;
 };

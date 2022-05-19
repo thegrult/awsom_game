@@ -27,15 +27,14 @@ void Entity::SetVel( const Vec2& vel )
 
 void Entity::Draw()
 {
-	if ( state.IsDamaged()) {
+	if ( state.IsDamaged() ) {
 		const int index = avatar.CurIndex();
 		avatar.SetAnim( index + avatar.NAnim() );
 		avatar.Draw( (Vei2)pos );
 		avatar.SetAnim( index );
 	}
-	else if (IsDead()) {
-		avatar.SetAnim( avatar.NAnim() );
-		avatar.Draw( (Vei2)pos );
+	else if ( IsDead() ) {
+		avatar.DrawBlend( (Vei2)pos, 0xff );
 	}
 	else {
 		avatar.Draw( (Vei2)pos );

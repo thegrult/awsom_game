@@ -22,7 +22,6 @@ public:
 	RectF GetHitBox() const;
 	int GetAtk() const { return atk; }
 	bool IsDead() const { return state.isDead(); }
-
 private:
 	void SetPos( const Vec2& nPos );
 
@@ -39,6 +38,7 @@ private:
 			Normal,
 			Invincible,
 			Damaged,
+			Dying,
 			Dead,
 			Total
 		};

@@ -37,6 +37,16 @@ void Animation::Draw( const Vei2& pos ) const
 	SDL_RenderCopy( renderer, sprite->Data(), &srcRect, &renderQuad );
 }
 
+void Animation::DrawBlend( const Vei2& pos, const Uint8 alpha )
+{
+	const Uint8 prevAlpha = sprite->GetAlpha();
+	sprite->SetAlpha( alpha );
+
+	Draw( pos );
+
+	sprite->SetAlpha( prevAlpha );
+}
+
 void Animation::Update( float dt )
 {
 	curFrameTime += dt;
