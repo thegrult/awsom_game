@@ -41,7 +41,7 @@ void Protagonist::Update( float dt, const Uint8* kbd )
 			Dash();
 		}
 	}
-	else action.SetAction( Action::walk, 1.0f );
+	else action.Do( Action::walk, 1.0f );
 }
 
 void Protagonist::SetDirection( const Vec2& dir )
@@ -69,7 +69,7 @@ void Protagonist::SetDirection( const Vec2& dir )
 
 void Protagonist::Dash()
 {
-	if (action.SetAction( Action::dash, 0.2f, 1.0f )) {
+	if (action.Do( Action::dash, 0.2f, 1.0f )) {
 		entity.ApplyInvincibility( 0.2f );
 	}
 }
@@ -96,7 +96,7 @@ void Protagonist::ApplyDamage( int dmg )
 
 Projectile Protagonist::Shoot()
 {
-	if (action.SetAction( Action::shoot, 0.0f, 0.5f )) {
+	if (action.Do( Action::shoot, 0.0f, 0.5f )) {
 		float bulletSpeed = 100.0f;
 
 		const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
@@ -107,7 +107,7 @@ Projectile Protagonist::Shoot()
 	else return Projectile::Null();
 }
 
-bool Protagonist::Action::SetAction( int act, float actDur, float cooldown )
+bool Protagonist::Action::Do( int act, float actDur, float cooldown )
 {
 	bool valid = true;
 	for (auto a : cooldowns) {

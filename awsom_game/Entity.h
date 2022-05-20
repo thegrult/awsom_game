@@ -21,7 +21,8 @@ public:
 
 	RectF GetHitBox() const;
 	int GetAtk() const { return atk; }
-	bool IsDead() const { return state.isDead(); }
+	bool IsDead() const { return state.Is( State::Dead ); }
+	bool IsAlive() const { return !IsDead() && !state.Is( State::Dying ); }
 private:
 	void SetPos( const Vec2& nPos );
 
@@ -34,7 +35,7 @@ private:
 	//state machine for invicibility and damage effect
 	class State {
 	public:
-		enum class states {
+		enum states {
 			Normal,
 			Invincible,
 			Damaged,
@@ -43,40 +44,13 @@ private:
 			Total
 		};
 	private:
-		states state = states::Normal;
-		float stateTime;
-		float effectDur = 0.5f;
+		int state = states::Normal;
+		float stateTime = 0.5f;
 	public:
-		void Damage( float dur) {
-			state = states::Damaged;
-			effectDur = dur;
-		}
-		bool IsDamaged() {
-			return state == states::Damaged;
-		}
-		void ApplyInvincibility( float dur ) {
-			state = states::Invincible;
-			effectDur = dur;
-		}
-		bool IsInvincible() const{
-			return state == states::Invincible;
-		}
-		void Update( float dt ) {
-			if (state != states::Normal && state != states::Dead) {
-				stateTime += dt;
-				if (stateTime >= effectDur) {
-					stateTime = 0.0f;
-					effectDur = 0.0f;
-					state = states::Normal;
-				}
-			}
-		}
-		void Dead() {
-			state = states::Dead;
-		}
-		bool isDead()const {
-			return state == states::Dead;
-		}
+		void ChangeState( int newState, float stateDur );
+		bool Is( int isState ) const;
+		void Update( float dt );
+		float StateTimeLeft() const;
 	};
 
 	State state;
@@ -84,8 +58,8 @@ private:
 	RectI hitBox; //is integer because it is in sprite space
 	Vec2 pos;
 	Vec2 velocity = { 0,0 };
-	//last frame time for rect collision
-	float deltat = 0.0f;
+
+	static constexpr float fadeOutTime = 1.5f;
 
 	int hp = 10;
 	int atk = 2;

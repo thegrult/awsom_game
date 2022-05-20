@@ -9,14 +9,13 @@ Entity::Entity( const Vec2& spawnPos, const Vei2& readPos, int width, int height
 
 void Entity::Update( const float dt )
 {
-	deltat = dt;
-	if (!IsDead()) {
-		if (velocity != Vec2( 0.0f, 0.0f )) {
+	state.Update( dt );
+
+	if (IsAlive()) {
+		if( velocity != Vec2( 0.0f, 0.0f )) {
 			avatar.Update( dt );
 			pos += velocity * dt;
 		}
-
-		state.Update( dt );
 	}
 }
 
@@ -27,14 +26,16 @@ void Entity::SetVel( const Vec2& vel )
 
 void Entity::Draw()
 {
-	if ( state.IsDamaged() ) {
+	if ( state.Is( State::Damaged ) ) {
 		const int index = avatar.CurIndex();
 		avatar.SetAnim( index + avatar.NAnim() );
 		avatar.Draw( (Vei2)pos );
 		avatar.SetAnim( index );
 	}
-	else if ( IsDead() ) {
-		avatar.DrawBlend( (Vei2)pos, 0xff );
+	else if ( state.Is( State::Dying ) ) {
+		Uint8 alpha = 0xff;
+		alpha *= Uint8(state.StateTimeLeft() / fadeOutTime);
+		avatar.DrawBlend( (Vei2)pos, alpha );
 	}
 	else {
 		avatar.Draw( (Vei2)pos );
@@ -78,19 +79,19 @@ void Entity::CollideRect( RectF rect )
 
 void Entity::ApplyDamage( int dmg )
 {
-	if (!state.IsInvincible() && !state.IsDamaged()) {
+	if (!state.Is( State::Invincible ) && !state.Is( State::Damaged )) {
 		hp -= dmg;
-		state.Damage( 0.5f );
+		state.ChangeState( State::Damaged, 0.5f );
 
 		if (hp <= 0) {
-			state.Dead();
+			state.ChangeState( State::Dying, fadeOutTime );
 		}
 	}
 }
 
 void Entity::ApplyInvincibility( float dur )
 {
-	state.ApplyInvincibility( dur );
+	state.ChangeState( State::Invincible, dur );
 }
 
 RectF Entity::GetHitBox() const
@@ -106,4 +107,39 @@ void Entity::SetPos( const Vec2& nPos )
 void Entity::SetAnim( int animIndex )
 {
 	avatar.SetAnim( animIndex );
+}
+
+void Entity::State::ChangeState( int newState, float stateDur )
+{
+	state = newState;
+	stateTime = stateDur;
+}
+
+bool Entity::State::Is( int isState ) const
+{
+	return state == isState;
+}
+
+void Entity::State::Update( float dt )
+{
+	if ( state != states::Normal && state != states::Dead ) {
+		if (state != states::Dying) {
+			stateTime -= dt;
+			if (stateTime <= 0.0f) {
+				stateTime = 0.0f;
+				state = states::Normal;
+			}
+		}
+		else {
+			stateTime -= dt;
+			if (stateTime <= 0.0f) {
+				state = states::Dead;
+			}
+		}
+	}
+}
+
+float Entity::State::StateTimeLeft() const
+{
+	return stateTime;
 }
