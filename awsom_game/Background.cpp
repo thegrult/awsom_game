@@ -34,6 +34,12 @@ void Background::Draw()
 			sprite->Draw( Vei2( x * tilew, y * tileh ) + drawStartPos, &clip );
 		}
 	}
+#ifdef _DEBUG //debug mode
+	for (auto a : obstacles) {
+		const auto r = SDL_Rect( a );
+		SDL_RenderDrawRect( sprite->GetRenderer(), &r );
+	}
+#endif
 }
 
 bool Background::IsColliding( RectI hitBox )

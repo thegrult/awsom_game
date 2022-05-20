@@ -26,16 +26,18 @@ void Entity::SetVel( const Vec2& vel )
 
 void Entity::Draw()
 {
-	if ( state.Is( State::Damaged ) ) {
+	if ( state.Is( State::Dead ) ) {}
+	else if ( state.Is( State::Damaged ) ) {
 		const int index = avatar.CurIndex();
 		avatar.SetAnim( index + avatar.NAnim() );
 		avatar.Draw( (Vei2)pos );
 		avatar.SetAnim( index );
 	}
 	else if ( state.Is( State::Dying ) ) {
-		Uint8 alpha = 0xff;
-		alpha *= Uint8(state.StateTimeLeft() / fadeOutTime);
-		avatar.DrawBlend( (Vei2)pos, alpha );
+		Uint32 alpha = 0xff;
+		alpha *= Uint32( state.StateTimeLeft() * 1000 );
+		alpha /= Uint32( deathAnimTime * 1000 );
+		avatar.DrawBlend( (Vei2)pos, Uint8( alpha ) );
 	}
 	else {
 		avatar.Draw( (Vei2)pos );
@@ -79,12 +81,13 @@ void Entity::CollideRect( RectF rect )
 
 void Entity::ApplyDamage( int dmg )
 {
-	if (!state.Is( State::Invincible ) && !state.Is( State::Damaged )) {
+	if (!state.Is( State::Invincible ) && !state.Is( State::Damaged ) && IsAlive()) {
 		hp -= dmg;
 		state.ChangeState( State::Damaged, 0.5f );
 
 		if (hp <= 0) {
-			state.ChangeState( State::Dying, fadeOutTime );
+			state.ChangeState( State::Dying, deathAnimTime );
+			atk = 0;
 		}
 	}
 }
@@ -123,19 +126,16 @@ bool Entity::State::Is( int isState ) const
 void Entity::State::Update( float dt )
 {
 	if ( state != states::Normal && state != states::Dead ) {
+		stateTime -= dt;
 		if (state != states::Dying) {
-			stateTime -= dt;
 			if (stateTime <= 0.0f) {
 				stateTime = 0.0f;
 				state = states::Normal;
 			}
 		}
-		else {
-			stateTime -= dt;
-			if (stateTime <= 0.0f) {
+		else if (stateTime <= 0.0f) {
 				state = states::Dead;
 			}
-		}
 	}
 }
 

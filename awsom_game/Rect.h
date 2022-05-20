@@ -1,8 +1,7 @@
 #pragma once
+#include "SDL.h"
 
 #include "Vec2.h"
-
-struct SDL_Rect;
 
 template<typename T>
 class Rect
@@ -30,10 +29,10 @@ public:
 		Rect( topLeft, topLeft + _Vec2<T>( width, height ) )
 	{
 	}
-	//Rect( const SDL_Rect& rect )
-	//	:
-	//	Rect( {rect.x, rect.y}, rect.w, rect.h )
-	//{}
+	Rect( const SDL_Rect& rect )
+		:
+		Rect( {rect.x, rect.y}, rect.w, rect.h )
+	{}
 
 	bool IsOverlappingWith( const Rect& other ) const
 	{
@@ -97,10 +96,10 @@ public:
 	{
 		return left > right || top > bottom;
 	}
-	////commenting this out until I find how to make it work
-	//explicit operator SDL_Rect() const{
-	//	return SDL_Rect{ int( left ), int( top ), int( right - left ), int( bottom - top ) };
-	//}
+
+	explicit operator SDL_Rect() const{
+		return SDL_Rect{ int( left ), int( top ), int( right - left ), int( bottom - top ) };
+	}
 public:
 	T left;
 	T right;

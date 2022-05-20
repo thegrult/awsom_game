@@ -8,40 +8,42 @@ Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite, SDL_Renderer* renderer
 
 void Protagonist::Update( float dt, const Uint8* kbd )
 {
-	action.Update( dt );
-	entity.Update( dt );
+	if (entity.IsAlive()) {
+		action.Update( dt );
+		entity.Update( dt );
 
-	if (action.IsDoing( Action::dash )) {
-		entity.SetVel( dir.GetNormalized() * rollSpeed );
+		if (action.IsDoing( Action::dash )) {
+			entity.SetVel( dir.GetNormalized() * rollSpeed );
+		}
+		else if (action.IsDoing( Action::walk )) {
+			Vei2 direc = { 0,0 };
+
+			if (kbd[SDL_SCANCODE_W]) {
+				direc.y -= 1;
+			}
+			if (kbd[SDL_SCANCODE_S]) {
+				direc.y += 1;
+			}
+			if (kbd[SDL_SCANCODE_A]) {
+				direc.x -= 1;
+			}
+			if (kbd[SDL_SCANCODE_D]) {
+				direc.x += 1;
+			}
+
+			entity.SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
+			SetDirection( (Vec2)direc );
+
+			if (direc != Vei2( 0, 0 )) {
+				dir = (Vec2)direc;
+			}
+
+			if (kbd[SDL_SCANCODE_LSHIFT]) {
+				Dash();
+			}
+		}
+		else action.Do( Action::walk, 1.0f );
 	}
-	else if (action.IsDoing( Action::walk )) {
-		Vei2 direc = { 0,0 };
-
-		if (kbd[SDL_SCANCODE_W]) {
-			direc.y -= 1;
-		}
-		if (kbd[SDL_SCANCODE_S]) {
-			direc.y += 1;
-		}
-		if (kbd[SDL_SCANCODE_A]) {
-			direc.x -= 1;
-		}
-		if (kbd[SDL_SCANCODE_D]) {
-			direc.x += 1;
-		}
-
-		entity.SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
-		SetDirection( (Vec2)direc );
-
-		if (direc != Vei2( 0, 0 )) {
-			dir = (Vec2)direc;
-		}
-
-		if (kbd[SDL_SCANCODE_LSHIFT]) {
-			Dash();
-		}
-	}
-	else action.Do( Action::walk, 1.0f );
 }
 
 void Protagonist::SetDirection( const Vec2& dir )

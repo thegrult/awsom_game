@@ -59,7 +59,7 @@ private:
 	Vec2 pos;
 	Vec2 velocity = { 0,0 };
 
-	static constexpr float fadeOutTime = 1.5f;
+	static constexpr float deathAnimTime = 1.5f;
 
 	int hp = 10;
 	int atk = 2;

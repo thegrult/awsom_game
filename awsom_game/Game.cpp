@@ -252,14 +252,6 @@ void Game::Draw()
 		p.Draw();
 	}
 
-#ifdef _DEBUG
-	const auto j = GetScreenRect().GetExpanded( toleranceregion );
-	SDL_Rect border = { j.TopLeft().x, j.TopLeft().y, j.GetDim().x, j.GetDim().y };
-	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
-	SDL_RenderDrawRect( gRenderer, &border );
-	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0xFF, 0xFF );
-#endif //  _DEBUG
-
 	fg->Draw();
 	//Update screen
 	SDL_RenderPresent( gRenderer );
