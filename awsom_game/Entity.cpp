@@ -4,7 +4,8 @@ Entity::Entity( const Vec2& spawnPos, const Vei2& readPos, int width, int height
 	:
 	avatar( readPos, width, height, framecount, animcount, sprite, holdTime, renderer),
 	pos(spawnPos),
-	hitBox(hitBox)
+	hitBox(hitBox),
+	drawingBox( { 0,0 }, width, height )
 {}
 
 void Entity::Update( const float dt )
@@ -24,32 +25,34 @@ void Entity::SetVel( const Vec2& vel )
 	velocity = vel;
 }
 
-void Entity::Draw( const Vei2& camPos )
+void Entity::Draw( const Camera& cam )
 {
-	if ( state.Is( State::Dead ) ) {}
-	else if ( state.Is( State::Damaged ) ) {
-		const int index = avatar.CurIndex();
-		avatar.SetAnim( index + avatar.NAnim() );
-		avatar.Draw( (Vei2)pos - camPos );
-		avatar.SetAnim( index );
-	}
-	else if ( state.Is( State::Dying ) ) {
-		Uint32 alpha = 0xff;
-		alpha *= Uint32( state.StateTimeLeft() * 1000 );
-		alpha /= Uint32( deathAnimTime * 1000 );
-		avatar.DrawBlend( (Vei2)pos - camPos, Uint8( alpha ) );
-	}
-	else {
-		avatar.Draw( (Vei2)pos - camPos );
-	}
+	if ( drawingBox.GetDisplaced( (Vei2)pos ).IsOverlappingWith( cam.GetFocus() ) ) {
+		if (state.Is( State::Dead )) {}
+		else if (state.Is( State::Damaged )) {
+			const int index = avatar.CurIndex();
+			avatar.SetAnim( index + avatar.NAnim() );
+			avatar.Draw( (Vei2)pos - cam.GetPos() );
+			avatar.SetAnim( index );
+		}
+		else if (state.Is( State::Dying )) {
+			Uint32 alpha = 0xff;
+			alpha *= Uint32( state.StateTimeLeft() * 1000 );
+			alpha /= Uint32( deathAnimTime * 1000 );
+			avatar.DrawBlend( (Vei2)pos - cam.GetPos(), Uint8( alpha ) );
+		}
+		else {
+			avatar.Draw( (Vei2)pos - cam.GetPos() );
+		}
 
 #ifdef _DEBUG
-	const auto j = GetHitBox().GetDisplaced((Vec2)-camPos);
-	SDL_Rect HitBox = { int(j.TopLeft().x), (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
-	SDL_Renderer* renderer = avatar.GetRenderer();
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
-	SDL_RenderDrawRect( renderer, &HitBox );
+		const auto j = GetHitBox().GetDisplaced( (Vec2)-cam.GetPos() );
+		SDL_Rect HitBox = { int( j.TopLeft().x ), (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
+		SDL_Renderer* renderer = avatar.GetRenderer();
+		SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
+		SDL_RenderDrawRect( renderer, &HitBox );
 #endif // DEBUG
+	}
 }
 
 void Entity::ClampToRect( RectF rect )

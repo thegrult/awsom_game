@@ -1,5 +1,6 @@
 #pragma once
 #include "Avatar.h"
+#include "Camera.h"
 #include "Utilities.h"
 
 class Entity {
@@ -7,7 +8,7 @@ public:
 	//hitbox is considered in frame space
 	Entity( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int framecount, int animcount, Surface* sprite, SDL_Renderer* renderer, RectI hitBox );
 
-	void Draw( const Vei2& camPos );
+	void Draw( const Camera& cam );
 
 	void Update( const float dt );
 
@@ -31,6 +32,7 @@ private:
 	//graphic things
 	static constexpr float holdTime = 0.1f;
 	Avatar avatar;
+	RectI drawingBox;
 
 	//state machine for invicibility and damage effect
 	class State {

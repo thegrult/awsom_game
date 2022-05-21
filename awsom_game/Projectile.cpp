@@ -14,8 +14,9 @@ Projectile::Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewid
 	dmg(dmg)
 {}
 
-void Projectile::Draw( const Vei2& camPos ) const
+void Projectile::Draw( const Camera& cam ) const
 {
+	const auto camPos = cam.GetPos();
 	if (IsExploding())
 		explanim.Draw( (Vei2)pos - camPos );
 	else

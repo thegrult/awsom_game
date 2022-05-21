@@ -27,8 +27,9 @@ Background::Background( Surface* sprite, int width, int height, Vei2 readPos, Ve
 	}
 }
 
-void Background::Draw( const Vei2& camPos ) const
+void Background::Draw( const Camera& cam ) const
 {
+	const auto camPos = cam.GetPos();
 	for (int y = 0; y < gridh; y++) {
 		for (int x = 0; x < gridw; x++) {
 			const auto j = tiles[x + y * gridw];

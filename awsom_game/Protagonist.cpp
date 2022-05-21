@@ -74,7 +74,7 @@ void Protagonist::Dash()
 	}
 }
 
-void Protagonist::Draw( const Vei2& camPos )
+void Protagonist::Draw( const Camera& camPos )
 {
 	entity.Draw( camPos );
 }

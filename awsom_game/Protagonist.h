@@ -8,7 +8,7 @@ public:
 	Protagonist( Vec2 spawnPos, Surface* Sprite, SDL_Renderer* renderer );
 
 	void Update( float dt, const Uint8* kbdStates );
-	void Draw( const Vei2& camPos );
+	void Draw( const Camera& camPos );
 
 	RectI GetHitBox() const;
 	void ClampToRect( RectI rect );

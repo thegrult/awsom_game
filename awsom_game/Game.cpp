@@ -192,22 +192,22 @@ void Game::Draw()
 	//Clear screen
 	SDL_RenderClear( gRenderer );
 
-	bg->Draw( cam.GetPos() );
+	bg->Draw( cam );
 
 	//draw character
-	elia->Draw( cam.GetPos() );
+	elia->Draw( cam );
 
 	//elia->ApplyDamage();
 
 	for (Entity& e : enemies) {
-		e.Draw( cam.GetPos() );
+		e.Draw( cam );
 	}
 
 	for (const Projectile& p : projectiles) {
-		p.Draw( cam.GetPos() );
+		p.Draw( cam );
 	}
 
-	fg->Draw( cam.GetPos() );
+	fg->Draw( cam );
 	//Update screen
 	SDL_RenderPresent( gRenderer );
 }
