@@ -1,6 +1,6 @@
 #include "Background.h"
 
-Background::Background( Surface* sprite, int width, int height, Vei2 readPos, Vei2 drawStartPos, int gridw, int gridh, std::string map )
+Background::Background( Surface* sprite, int width, int height, Vei2 readPos, Vei2 drawStartPos, int gridw, int gridh, std::ifstream& map )
 	:
 	sprite( sprite ),
 	tilew( width ),
@@ -11,10 +11,12 @@ Background::Background( Surface* sprite, int width, int height, Vei2 readPos, Ve
 {
 	tiles.reserve( gridw * gridh );
 
-	auto mi = map.cbegin();
-	
-	for (int n = 0; n < gridw * gridh; n++, mi++) {
-		auto entry = BgStringConverter::Convert( *mi );
+	char tile;
+
+	map >> tile;
+
+	for (int n = 0; n < gridw * gridh; n++, map >> tile) {
+		auto entry = BgStringConverter::Convert( tile );
 		tiles.push_back( std::move( entry.first.GetDisplaced( readPos ) ) );
 		if (!entry.second.IsDegenerate())
 		{
