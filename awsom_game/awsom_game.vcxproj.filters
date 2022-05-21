@@ -107,4 +107,12 @@
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="resources\bgmap.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="resources\fgmap.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

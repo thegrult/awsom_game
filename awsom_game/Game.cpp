@@ -40,7 +40,7 @@ Game::Game()
 		//"ZZZZZZZZZZZZZZZZZZZZ"
 		//"ZZZZZZZZZZZZZZZZZZZZ";
 
-	bg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, 20, 15, bgs );
+	bg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, LEVEL_WIDTH/32, LEVEL_HEIGHT/32, bgs );
 
 	std::string fgs = 
 		"ZAAAAAAAAAAAAAAAAAAZ"
@@ -59,7 +59,7 @@ Game::Game()
 		"ZAAAAAAAAAAAAAAAAAAZ"
 		"ZZZZZZZZZZZZZZZZZZZZ";
 
-	fg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, 20, 15, fgs );
+	fg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, LEVEL_WIDTH/32, LEVEL_HEIGHT/32, fgs );
 
 	for (int i = 0; i < nEnemies; i++) {
 		enemies.push_back( Entity{ { xDist( rng ), yDist( rng ) }, { 256,0 }, 32, 32, 8, 4, spriteSheet, gRenderer, {11, 21, 24, 32} } );

@@ -30,6 +30,9 @@ private:
 	const int SCREEN_WIDTH = 640;
 	const int SCREEN_HEIGHT = 480;
 
+	const int LEVEL_WIDTH = 1024;
+	const int LEVEL_HEIGHT = 512;
+
 	//The window we'll be rendering to
 	Window window;
 
