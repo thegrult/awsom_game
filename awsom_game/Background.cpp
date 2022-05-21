@@ -27,18 +27,18 @@ Background::Background( Surface* sprite, int width, int height, Vei2 readPos, Ve
 	}
 }
 
-void Background::Draw()
+void Background::Draw( const Vei2& camPos ) const
 {
 	for (int y = 0; y < gridh; y++) {
 		for (int x = 0; x < gridw; x++) {
 			const auto j = tiles[x + y * gridw];
 			SDL_Rect clip = { j.TopLeft().x, j.TopLeft().y, j.GetDim().x, j.GetDim().y };
-			sprite->Draw( Vei2( x * tilew, y * tileh ) + drawStartPos, &clip );
+			sprite->Draw( Vei2( x * tilew, y * tileh ) + drawStartPos - camPos, &clip );
 		}
 	}
 #ifdef _DEBUG //debug mode
 	for (auto a : obstacles) {
-		const auto r = SDL_Rect( a );
+		const auto r = SDL_Rect( a.GetDisplaced( -camPos ) );
 		SDL_RenderDrawRect( sprite->GetRenderer(), &r );
 	}
 #endif

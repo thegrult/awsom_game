@@ -7,7 +7,7 @@ public:
 	//hitbox is considered in frame space
 	Entity( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int framecount, int animcount, Surface* sprite, SDL_Renderer* renderer, RectI hitBox );
 
-	void Draw();
+	void Draw( const Vei2& camPos );
 
 	void Update( const float dt );
 

@@ -9,7 +9,7 @@ class Background {
 public:
 	Background( Surface* tiles, int tilewidth, int tileheight, Vei2 readPos, Vei2 drawStartPos, int gridw, int gridh, std::ifstream& map );
 
-	void Draw();
+	void Draw( const Vei2& camPos ) const;
 
 	bool IsColliding( RectI hitBox );
 

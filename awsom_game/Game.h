@@ -7,6 +7,7 @@
 #include "Protagonist.h"
 #include "FrameTimer.h"
 #include "Background.h"
+#include "Camera.h"
 #include <random>
 
 class Game {
@@ -31,7 +32,7 @@ private:
 	const int SCREEN_HEIGHT = 480;
 
 	const int LEVEL_WIDTH = 1024;
-	const int LEVEL_HEIGHT = 512;
+	const int LEVEL_HEIGHT = 1024;
 
 	//The window we'll be rendering to
 	Window window;
@@ -49,8 +50,8 @@ private:
 
 	//rnd int generator
 	std::mt19937 rng{ std::random_device()() };
-	std::uniform_real_distribution<float> xDist = std::uniform_real_distribution<float>(0.0f, float(SCREEN_WIDTH));
-	std::uniform_real_distribution<float> yDist = std::uniform_real_distribution<float>(0.0f, float(SCREEN_HEIGHT));
+	std::uniform_real_distribution<float> xDist = std::uniform_real_distribution<float>(0.0f, float(LEVEL_WIDTH));
+	std::uniform_real_distribution<float> yDist = std::uniform_real_distribution<float>(0.0f, float(LEVEL_HEIGHT));
 
 	//utilities
 	FrameTimer ft;
@@ -62,6 +63,8 @@ private:
 	Background* bg = nullptr;
 	Background* fg = nullptr;
 
+	Camera cam;
+
 	//actual game stuff
 	Protagonist* elia = nullptr;
 
@@ -69,5 +72,5 @@ private:
 
 	std::vector<Projectile> projectiles;
 
-	const int nEnemies = 3;
+	const int nEnemies = 20;
 };

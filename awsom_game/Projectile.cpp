@@ -14,16 +14,15 @@ Projectile::Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewid
 	dmg(dmg)
 {}
 
-void Projectile::Draw() const
+void Projectile::Draw( const Vei2& camPos ) const
 {
 	if (IsExploding())
-		explanim.Draw( (Vei2)pos );
+		explanim.Draw( (Vei2)pos - camPos );
 	else
-		animation.Draw( (Vei2)pos );
+		animation.Draw( (Vei2)pos - camPos );
 
 #ifdef _DEBUG
-
-	const auto j = GetHitBox();
+	const auto j = GetHitBox().GetDisplaced( (Vec2)-camPos );
 	SDL_Rect HitBox = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
 	SDL_Renderer* renderer = animation.GetRenderer();
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );

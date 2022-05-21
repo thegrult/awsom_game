@@ -24,27 +24,27 @@ void Entity::SetVel( const Vec2& vel )
 	velocity = vel;
 }
 
-void Entity::Draw()
+void Entity::Draw( const Vei2& camPos )
 {
 	if ( state.Is( State::Dead ) ) {}
 	else if ( state.Is( State::Damaged ) ) {
 		const int index = avatar.CurIndex();
 		avatar.SetAnim( index + avatar.NAnim() );
-		avatar.Draw( (Vei2)pos );
+		avatar.Draw( (Vei2)pos - camPos );
 		avatar.SetAnim( index );
 	}
 	else if ( state.Is( State::Dying ) ) {
 		Uint32 alpha = 0xff;
 		alpha *= Uint32( state.StateTimeLeft() * 1000 );
 		alpha /= Uint32( deathAnimTime * 1000 );
-		avatar.DrawBlend( (Vei2)pos, Uint8( alpha ) );
+		avatar.DrawBlend( (Vei2)pos - camPos, Uint8( alpha ) );
 	}
 	else {
-		avatar.Draw( (Vei2)pos );
+		avatar.Draw( (Vei2)pos - camPos );
 	}
 
 #ifdef _DEBUG
-	const auto j = GetHitBox();
+	const auto j = GetHitBox().GetDisplaced((Vec2)-camPos);
 	SDL_Rect HitBox = { int(j.TopLeft().x), (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
 	SDL_Renderer* renderer = avatar.GetRenderer();
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
@@ -83,6 +83,7 @@ void Entity::ApplyDamage( int dmg )
 {
 	if (!state.Is( State::Invincible ) && !state.Is( State::Damaged ) && IsAlive()) {
 		hp -= dmg;
+		if( dmg > 0 )
 		state.ChangeState( State::Damaged, 0.5f );
 
 		if (hp <= 0) {

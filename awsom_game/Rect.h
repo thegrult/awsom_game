@@ -53,8 +53,8 @@ public:
 
 	static Rect<T> FromCenter( const _Vec2<T>& center, T halfWidth, T halfHeight )
 	{
-		  const Vec2 half( halfWidth, halfHeight );
-		  return RectF( center - half, center + half );
+		  const _Vec2<T> half( halfWidth, halfHeight );
+		  return Rect<T>( center - half, center + half );
 	}
 
 	Rect<T> GetExpanded( T offset ) const

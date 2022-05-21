@@ -10,7 +10,7 @@ public:
 	Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int normalFramesCount, int explosionFramesCount, float holdTime, Surface* sprite,
 				SDL_Renderer* renderer, RectI hitBox, float range, Vec2 velocity, int dmg );
 
-	void Draw() const;
+	void Draw( const Vei2& camPos ) const;
 
 	void Update( float dt );
 	RectF GetHitBox() const;

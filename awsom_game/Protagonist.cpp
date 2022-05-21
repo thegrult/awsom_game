@@ -76,9 +76,9 @@ void Protagonist::Dash()
 	}
 }
 
-void Protagonist::Draw()
+void Protagonist::Draw( const Vei2& camPos )
 {
-	entity.Draw();
+	entity.Draw( camPos );
 }
 
 RectI Protagonist::GetHitBox() const

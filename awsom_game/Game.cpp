@@ -1,6 +1,8 @@
 #include "Game.h"
 
 Game::Game()
+	:
+	cam( GetScreenRect().GetCenter(), RectI({0,0}, SCREEN_WIDTH, SCREEN_HEIGHT), RectI( {0,0}, LEVEL_WIDTH, LEVEL_HEIGHT) )
 {
 	init();
 	//BEWARE! gRenderer is null before the call to loadMedia!
@@ -82,7 +84,6 @@ bool Game::UpdateGame( const float dt )
 
 	for (Entity&e : enemies) {
 		e.Update( dt );
-		e.ClampToRect( GetScreenRect().GetExpanded( toleranceregion ) );
 
 		if (elia->GetHitBox().IsOverlappingWith( e.GetHitBox() )) {
 			elia->ApplyDamage(e.GetAtk());
@@ -113,13 +114,11 @@ bool Game::UpdateGame( const float dt )
 		}
 	}
 
-
 	{
 		const auto bgobs = bg->GetObstacles();
 		auto hbx = elia->GetHitBox();
 		for (auto ob : bgobs) {
 			if (ob.IsOverlappingWith( hbx )) {
-				//elia->ApplyDamage( 1 );
 				elia->CollideRect( ob );
 			}
 		}
@@ -129,7 +128,6 @@ bool Game::UpdateGame( const float dt )
 		auto hbx = elia->GetHitBox();
 		for (auto ob : bgobs) {
 			if (ob.IsOverlappingWith( hbx )) {
-				//elia->ApplyDamage( 1 );
 				elia->CollideRect( ob );
 			}
 		}
@@ -182,6 +180,8 @@ bool Game::UpdateGame( const float dt )
 			} ), enemies.end()
 	);
 
+	cam.CenterOnPoint( elia->GetHitBox().GetCenter() );
+
 	printf( "%f", dt);
 
 	return quit;
@@ -192,22 +192,22 @@ void Game::Draw()
 	//Clear screen
 	SDL_RenderClear( gRenderer );
 
-	bg->Draw();
+	bg->Draw( cam.GetPos() );
 
 	//draw character
-	elia->Draw();
+	elia->Draw( cam.GetPos() );
 
 	//elia->ApplyDamage();
 
 	for (Entity& e : enemies) {
-		e.Draw();
+		e.Draw( cam.GetPos() );
 	}
 
 	for (const Projectile& p : projectiles) {
-		p.Draw();
+		p.Draw( cam.GetPos() );
 	}
 
-	fg->Draw();
+	fg->Draw( cam.GetPos() );
 	//Update screen
 	SDL_RenderPresent( gRenderer );
 }
