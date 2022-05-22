@@ -1,14 +1,14 @@
 #include "Entity.h"
 
-Entity::Entity( const Vec2& spawnPos, const Vei2& readPos, int width, int height, int framecount, int animcount, Surface* sprite, SDL_Renderer* renderer, RectI hitBox )
+Entity::Entity( const Vec2& spawnPos, const Vei2& readPos, int width, int height, int framecount, int animcount, Surface* sprite, RectI hitBox )
 	:
-	avatar( readPos, width, height, framecount, animcount, sprite, holdTime, renderer),
+	avatar( readPos, width, height, framecount, animcount, sprite, holdTime ),
 	pos(spawnPos),
 	hitBox(hitBox),
 	drawingBox( { 0,0 }, width, height )
 {}
 
-void Entity::Update( const float dt )
+void Entity::Update( const float dt, const Vec2& )
 {
 	state.Update( dt );
 
@@ -106,6 +106,11 @@ RectF Entity::GetHitBox() const
 	return RectF(hitBox).GetDisplaced(pos);
 }
 
+Vec2 Entity::GetPos() const
+{
+	return GetHitBox().GetCenter();
+}
+
 void Entity::SetPos( const Vec2& nPos )
 {
 	pos = nPos - Vec2(hitBox.TopLeft());
@@ -118,8 +123,10 @@ void Entity::SetAnim( int animIndex )
 
 void Entity::State::ChangeState( int newState, float stateDur )
 {
-	state = newState;
-	stateTime = stateDur;
+	if (state != State::Dead) {
+		state = newState;
+		stateTime = stateDur;
+	}
 }
 
 bool Entity::State::Is( int isState ) const

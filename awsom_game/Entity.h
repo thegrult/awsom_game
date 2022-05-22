@@ -6,11 +6,11 @@
 class Entity {
 public:
 	//hitbox is considered in frame space
-	Entity( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int framecount, int animcount, Surface* sprite, SDL_Renderer* renderer, RectI hitBox );
+	Entity( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int framecount, int animcount, Surface* sprite, RectI hitBox );
 
 	void Draw( const Camera& cam );
 
-	void Update( const float dt );
+	virtual void Update( const float dt, const Vec2& );
 
 	void SetVel( const Vec2& vel );
 	void SetAnim( int animIndex );
@@ -21,6 +21,7 @@ public:
 	void ApplyInvincibility( float dur );
 
 	RectF GetHitBox() const;
+	Vec2 GetPos() const;
 	int GetAtk() const { return atk; }
 	bool IsDead() const { return state.Is( State::Dead ); }
 	bool IsAlive() const { return !IsDead() && !state.Is( State::Dying ); }
@@ -28,13 +29,15 @@ private:
 	void SetPos( const Vec2& nPos );
 
 	void DisplaceBy( const Vec2 delta ) {	pos += delta;	}
-private:
+protected:
 	//graphic things
 	static constexpr float holdTime = 0.1f;
 	Avatar avatar;
 	RectI drawingBox;
 
-	//state machine for invicibility and damage effect
+	static constexpr float deathAnimTime = 1.5f;
+protected:
+	//state machine controlling life and death - for actions we'll reuse protagonist::action in each child class
 	class State {
 	public:
 		enum states {
@@ -60,8 +63,6 @@ private:
 	RectI hitBox; //is integer because it is in sprite space
 	Vec2 pos;
 	Vec2 velocity = { 0,0 };
-
-	static constexpr float deathAnimTime = 1.5f;
 
 	int hp = 10;
 	int atk = 2;

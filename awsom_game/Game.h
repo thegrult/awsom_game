@@ -3,8 +3,8 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include "Window.h"
-#include "Entity.h"
 #include "Protagonist.h"
+#include "Bandit.h"
 #include "FrameTimer.h"
 #include "Background.h"
 #include "Camera.h"
@@ -68,9 +68,9 @@ private:
 	//actual game stuff
 	Protagonist* elia = nullptr;
 
-	std::vector<Entity> enemies;
+	std::vector<Bandit> enemies;
 
 	std::vector<Projectile> projectiles;
 
-	const int nEnemies = 20;
+	const int nEnemies = 5;
 };
