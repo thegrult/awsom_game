@@ -1,11 +1,11 @@
 #include "Avatar.h"
 
-Avatar::Avatar( const Vei2& pos, int width, int height, int framecount, int animcount, Surface* sprite, float holdTime, SDL_Renderer* renderer )
+Avatar::Avatar( const Vei2& pos, int width, int height, int framecount, int animcount, Surface* sprite, float holdTime )
 	:
 	width(width),
 	height(height),
 	animCount(animcount),
-	animation( pos, width, height, framecount, sprite, holdTime, renderer )
+	animation( pos, width, height, framecount, sprite, holdTime, sprite->GetRenderer() )
 {}
 
 void Avatar::SetAnim( int newAnimIndex )

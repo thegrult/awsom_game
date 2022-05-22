@@ -149,9 +149,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Action.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Avatar.cpp" />
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Bandit.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FrameTimer.cpp" />
@@ -164,9 +166,11 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Action.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Avatar.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="Bandit.h" />
     <ClInclude Include="bgstringconverter.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Entity.h" />

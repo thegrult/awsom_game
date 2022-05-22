@@ -1,7 +1,7 @@
 #include "Projectile.h"
 
 Projectile::Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int normalFramesCount, int explosionFrameCount,
-	float holdTime, Surface* sprite, SDL_Renderer* renderer, RectI hitBox, float range, Vec2 velocity, int dmg )
+	float holdTime, Surface* sprite, SDL_Renderer* renderer, const RectI& hitBox, float range, const Vec2& velocity, int dmg, bool isFriend )
 	:
 	hitBox( hitBox ),
 	range( range ),
@@ -11,7 +11,8 @@ Projectile::Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewid
 	expldur( explosionFrameCount* holdTime ),
 	pos( startPos ),
 	vel( velocity ),
-	dmg(dmg)
+	dmg(dmg),
+	isFriend(isFriend)
 {}
 
 void Projectile::Draw( const Camera& cam ) const
@@ -86,7 +87,7 @@ bool Projectile::operator==( const Projectile& rhs ) const
 
  Projectile Projectile::Null()
  {
-	 return Projectile( Vec2( -1.0f,-1.0f ), Vei2( -1,-1 ), -1, -1, -1, -1, -1.0f, nullptr, nullptr, {-1,-1,-1,-1}, -1.0f, {0.0f, 0.0f}, -1);
+	 return Projectile( Vec2( -1.0f,-1.0f ), Vei2( -1,-1 ), -1, -1, -1, -1, -1.0f, nullptr, nullptr, {-1,-1,-1,-1}, -1.0f, {0.0f, 0.0f}, -1, false);
  }
 
  bool Projectile::IsNull( Projectile p )

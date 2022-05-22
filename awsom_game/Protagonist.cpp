@@ -1,15 +1,15 @@
 #include "Protagonist.h"
 
-Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite, SDL_Renderer* renderer )
+Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite )
 	:
-	entity( spawnPos, {0,0}, 32, 32, 8, 9, sprite, renderer, { 12, 20, 24, 32 } ),
+	entity( spawnPos, {0,0}, 32, 32, 8, 9, sprite, { 12, 20, 24, 32 } ),
 	sprite(sprite)
 {}
 
 void Protagonist::Update( float dt, const Uint8* kbd )
 {
 	action.Update( dt );
-	entity.Update( dt );
+	entity.Update( dt, GetPos() );
 
 	if (action.IsDoing( Action::dash )) {
 		entity.SetVel( dir.GetNormalized() * rollSpeed );
@@ -44,6 +44,11 @@ void Protagonist::Update( float dt, const Uint8* kbd )
 	else action.Do( Action::walk, 1.0f );
 }
 
+Vec2 Protagonist::GetPos() const
+{
+	return GetHitBox().GetCenter();
+}
+
 void Protagonist::SetDirection( const Vec2& dir )
 {
 	//selects the animation based on direction (right = +1, left = +2, down = +3, up = +6), when dmged +9 
@@ -69,7 +74,7 @@ void Protagonist::SetDirection( const Vec2& dir )
 
 void Protagonist::Dash()
 {
-	if (action.Do( Action::dash, 0.2f, 1.0f )) {
+	if (action.Do( Action::dash, 0.4f, 1.0f )) {
 		entity.ApplyInvincibility( 0.2f );
 	}
 }
@@ -79,7 +84,7 @@ void Protagonist::Draw( const Camera& camPos )
 	entity.Draw( camPos );
 }
 
-RectI Protagonist::GetHitBox() const
+RectF Protagonist::GetHitBox() const
 {
 	return entity.GetHitBox();
 }
@@ -94,53 +99,16 @@ void Protagonist::ApplyDamage( int dmg )
 	entity.ApplyDamage( dmg );
 }
 
-Projectile Protagonist::Shoot()
+bool Protagonist::Shoot( std::vector<Projectile>& projectiles )
 {
 	if (action.Do( Action::shoot, 0.0f, 0.5f )) {
 		float bulletSpeed = 100.0f;
 
 		const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
 
-		return Projectile( entity.GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
-			sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk() );
+		projectiles.emplace_back( Projectile( entity.GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
+			sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk(), true ) );
+		return true;
 	}
-	else return Projectile::Null();
-}
-
-bool Protagonist::Action::Do( int act, float actDur, float cooldown )
-{
-	bool valid = true;
-	for (auto a : cooldowns) {
-		valid = valid && a.first != act;
-	}
-	if (valid) {
-		active.push_back( { act, actDur } );
-		cooldowns.push_back( { act, cooldown } );
-	}
-	return valid;
-}
-
-bool Protagonist::Action::IsDoing( int action )
-{
-	return std::any_of( active.begin(), active.end(), [&action](std::pair<int,float> p)
-		{
-			return p.first == action;
-		}
-	);
-}
-
-void Protagonist::Action::Update( float dt )
-{
-	for (int i = 0; i < cooldowns.size(); i++) {
-		cooldowns[i].second -= dt;
-		if (cooldowns[i].second <= 0.0f) {
-			cooldowns.erase( cooldowns.begin() + i );
-		}
-	}
-	for (int i = 0; i < active.size(); i++) {
-		active[i].second -= dt;
-		if (active[i].second <= 0.0f) {
-			active.erase( active.begin() + i );
-		}
-	}
+	else return false;
 }

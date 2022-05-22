@@ -8,7 +8,7 @@ Game::Game()
 	//BEWARE! gRenderer is null before the call to loadMedia!
 	loadMedia();
 	
-	elia = new Protagonist( { float( SCREEN_WIDTH / 2), float(SCREEN_HEIGHT / 2 )}, spriteSheet, gRenderer );
+	elia = new Protagonist( { float( SCREEN_WIDTH / 2), float(SCREEN_HEIGHT / 2 )}, spriteSheet );
 
 	std::ifstream bgs( "resources\\bgmap.txt" );
 
@@ -19,7 +19,7 @@ Game::Game()
 	fg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, LEVEL_WIDTH/32, LEVEL_HEIGHT/32, fgs );
 
 	for (int i = 0; i < nEnemies; i++) {
-		enemies.push_back( Entity{ { xDist( rng ), yDist( rng ) }, { 256,0 }, 32, 32, 8, 4, spriteSheet, gRenderer, {11, 21, 24, 32} } );
+		enemies.push_back( Bandit({ xDist( rng ), yDist( rng ) }, spriteSheet, projectiles ) );
 	}
 
 	//starts music with indefinite loops
@@ -71,19 +71,21 @@ bool Game::UpdateGame( const float dt )
 
 	elia->Update( dt, keyStates );
 
-	if (keyStates[SDL_SCANCODE_SPACE]) {
-		Projectile p = elia->Shoot();
-		if (!Projectile::IsNull(p))
+	if ( keyStates[SDL_SCANCODE_SPACE] ) {
+		if ( elia->Shoot( projectiles ) )
 		{
-			projectiles.emplace_back( std::move( p ) );
 			Mix_PlayChannel( -1, sfxshoot, 0 );
 		}
 	}
 
-	//elia->ClampToRect( GetScreenRect().GetExpanded(toleranceregion) );
-
 	for (Entity&e : enemies) {
-		e.Update( dt );
+
+		const auto projectilesNOld = projectiles.size();
+		e.Update( dt, elia->GetPos() );
+
+		if (projectilesNOld != projectiles.size()) {
+			Mix_PlayChannel( -1, sfxshoot, 0 );
+		}
 
 		if (elia->GetHitBox().IsOverlappingWith( e.GetHitBox() )) {
 			elia->ApplyDamage(e.GetAtk());
@@ -134,35 +136,51 @@ bool Game::UpdateGame( const float dt )
 	}
 
 
-	//for (auto p : projectiles)
-	//{
-	//	p.Update(dt);
-
-	//	RectF phitbox = p.GetHitBox();
-	
-	//	for (Entity& e : enemies) {
-	//		if (e.GetHitBox().IsOverlappingWith( phitbox )) {
-	//			p.Hits();
-	//			e.ApplyDamage(p.GetDmg());
-	//			Mix_PlayChannel( -1, sfxexplosion, 0 );
-	//		}
-	//	}
-	//}
-
-	for (int i = 0; i < projectiles.size(); i++)
+	for (auto p = projectiles.begin(); p != projectiles.end(); p++)
 	{
-		projectiles[i].Update( dt );
+		p->Update(dt);
 
-		RectF phitbox = projectiles[i].GetHitBox();
+		if (p->IsFriend()) {
+			RectF phitbox = p->GetHitBox();
 
-		for (Entity& e : enemies) {
-			if (e.GetHitBox().IsOverlappingWith( phitbox )) {
-				projectiles[i].Hits();
-				e.ApplyDamage( projectiles[i].GetDmg() );
+			for (Entity& e : enemies) {
+				if (e.GetHitBox().IsOverlappingWith( phitbox )) {
+					p->Hits();
+					e.ApplyDamage( p->GetDmg() );
+					Mix_PlayChannel( -1, sfxexplosion, 0 );
+				}
+			}
+		}
+		else {
+			if (p->GetHitBox().IsOverlappingWith( elia->GetHitBox() )) {
+				p->Hits();
+				elia->ApplyDamage( p->GetDmg() );
 				Mix_PlayChannel( -1, sfxexplosion, 0 );
 			}
 		}
 	}
+
+	//for (int i = 0; i < projectiles.size(); i++)
+	//{
+	//	projectiles[i].Update( dt );
+
+	//	if (!projectiles[i].IsFriend()) {
+
+	//		RectF phitbox = projectiles[i].GetHitBox();
+
+	//		for (Entity& e : enemies) {
+	//			if (e.GetHitBox().IsOverlappingWith( phitbox )) {
+	//				projectiles[i].Hits();
+	//				e.ApplyDamage( projectiles[i].GetDmg() );
+	//				Mix_PlayChannel( -1, sfxexplosion, 0 );
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if(  )
+	//	}
+	//}
 
 	projectiles.erase( 
 		std::remove_if( 
@@ -180,7 +198,7 @@ bool Game::UpdateGame( const float dt )
 			} ), enemies.end()
 	);
 
-	cam.CenterOnPoint( elia->GetHitBox().GetCenter() );
+	cam.CenterOnPoint( (Vei2)elia->GetHitBox().GetCenter() );
 
 	printf( "%f", dt);
 
@@ -194,14 +212,12 @@ void Game::Draw()
 
 	bg->Draw( cam );
 
-	//draw character
-	elia->Draw( cam );
-
-	//elia->ApplyDamage();
-
 	for (Entity& e : enemies) {
 		e.Draw( cam );
 	}
+
+	//draw character
+	elia->Draw( cam );
 
 	for (const Projectile& p : projectiles) {
 		p.Draw( cam );

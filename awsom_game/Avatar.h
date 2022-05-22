@@ -5,7 +5,7 @@
 
 class Avatar{
 public:
-	Avatar( const Vei2& readPos, int width, int height, int framecount, int animcount, Surface* sprite, float holdTime, SDL_Renderer* renderer );
+	Avatar( const Vei2& readPos, int width, int height, int framecount, int animcount, Surface* sprite, float holdTime );
 	int CurIndex() const {
 		return animIndex;
 	}
