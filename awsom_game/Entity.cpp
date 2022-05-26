@@ -98,6 +98,7 @@ void Entity::ApplyDamage( int dmg )
 
 void Entity::ApplyInvincibility( float dur )
 {
+	if( IsAlive() )
 	state.ChangeState( State::Invincible, dur );
 }
 
@@ -123,10 +124,8 @@ void Entity::SetAnim( int animIndex )
 
 void Entity::State::ChangeState( int newState, float stateDur )
 {
-	if (state != State::Dead) {
-		state = newState;
-		stateTime = stateDur;
-	}
+	state = newState;
+	stateTime = stateDur;
 }
 
 bool Entity::State::Is( int isState ) const
