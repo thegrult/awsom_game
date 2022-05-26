@@ -200,8 +200,6 @@ bool Game::UpdateGame( const float dt )
 
 	cam.CenterOnPoint( (Vei2)elia->GetHitBox().GetCenter() );
 
-	printf( "%f", dt);
-
 	return quit;
 }
 
@@ -236,7 +234,7 @@ bool Game::init()
 	//Initialize SDL
 	if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0)
 	{
-		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
+		OutputDebugStringA( (std::string("SDL could not initialize! SDL Error: \n") + SDL_GetError()).c_str() );
 		success = false;
 	}
 	else
@@ -244,13 +242,13 @@ bool Game::init()
 		//Set texture filtering to linear
 		if (!SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ))
 		{
-			printf( "Warning: Linear texture filtering not enabled!" );
+			OutputDebugStringA( "Warning: Linear texture filtering not enabled! \n" );
 		}
 
 		//Create window
 		if (!window.init( SCREEN_WIDTH, SCREEN_HEIGHT ))
 		{
-			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+			OutputDebugStringA( (std::string( "Window could not be created! SDL Error: \n") + SDL_GetError()).c_str() );
 			success = false;
 		}
 		else
@@ -259,7 +257,7 @@ bool Game::init()
 			gRenderer = window.createRenderer();
 			if (gRenderer == NULL)
 			{
-				printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+				OutputDebugStringA( (std::string("Renderer could not be created! SDL Error: \n") + SDL_GetError()).c_str());
 				success = false;
 			}
 			else
@@ -271,7 +269,7 @@ bool Game::init()
 				int imgFlags = IMG_INIT_PNG;
 				if (!(IMG_Init( imgFlags ) & imgFlags))
 				{
-					printf( "SDL_image could not initialize! SDL_mage Error: %s\n", IMG_GetError() );
+					OutputDebugStringA( (std::string( "SDL_image could not initialize! SDL_mage Error: \n") + IMG_GetError()).c_str() );
 					success = false;
 				}
 
@@ -279,7 +277,7 @@ bool Game::init()
 				//1st argument is sound frequency, Sample format, n of hardware channels, sample size (in bytes)
 				if (Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0)
 				{
-					printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+					OutputDebugStringA( (std::string( "SDL_mixer could not initialize! SDL_mixer Error: \n") + Mix_GetError()).c_str() );
 					success = false;
 				}
 			}
@@ -301,7 +299,7 @@ bool Game::loadMedia()
 	spriteSheet->SetRenderer( gRenderer );
 	if (!spriteSheet->LoadData( "imgs\\sprites.png" ))
 	{
-		printf( "Failed to load sprite sheet texture!\n" );
+		OutputDebugStringA( "Failed to load sprite sheet texture!\n" );
 		success = false;
 	}
 
@@ -309,28 +307,28 @@ bool Game::loadMedia()
 	backgroundsheet->SetRenderer( gRenderer );
 	if (!backgroundsheet->LoadData( "imgs\\bgtiles.png" ))
 	{
-		printf( "Failed to load background sheet texture!\n" );
+		OutputDebugStringA( "Failed to load background sheet texture!\n" );
 		success = false;
 	}
 
 	music = Mix_LoadMUS( "audio\\SuperMarioBros.wav" );
 	if (music == NULL)
 	{
-		printf( "Failed to load music! SDL_mixer Error: %s\n", Mix_GetError() );
+		OutputDebugStringA( (std::string( "Failed to load music! SDL_mixer Error: \n") + Mix_GetError()).c_str() );
 		success = false;
 	}
 
 	sfxshoot = Mix_LoadWAV( "audio\\smb_fireball.wav" );
 	if (sfxshoot == NULL)
 	{
-		printf( "Failed to load shooting sfx! SDL_mixer Error: %s\n", Mix_GetError() );
+		OutputDebugStringA( (std::string( "Failed to load shooting sfx! SDL_mixer Error: \n") + Mix_GetError()).c_str() );
 		success = false;
 	}
 
 	sfxexplosion = Mix_LoadWAV( "audio\\smb_fireworks.wav" );
 	if (sfxexplosion == NULL)
 	{
-		printf( "Failed to load explosion sfx! SDL_mixer Error: %s\n", Mix_GetError() );
+		OutputDebugStringA( (std::string( "Failed to load explosion sfx! SDL_mixer Error: \n") + Mix_GetError()).c_str() );
 		success = false;
 	}
 

@@ -1,4 +1,5 @@
 #include "Surface.h"
+#include <Windows.h>
 #include <cassert>
 #include <fstream>
 #include <algorithm>
@@ -13,7 +14,7 @@ Surface::Surface( const std::string& path, SDL_Renderer* gRenderer )
 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
 	if (loadedSurface == NULL)
 	{
-		printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
+		OutputDebugStringA( (std::string("Unable to load image ") + path + std::string("!SDL_image Error : \n") + std::string(IMG_GetError())).c_str() );
 	}
 	else
 	{
@@ -24,7 +25,7 @@ Surface::Surface( const std::string& path, SDL_Renderer* gRenderer )
 		newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
 		if (newTexture == NULL)
 		{
-			printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+			OutputDebugStringA(( std::string( "Unable to create texture from ")+ path + "!SDL Error : \n" + SDL_GetError() ).c_str());
 		}
 		else
 		{
@@ -136,7 +137,7 @@ bool Surface::LoadData( const std::string& path )
 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
 	if (loadedSurface == NULL)
 	{
-		printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
+		OutputDebugStringA( "Unable to load image %s! SDL_image Error: %s\n" + *path.c_str() + *IMG_GetError() );
 		return false;
 	}
 	else
@@ -148,7 +149,7 @@ bool Surface::LoadData( const std::string& path )
 		newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
 		if (newTexture == NULL)
 		{
-			printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+			OutputDebugStringA( "Unable to create texture from %s! SDL Error: %s\n" + *path.c_str() + *SDL_GetError() );
 		}
 		else
 		{
