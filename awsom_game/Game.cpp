@@ -116,6 +116,7 @@ bool Game::UpdateGame( const float dt )
 		}
 	}
 
+	//collision with back and foreground
 	{
 		const auto bgobs = bg->GetObstacles();
 		auto hbx = elia->GetHitBox();
@@ -160,43 +161,15 @@ bool Game::UpdateGame( const float dt )
 		}
 	}
 
-	//for (int i = 0; i < projectiles.size(); i++)
-	//{
-	//	projectiles[i].Update( dt );
+	util::remove_erase_if( projectiles, 
+		[]( Projectile p ) {
+		return p.ToBeRemoved();
+		} );
 
-	//	if (!projectiles[i].IsFriend()) {
-
-	//		RectF phitbox = projectiles[i].GetHitBox();
-
-	//		for (Entity& e : enemies) {
-	//			if (e.GetHitBox().IsOverlappingWith( phitbox )) {
-	//				projectiles[i].Hits();
-	//				e.ApplyDamage( projectiles[i].GetDmg() );
-	//				Mix_PlayChannel( -1, sfxexplosion, 0 );
-	//			}
-	//		}
-	//	}
-	//	else
-	//	{
-	//		if(  )
-	//	}
-	//}
-
-	projectiles.erase( 
-		std::remove_if( 
-			projectiles.begin(), projectiles.end(),
-				[]( Projectile p ) {
-					return p.ToBeRemoved();
-				} ), projectiles.end()
-	);
-
-	enemies.erase(
-		std::remove_if(
-			enemies.begin(), enemies.end(),
-			[]( Entity e ) {
-				return e.IsDead();
-			} ), enemies.end()
-	);
+	util::remove_erase_if( enemies,
+		[]( Entity e ) {
+			return e.IsDead();
+		} );
 
 	cam.CenterOnPoint( (Vei2)elia->GetHitBox().GetCenter() );
 

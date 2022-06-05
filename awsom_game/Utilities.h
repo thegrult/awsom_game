@@ -19,6 +19,13 @@ namespace util {
 	bool ResolveDynamicRectVsRect( RectF* r_dynamic, Vec2& vel, const float fTimeStep, RectF* r_static );
 
 	void DumbWay( RectF* r_dynamic, Vec2& vel, RectF* r_static );
+
+	template <class Container, class Pred>
+	void remove_erase_if( Container& c, Pred p )
+	{
+		const auto nEnd = std::remove_if( c.begin(), c.end(), p );
+		c.erase( nEnd, c.end() );
+	}
 }
 
 #endif

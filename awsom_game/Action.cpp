@@ -24,16 +24,14 @@ bool Action::IsDoing( int action )
 
 void Action::Update( float dt )
 {
-	for (int i = 0; i < cooldowns.size(); i++) {
-		cooldowns[i].second -= dt;
-		if (cooldowns[i].second <= 0.0f) {
-			cooldowns.erase( cooldowns.begin() + i );
-		}
-	}
-	for (int i = 0; i < active.size(); i++) {
-		active[i].second -= dt;
-		if (active[i].second <= 0.0f) {
-			active.erase( active.begin() + i );
-		}
-	}
+	util::remove_erase_if( cooldowns, [dt]( auto& c ) {
+		c.second -= dt;
+		if (c.second <= 0.0f) return true;
+		else return false;
+		} );
+	util::remove_erase_if( active, [dt]( auto& c ) {
+		c.second -= dt;
+		if (c.second <= 0.0f) return true;
+		else return false;
+		} );
 }
