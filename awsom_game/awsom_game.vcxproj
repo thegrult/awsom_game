@@ -187,6 +187,7 @@
   <ItemGroup>
     <Image Include="imgs\background32x32.png" />
     <Image Include="imgs\bgtiles.png" />
+    <Image Include="imgs\roundcursor.png" />
     <Image Include="imgs\w_g_sprites.png" />
   </ItemGroup>
   <ItemGroup>

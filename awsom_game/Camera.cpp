@@ -20,3 +20,8 @@ void Camera::CenterOnPoint( const Vei2& center )
 	else if (focus.bottom > limitRect.bottom)
 		focus = focus.GetDisplaced( { 0, limitRect.bottom - focus.bottom } );
 }
+
+void Camera::AdaptToWnd( const Window& wnd )
+{
+	focus = RectI::FromCenter( focus.GetCenter(), wnd.GetWidth() / 2, wnd.GetHeight() / 2 );
+}

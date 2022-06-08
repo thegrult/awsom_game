@@ -38,6 +38,7 @@ void Background::Draw( const Camera& cam ) const
 		}
 	}
 #ifdef _DEBUG //debug mode
+	SDL_SetRenderDrawColor( sprite->GetRenderer(), 0xff, 0x00, 0x00, 0xff );
 	for (auto a : obstacles) {
 		const auto r = SDL_Rect( a.GetDisplaced( -camPos ) );
 		SDL_RenderDrawRect( sprite->GetRenderer(), &r );

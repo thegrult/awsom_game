@@ -124,6 +124,9 @@
     <Image Include="imgs\bgtiles.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="imgs\roundcursor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="resources\bgmap.txt">

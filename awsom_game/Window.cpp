@@ -1,4 +1,6 @@
 #include "Window.h"
+//lol
+#include <Windows.h>
 
 Window::Window()
 {
@@ -31,8 +33,9 @@ SDL_Renderer* Window::createRenderer()
 	return renderer;
 }
 
-void Window::handleEvent( SDL_Event& e )
+bool Window::handleEvent( SDL_Event& e )
 {
+	bool hasChanged = false;
 	if (e.type == SDL_WINDOWEVENT) {
 		switch (e.window.event)
 		{
@@ -80,12 +83,22 @@ void Window::handleEvent( SDL_Event& e )
 	else if (e.type == SDL_KEYDOWN) {
 		if (e.key.keysym.sym == SDLK_F11) {
 			isFullScreen = !isFullScreen;
-			if(isFullScreen)
+			if (isFullScreen)
+			{
 				SDL_SetWindowFullscreen( window, SDL_WINDOW_FULLSCREEN );
-			else
+				SDL_DisplayMode mode;
+				mode.w = width;
+				mode.h = height;
+				if (SDL_SetWindowDisplayMode( window, &mode ) < 0)
+					OutputDebugStringA( "\n ERROR \n");
+				hasChanged = true;
+			}
+			else {
 				SDL_SetWindowFullscreen( window, 0 );
+			}
 		}
 	}
+	return hasChanged;
 }
 
 void Window::free()

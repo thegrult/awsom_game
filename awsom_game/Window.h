@@ -14,7 +14,7 @@ public:
     SDL_Renderer* createRenderer();
 
     //Handles window events
-    void handleEvent( SDL_Event& e );
+    bool handleEvent( SDL_Event& e );
 
     //Deallocates internals
     void free();

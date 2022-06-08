@@ -58,9 +58,10 @@ private:
 	FrameTimer ft;
 	Surface* spriteSheet = nullptr;
 	Surface* backgroundsheet = nullptr;
-private:
-	const int toleranceregion = -32;
+	SDL_Surface* cursorSprite = nullptr;
 
+	SDL_Cursor* cursor = nullptr;
+private:
 	Background* bg = nullptr;
 	Background* fg = nullptr;
 

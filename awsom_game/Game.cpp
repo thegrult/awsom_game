@@ -4,10 +4,12 @@ Game::Game()
 	:
 	cam( GetScreenRect().GetCenter(), RectI({0,0}, SCREEN_WIDTH, SCREEN_HEIGHT), RectI( {0,0}, LEVEL_WIDTH, LEVEL_HEIGHT) )
 {
+	assert( SCREEN_WIDTH < LEVEL_WIDTH );
+	assert( SCREEN_HEIGHT < LEVEL_HEIGHT );
 	init();
 	//BEWARE! gRenderer is null before the call to loadMedia!
 	loadMedia();
-	
+
 	elia = new Protagonist( { float( SCREEN_WIDTH / 2), float(SCREEN_HEIGHT / 2 )}, spriteSheet );
 
 	std::ifstream bgs( "resources\\bgmap.txt" );
@@ -66,7 +68,8 @@ bool Game::UpdateGame( const float dt )
 			quit = true;
 			break;
 		}
-		window.handleEvent( e );
+		if (window.handleEvent( e )) 
+			cam.AdaptToWnd( window );
 	}
 
 	elia->Update( dt, keyStates );
@@ -98,7 +101,6 @@ bool Game::UpdateGame( const float dt )
 
 			for (auto ob : bgobs) {
 				if (ob.IsOverlappingWith( hbx )) {
-					//e.ApplyDamage( 1 );
 					e.CollideRect( ob );
 				}
 			}
@@ -109,7 +111,6 @@ bool Game::UpdateGame( const float dt )
 
 			for (auto ob : bgobs) {
 				if (ob.IsOverlappingWith( hbx )) {
-					//e.ApplyDamage( 1 );
 					e.CollideRect( ob );
 				}
 			}
@@ -178,7 +179,9 @@ bool Game::UpdateGame( const float dt )
 
 void Game::Draw()
 {
+	
 	//Clear screen
+	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0xff, 0xff );
 	SDL_RenderClear( gRenderer );
 
 	bg->Draw( cam );
@@ -187,7 +190,6 @@ void Game::Draw()
 		e.Draw( cam );
 	}
 
-	//draw character
 	elia->Draw( cam );
 
 	for (const Projectile& p : projectiles) {
@@ -256,7 +258,6 @@ bool Game::init()
 			}
 		}
 	}
-
 	
 
 	return success;
@@ -282,6 +283,20 @@ bool Game::loadMedia()
 	{
 		OutputDebugStringA( "Failed to load background sheet texture!\n" );
 		success = false;
+	}
+
+	cursorSprite = IMG_Load( "imgs\\roundcursor.png" );
+	if (cursorSprite == NULL) {
+		OutputDebugStringA( "Failed to load cursor texture" );
+	}
+	else
+	{
+		//Color key image
+		SDL_SetColorKey( cursorSprite, SDL_TRUE, SDL_MapRGB( cursorSprite->format, 0, 0xFF, 0xFF ) );
+
+		//create new cursor from sprite and set it
+		cursor = SDL_CreateColorCursor( cursorSprite, 2, 2 );
+		SDL_SetCursor( cursor );
 	}
 
 	music = Mix_LoadMUS( "audio\\SuperMarioBros.wav" );
