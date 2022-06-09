@@ -68,7 +68,7 @@ bool Game::UpdateGame( const float dt )
 			quit = true;
 			break;
 		}
-		if (window.handleEvent( e )) 
+		if (window.handleEvent( e ))
 			cam.AdaptToWnd( window );
 	}
 
@@ -94,7 +94,7 @@ bool Game::UpdateGame( const float dt )
 			elia->ApplyDamage(e.GetAtk());
 			e.ApplyDamage(elia->GetAtk());
 		}
-
+		//collision with back and foreground
 		{
 			auto bgobs = bg->GetObstacles();
 			auto hbx = e.GetHitBox();
@@ -179,9 +179,8 @@ bool Game::UpdateGame( const float dt )
 
 void Game::Draw()
 {
-	
 	//Clear screen
-	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0xff, 0xff );
+	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xff );
 	SDL_RenderClear( gRenderer );
 
 	bg->Draw( cam );

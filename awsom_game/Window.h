@@ -25,6 +25,11 @@ public:
 
     RectI GetWindowRect() const;
 
+#ifdef _DEBUG
+    SDL_Window* GetWindow() { return window; }
+#endif // _DEBUG
+
+
     //Window focii
     bool HasMouseFocus();
     bool HasKeyboardFocus();
