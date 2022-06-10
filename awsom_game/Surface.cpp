@@ -193,3 +193,10 @@ void Surface::SetRenderer( SDL_Renderer* newrenderer )
 {
 	renderer = newrenderer;
 }
+
+void Surface::DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b, SDL_Rect* clip )
+{
+	SDL_SetTextureColorMod( texture, r, g, b );
+	Draw( pos, clip );
+	SDL_SetTextureColorMod( texture, 0xff, 0xff, 0xff );
+}

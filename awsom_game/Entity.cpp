@@ -30,10 +30,11 @@ void Entity::Draw( const Camera& cam )
 	if ( drawingBox.GetDisplaced( (Vei2)pos ).IsOverlappingWith( cam.GetFocus() ) ) {
 		if (state.Is( State::Dead )) {}
 		else if (state.Is( State::Damaged )) {
-			const int index = avatar.CurIndex();
-			avatar.SetAnim( index + avatar.NAnim() );
-			avatar.Draw( (Vei2)pos - cam.GetPos() );
-			avatar.SetAnim( index );
+			//const int index = avatar.CurIndex();
+			//avatar.SetAnim( index + avatar.NAnim() );
+			//avatar.Draw( (Vei2)pos - cam.GetPos() );
+			//avatar.SetAnim( index );
+			avatar.DrawColorMod( (Vei2)pos - cam.GetPos(), 0xff, 0x00, 0x00 );
 		}
 		else if (state.Is( State::Dying )) {
 			Uint32 alpha = 0xff;

@@ -58,7 +58,6 @@ private:
 	FrameTimer ft;
 	Surface* spriteSheet = nullptr;
 	Surface* backgroundsheet = nullptr;
-	SDL_Surface* cursorSprite = nullptr;
 
 	SDL_Cursor* cursor = nullptr;
 private:

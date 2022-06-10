@@ -27,6 +27,15 @@ void Animation::operator=( const Animation& rhs )
 
 void Animation::Draw( const Vei2& pos ) const
 {
+	//Render to screen
+	const auto j = frames[iCurFrame].GetDisplaced( srcDeltaPos );
+	SDL_Rect srcRect = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
+
+	sprite->Draw( pos, &srcRect );
+}
+
+void Animation::DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b )
+{
 	//Set rendering space and render to screen
 	SDL_Rect renderQuad = { pos.x, pos.y, width, height };
 
@@ -34,7 +43,7 @@ void Animation::Draw( const Vei2& pos ) const
 	const auto j = frames[iCurFrame].GetDisplaced( srcDeltaPos );
 	SDL_Rect srcRect = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
 
-	SDL_RenderCopy( renderer, sprite->Data(), &srcRect, &renderQuad );
+	sprite->DrawColorMod( pos, r, g, b, &srcRect );
 }
 
 void Animation::DrawBlend( const Vei2& pos, const Uint8 alpha )

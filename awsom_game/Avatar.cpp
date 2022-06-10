@@ -19,6 +19,11 @@ void Avatar::Draw( const Vei2& drawPos ) const
 	animation.Draw( drawPos );
 }
 
+void Avatar::DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b )
+{
+	animation.DrawColorMod( pos, r, g, b );
+}
+
 void Avatar::DrawBlend( const Vei2& drawPos, const Uint8 alpha )
 {
 	animation.DrawBlend( drawPos, alpha );

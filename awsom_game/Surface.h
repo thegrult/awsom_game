@@ -30,6 +30,7 @@ public:
 	SDL_Renderer* GetRenderer() const {
 		return renderer;
 	}
+	void DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b, SDL_Rect* clip = 0 );
 private:
 	SDL_Renderer* renderer = nullptr;
 	SDL_Texture* texture = nullptr;

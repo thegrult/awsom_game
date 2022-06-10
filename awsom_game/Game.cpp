@@ -52,6 +52,7 @@ bool Game::UpdateGame( const float dt )
 	bool quit = false;
 
 	const Uint8* keyStates = SDL_GetKeyboardState( NULL );
+
 	//Handle events on queue
 	while (SDL_PollEvent( &e ) != 0)
 	{
@@ -284,7 +285,7 @@ bool Game::loadMedia()
 		success = false;
 	}
 
-	cursorSprite = IMG_Load( "imgs\\roundcursor.png" );
+	auto cursorSprite = IMG_Load( "imgs\\roundcursor.png" );
 	if (cursorSprite == NULL) {
 		OutputDebugStringA( "Failed to load cursor texture" );
 	}
