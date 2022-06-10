@@ -176,6 +176,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Inventory.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Protagonist.h" />
     <ClInclude Include="Rect.h" />
@@ -188,7 +189,7 @@
     <Image Include="imgs\background32x32.png" />
     <Image Include="imgs\bgtiles.png" />
     <Image Include="imgs\roundcursor.png" />
-    <Image Include="imgs\w_g_sprites.png" />
+    <Image Include="imgs\sprites.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="resources\bgmap.txt" />

@@ -113,11 +113,11 @@
     <ClInclude Include="Action.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="imgs\w_g_sprites.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="imgs\background32x32.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -125,6 +125,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="imgs\roundcursor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="imgs\sprites.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

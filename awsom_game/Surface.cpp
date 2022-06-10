@@ -8,9 +8,20 @@ Surface::Surface( const std::string& path, SDL_Renderer* gRenderer )
 	:
 	renderer(gRenderer)
 {
-	SDL_Texture* newTexture = NULL;
+	SDL_Texture* newTexture = IMG_LoadTexture( gRenderer, path.c_str() );
+	if (!newTexture)
+	{
+		OutputDebugStringA( ("Unable to load image " + path + "!SDL_image Error : \n" + IMG_GetError() ).c_str() );
+	}
+	else {
+		SDL_SetTextureBlendMode( newTexture, SDL_BLENDMODE_BLEND );
+		SDL_SetTextureAlphaMod( newTexture, 0xff );
+		//Get image dimensions
+		SDL_QueryTexture( newTexture, NULL, NULL, &width, &height );
+	}
 
-	//Load image at specified path
+	//old code for loading texture based on optimization of a surface
+	/*//Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
 	if (loadedSurface == NULL)
 	{
@@ -38,7 +49,7 @@ Surface::Surface( const std::string& path, SDL_Renderer* gRenderer )
 
 		//Get rid of old loaded surface
 		SDL_FreeSurface( loadedSurface );
-	}
+	}*/
 
 	texture = newTexture;
 }
@@ -131,14 +142,24 @@ void Surface::FreeData()
 bool Surface::LoadData( const std::string& path )
 {
 	FreeData();
-	SDL_Texture* newTexture = NULL;
+	SDL_Texture* newTexture = IMG_LoadTexture( renderer, path.c_str() );
+	if (!newTexture)
+	{
+		OutputDebugStringA( ("Unable to load image " + path + "!SDL_image Error : \n" + IMG_GetError()).c_str() );
+	}
+	else {
+		SDL_SetTextureBlendMode( newTexture, SDL_BLENDMODE_BLEND );
+		SDL_SetTextureAlphaMod( newTexture, 0xff );
+		//Get image dimensions
+		SDL_QueryTexture( newTexture, NULL, NULL, &width, &height );
+	}
 
-	//Load image at specified path
+	//old code for loading texture based on optimization of a surface
+	/*//Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
 	if (loadedSurface == NULL)
 	{
-		OutputDebugStringA( "Unable to load image %s! SDL_image Error: %s\n" + *path.c_str() + *IMG_GetError() );
-		return false;
+		OutputDebugStringA( (std::string("Unable to load image ") + path + std::string("!SDL_image Error : \n") + std::string(IMG_GetError())).c_str() );
 	}
 	else
 	{
@@ -146,13 +167,15 @@ bool Surface::LoadData( const std::string& path )
 		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
 
 		//Create texture from surface pixels
-		newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
+		newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
 		if (newTexture == NULL)
 		{
-			OutputDebugStringA( "Unable to create texture from %s! SDL Error: %s\n" + *path.c_str() + *SDL_GetError() );
+			OutputDebugStringA(( std::string( "Unable to create texture from ")+ path + "!SDL Error : \n" + SDL_GetError() ).c_str());
 		}
 		else
 		{
+			SDL_SetTextureBlendMode( newTexture, SDL_BLENDMODE_BLEND );
+			SDL_SetTextureAlphaMod( newTexture, 0xff );
 			//Get image dimensions
 			width = loadedSurface->w;
 			height = loadedSurface->h;
@@ -160,7 +183,7 @@ bool Surface::LoadData( const std::string& path )
 
 		//Get rid of old loaded surface
 		SDL_FreeSurface( loadedSurface );
-	}
+	}*/
 
 	texture = newTexture;
 	return true;
