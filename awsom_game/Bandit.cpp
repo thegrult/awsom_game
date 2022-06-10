@@ -19,7 +19,7 @@ void Bandit::Update( const float dt, const Vec2 & protagonistPos )
 	if (isAngry) {
 		SetVel( (protagonistPos - GetPos()).GetNormalized() * speed );
 
-		if ( IsAlive() && action.Do( Action::shoot, 0.0f, 2.0f )) {
+		if ( IsAlive() && action.Do( action::shoot, 0.0f, 2.0f )) {
 			float bulletSpeed = 100.0f;
 
 			const Vec2 bullVel = velocity.GetNormalized() * bulletSpeed;

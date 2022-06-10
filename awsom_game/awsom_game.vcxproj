@@ -158,6 +158,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FrameTimer.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Protagonist.cpp" />
@@ -186,8 +187,8 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="imgs\background32x32.png" />
     <Image Include="imgs\bgtiles.png" />
+    <Image Include="imgs\inventorystolen.png" />
     <Image Include="imgs\roundcursor.png" />
     <Image Include="imgs\sprites.png" />
   </ItemGroup>

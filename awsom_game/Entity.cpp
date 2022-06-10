@@ -45,7 +45,6 @@ void Entity::Draw( const Camera& cam )
 		else {
 			avatar.Draw( (Vei2)pos - cam.GetPos() );
 		}
-
 #ifdef _DEBUG
 		const auto j = GetHitBox().GetDisplaced( (Vec2)-cam.GetPos() );
 		SDL_Rect HitBox = { int( j.TopLeft().x ), (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };

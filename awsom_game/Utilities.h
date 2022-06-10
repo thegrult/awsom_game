@@ -6,6 +6,12 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
+
+#define LEVEL_WIDTH 1024
+#define LEVEL_HEIGHT 1024
+
 namespace util {
 	bool PointVsRect( const Vec2& p, const RectF* r );
 

@@ -28,13 +28,6 @@ private:
 	//helper functions
 	RectI GetScreenRect() const;
 private:
-	//Screen dimension constants
-	const int SCREEN_WIDTH = 640;
-	const int SCREEN_HEIGHT = 480;
-
-	const int LEVEL_WIDTH = 1024;
-	const int LEVEL_HEIGHT = 1024;
-
 	//The window we'll be rendering to
 	Window window;
 

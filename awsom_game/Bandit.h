@@ -5,6 +5,12 @@
 
 class Bandit : public Entity {
 public:
+	enum action{
+		walk,
+		dash,
+		shoot
+	};
+public:
 	Bandit( const Vec2& spawnPos, Surface* sprite, std::vector<Projectile>& projectiles );
 
 	void Update( const float dt, const Vec2& protagonistPos ) override;

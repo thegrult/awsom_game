@@ -3,7 +3,8 @@
 Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite )
 	:
 	entity( spawnPos, {0,0}, 32, 32, 8, 9, sprite, { 12, 20, 24, 32 } ),
-	sprite(sprite)
+	sprite(sprite),
+	inv( sprite->GetRenderer() )
 {}
 
 void Protagonist::Update( float dt, const Uint8* kbd )
@@ -11,10 +12,10 @@ void Protagonist::Update( float dt, const Uint8* kbd )
 	action.Update( dt );
 	entity.Update( dt, GetPos() );
 
-	if (action.IsDoing( Action::dash )) {
+	if (action.IsDoing( action::dash )) {
 		entity.SetVel( dir.GetNormalized() * rollSpeed );
 	}
-	else if (action.IsDoing( Action::walk )) {
+	else if (action.IsDoing( action::walk )) {
 		Vei2 direc = { 0,0 };
 
 		if (kbd[SDL_SCANCODE_W]) {
@@ -41,7 +42,13 @@ void Protagonist::Update( float dt, const Uint8* kbd )
 			Dash();
 		}
 	}
-	else action.Do( Action::walk, 1.0f );
+	else action.Do( action::walk, 1.0f );
+
+	if (kbd[SDL_SCANCODE_E]) {
+		if (action.Do( inventorytoggled, 0.0f, 0.5f )) {
+			inv.ToggleShown();
+		}
+	}
 }
 
 Vec2 Protagonist::GetPos() const
@@ -74,7 +81,7 @@ void Protagonist::SetDirection( const Vec2& dir )
 
 void Protagonist::Dash()
 {
-	if (action.Do( Action::dash, 0.4f, 1.0f )) {
+	if (action.Do( action::dash, 0.4f, 1.0f )) {
 		entity.ApplyInvincibility( 0.2f );
 	}
 }
@@ -82,6 +89,7 @@ void Protagonist::Dash()
 void Protagonist::Draw( const Camera& camPos )
 {
 	entity.Draw( camPos );
+	inv.Draw( { 0, SCREEN_WIDTH, 0, SCREEN_HEIGHT } );
 }
 
 RectF Protagonist::GetHitBox() const
@@ -101,7 +109,7 @@ void Protagonist::ApplyDamage( int dmg )
 
 bool Protagonist::Shoot( std::vector<Projectile>& projectiles )
 {
-	if (action.Do( Action::shoot, 0.0f, 0.5f )) {
+	if (action.Do( action::shoot, 0.0f, 0.5f )) {
 		float bulletSpeed = 100.0f;
 
 		const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;

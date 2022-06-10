@@ -60,6 +60,9 @@
     <ClCompile Include="Action.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -118,9 +121,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="imgs\background32x32.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="imgs\bgtiles.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -128,6 +128,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="imgs\sprites.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="imgs\inventorystolen.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Projectile.h"
 #include "Action.h"
+#include "Inventory.h"
 
 class Protagonist {
 public:
@@ -38,4 +39,12 @@ private:
 private:
 	Surface* sprite;
 	Entity entity;
+	Inventory inv;
+public:
+	enum action{
+		walk,
+		dash,
+		shoot,
+		inventorytoggled
+	};
 };

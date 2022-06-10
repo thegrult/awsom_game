@@ -7,7 +7,9 @@ bool Action::Do( int act, float actDur, float cooldown )
 		valid = valid && a.first != act;
 	}
 	if (valid) {
+		if(actDur > 0.0f)
 		active.push_back( { act, actDur } );
+		if(cooldown > 0.0f)
 		cooldowns.push_back( { act, cooldown } );
 	}
 	return valid;

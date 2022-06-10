@@ -19,7 +19,7 @@ public:
 	~Surface();
 	int GetWidth() const;
 	int GetHeight() const;
-	SDL_Rect GetRect() const;
+	RectI GetRect() const;
 	SDL_Texture* Data() const;
 	void Draw(const Vei2& pos, SDL_Rect* clip = 0) const;
 	void SetAlpha( const Uint8& alpha );

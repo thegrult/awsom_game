@@ -91,9 +91,9 @@ int Surface::GetHeight() const
 	return height;
 }
 
-SDL_Rect Surface::GetRect() const
+RectI Surface::GetRect() const
 {
-	return{ 0,width,0,height };
+	return RectI( 0, width, 0, height );
 }
 
 SDL_Texture* Surface::Data() const

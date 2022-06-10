@@ -5,11 +5,6 @@
 
 class Action {
 public:
-	enum {
-		walk,
-		dash,
-		shoot
-	};
 	//cooldown starts counting as soon as the action starts
 	bool Do( int action, float actDur, float coolDown = 0.0f );
 	bool IsDoing( int action );
