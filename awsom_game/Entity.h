@@ -12,6 +12,7 @@ public:
 
 	virtual void Update( const float dt, const Vec2& );
 
+	//does not perform normalization
 	void SetVel( const Vec2& vel );
 	void SetAnim( int animIndex );
 
