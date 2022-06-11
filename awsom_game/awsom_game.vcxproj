@@ -165,6 +165,7 @@
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Action.h" />
@@ -185,6 +186,8 @@
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="World.h" />
+    <ClInclude Include="Wrld.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="imgs\bgtiles.png" />

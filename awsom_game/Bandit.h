@@ -14,6 +14,7 @@ public:
 	Bandit( const Vec2& spawnPos, Surface* sprite, std::vector<Projectile>& projectiles );
 
 	void Update( const float dt, const Vec2& protagonistPos ) override;
+	
 private:
 	static constexpr float speed = 50.0f;
 	static constexpr float detectionRadius = 150.0f;

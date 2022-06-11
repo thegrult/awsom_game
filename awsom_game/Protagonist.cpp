@@ -7,6 +7,53 @@ Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite )
 	inv( sprite->GetRenderer() )
 {}
 
+void Protagonist::HandleInput( Wrld* wrld, const Uint8 * kbd )
+{
+	if (action.IsDoing( action::dash )) {
+		entity.SetVel( dir.GetNormalized() * rollSpeed );
+	}
+	else if (action.IsDoing( action::walk )) {
+		Vei2 direc = { 0,0 };
+
+		if (kbd[SDL_SCANCODE_W]) {
+			direc.y -= 1;
+		}
+		if (kbd[SDL_SCANCODE_S]) {
+			direc.y += 1;
+		}
+		if (kbd[SDL_SCANCODE_A]) {
+			direc.x -= 1;
+		}
+		if (kbd[SDL_SCANCODE_D]) {
+			direc.x += 1;
+		}
+
+		entity.SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
+		SetDirection( (Vec2)direc );
+
+		if (direc != Vei2( 0, 0 )) {
+			dir = (Vec2)direc;
+		}
+
+		if (kbd[SDL_SCANCODE_LSHIFT]) {
+			Dash();
+		}
+	}
+	else action.Do( action::walk, 1.0f );
+
+	if (kbd[SDL_SCANCODE_E]) {
+		if (action.Do( inventorytoggled, 0.0f, 0.5f )) {
+			inv.ToggleShown();
+		}
+	}
+}
+
+void Protagonist::Update( float dt )
+{
+	action.Update( dt );
+	entity.Update( dt, GetPos() );
+}
+
 void Protagonist::Update( float dt, const Uint8* kbd )
 {
 	action.Update( dt );

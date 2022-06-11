@@ -21,7 +21,7 @@ Game::Game()
 	fg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, LEVEL_WIDTH/32, LEVEL_HEIGHT/32, fgs );
 
 	for (int i = 0; i < nEnemies; i++) {
-		enemies.push_back( Bandit({ xDist( rng ), yDist( rng ) }, spriteSheet, projectiles ) );
+		enemies.push_back( new Bandit({ xDist( rng ), yDist( rng ) }, spriteSheet, projectiles ) );
 	}
 
 	//starts music with indefinite loops
@@ -82,37 +82,37 @@ bool Game::UpdateGame( const float dt )
 		}
 	}
 
-	for (Entity&e : enemies) {
+	for (Entity* e : enemies) {
 
 		const auto projectilesNOld = projectiles.size();
-		e.Update( dt, elia->GetPos() );
+		e->Update( dt, elia->GetPos() );
 
 		if (projectilesNOld != projectiles.size()) {
 			Mix_PlayChannel( -1, sfxshoot, 0 );
 		}
 
-		if (elia->GetHitBox().IsOverlappingWith( e.GetHitBox() )) {
-			elia->ApplyDamage(e.GetAtk());
-			e.ApplyDamage(elia->GetAtk());
+		if (elia->GetHitBox().IsOverlappingWith( e->GetHitBox() )) {
+			elia->ApplyDamage(e->GetAtk());
+			e->ApplyDamage(elia->GetAtk());
 		}
 		//collision with back and foreground
 		{
 			auto bgobs = bg->GetObstacles();
-			auto hbx = e.GetHitBox();
+			auto hbx = e->GetHitBox();
 
 			for (auto ob : bgobs) {
 				if (ob.IsOverlappingWith( hbx )) {
-					e.CollideRect( ob );
+					e->CollideRect( ob );
 				}
 			}
 		}
 		{
 			auto bgobs = fg->GetObstacles();
-			auto hbx = e.GetHitBox();
+			auto hbx = e->GetHitBox();
 
 			for (auto ob : bgobs) {
 				if (ob.IsOverlappingWith( hbx )) {
-					e.CollideRect( ob );
+					e->CollideRect( ob );
 				}
 			}
 		}
@@ -146,10 +146,10 @@ bool Game::UpdateGame( const float dt )
 		if (p->IsFriend()) {
 			RectF phitbox = p->GetHitBox();
 
-			for (Entity& e : enemies) {
-				if (e.GetHitBox().IsOverlappingWith( phitbox )) {
+			for (Entity* e : enemies) {
+				if (e->GetHitBox().IsOverlappingWith( phitbox )) {
 					p->Hits();
-					e.ApplyDamage( p->GetDmg() );
+					e->ApplyDamage( p->GetDmg() );
 					Mix_PlayChannel( -1, sfxexplosion, 0 );
 				}
 			}
@@ -169,8 +169,8 @@ bool Game::UpdateGame( const float dt )
 		} );
 
 	util::remove_erase_if( enemies,
-		[]( Entity e ) {
-			return e.IsDead();
+		[]( Entity* e ) {
+			return e->IsDead();
 		} );
 
 	cam.CenterOnPoint( (Vei2)elia->GetHitBox().GetCenter() );
@@ -186,8 +186,8 @@ void Game::Draw()
 
 	bg->Draw( cam );
 
-	for (Entity& e : enemies) {
-		e.Draw( cam );
+	for (Entity* e : enemies) {
+		e->Draw( cam );
 	}
 
 	elia->Draw( cam );

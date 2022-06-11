@@ -48,11 +48,11 @@ private:
 	std::uniform_real_distribution<float> yDist = std::uniform_real_distribution<float>(0.0f, float(LEVEL_HEIGHT));
 
 	//utilities
+	SDL_Cursor* cursor = nullptr;
+
 	FrameTimer ft;
 	Surface* spriteSheet = nullptr;
 	Surface* backgroundsheet = nullptr;
-
-	SDL_Cursor* cursor = nullptr;
 private:
 	Background* bg = nullptr;
 	Background* fg = nullptr;
@@ -62,7 +62,7 @@ private:
 	//actual game stuff
 	Protagonist* elia = nullptr;
 
-	std::vector<Bandit> enemies;
+	std::vector<Entity*> enemies;
 
 	std::vector<Projectile> projectiles;
 

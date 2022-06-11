@@ -3,10 +3,14 @@
 #include "Projectile.h"
 #include "Action.h"
 #include "Inventory.h"
+#include "Wrld.h"
 
 class Protagonist {
 public:
 	Protagonist( Vec2 spawnPos, Surface* Sprite );
+
+	void HandleInput( Wrld* wrld, const Uint8* kbd );
+	void Update( float dt );
 
 	void Update( float dt, const Uint8* kbdStates );
 	void Draw( const Camera& camPos );
