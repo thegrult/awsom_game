@@ -14,6 +14,21 @@ void World::Update( const float dt )
 void World::ProcessInput( const Uint8* kbd, const Uint32 mouseKeys, const Vec2 mousePos )
 {
 	elia->HandleInput( this, kbd );
+	for (auto e : enemies) {
+		e->HandleInput( this );
+	}
+}
+
+void World::Draw() const
+{
+	elia->Draw( cam );
+	for (const auto e : enemies)
+	{
+		e->Draw( cam );
+	}
+	for (const auto p : projectiles) {
+		p.Draw( cam );
+	}
 }
 
 void World::PlaySnd( Sounds s )
@@ -35,7 +50,7 @@ void World::PlaySnd( Sounds s )
 	}
 }
 
-void World::SpawnBullet( Projectile& p )
+void World::SpawnBullet( Projectile&& p )
 {
 	projectiles.push_back( std::move( p ) );
 }
@@ -53,4 +68,9 @@ const std::vector<Entity*>* World::GetEntitiesConst() const
 const Protagonist* World::GetProtagonistConst() const
 {
 	return elia;
+}
+
+const std::pair<const Background*,const Background*> World::GetBackandForeGround() const
+{
+	return { bg, fg };
 }

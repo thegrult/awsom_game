@@ -1,6 +1,7 @@
 #pragma once
 #include "Avatar.h"
 #include "Camera.h"
+#include "Wrld.h"
 #include "Utilities.h"
 
 class Entity {
@@ -8,8 +9,10 @@ public:
 	//hitbox is considered in frame space
 	Entity( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int framecount, int animcount, Surface* sprite, RectI hitBox );
 
-	void Draw( const Camera& cam );
+	void Draw( const Camera& cam ) const;
 
+	virtual void HandleInput( Wrld* wrld );
+	virtual void Update( const float dt );
 	virtual void Update( const float dt, const Vec2& );
 
 	//does not perform normalization

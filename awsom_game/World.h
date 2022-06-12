@@ -13,12 +13,15 @@ class World : public Wrld{
 public:
 	void Update( const float dt );
 	void ProcessInput( const Uint8* kbd, const Uint32 mouseKeys, const Vec2 mousePos );
+	void Draw() const;
+public:
 	void PlaySnd( Sounds s ) override;
-	void SpawnBullet( class Projectile& p ) override;
+	void SpawnBullet( class Projectile&& p ) override;
 
-	const std::vector<Projectile>* GetProjConst() const;
-	const std::vector<Entity*>* GetEntitiesConst() const;
-	const Protagonist* GetProtagonistConst() const;
+	const std::vector<Projectile>* GetProjConst() const override;
+	const std::vector<Entity*>* GetEntitiesConst() const override;
+	const Protagonist* GetProtagonistConst() const override;
+	const std::pair<const Background*,const Background*> GetBackandForeGround() const override;
 private:
 	//entities
 	Protagonist* elia = nullptr;

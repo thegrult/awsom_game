@@ -15,6 +15,26 @@ Projectile::Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewid
 	isFriend(isFriend)
 {}
 
+void Projectile::HandleInput( Wrld* wrld )
+{
+	if (IsFriend()) {
+		RectF phitbox = GetHitBox();
+		const auto enemies = wrld->GetEntitiesConst();
+		for (auto e : *enemies) {
+			if (GetHitBox().IsOverlappingWith( phitbox )) {
+				Hits();
+				wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
+			}
+		}
+	}
+	else {
+		if (GetHitBox().IsOverlappingWith( wrld->GetProtagonistConst()->GetHitBox() )) {
+			Hits();
+			wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
+		}
+	}
+}
+
 void Projectile::Draw( const Camera& cam ) const
 {
 	const auto camPos = cam.GetPos();

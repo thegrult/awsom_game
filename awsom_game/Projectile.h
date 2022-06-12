@@ -1,6 +1,7 @@
 #pragma once
 #include "Avatar.h"
 #include "Camera.h"
+#include "Wrld.h"
 
 class Projectile {
 public:
@@ -11,6 +12,7 @@ public:
 	Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int normalFramesCount, int explosionFramesCount, float holdTime, Surface* sprite,
 				SDL_Renderer* renderer, const RectI& hitBox, float range, const Vec2& velocity, int dmg, bool isFriend );
 
+	void HandleInput( Wrld* wrld );
 	void Draw( const Camera& camPos ) const;
 
 	void Update( float dt );

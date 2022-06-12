@@ -14,8 +14,8 @@ public:
 
 	void operator=( const Animation& rhs );
 	void Draw( const Vei2& pos ) const;
-	void DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b );
-	void DrawBlend( const Vei2& pos, const Uint8 alpha );
+	void DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b ) const;
+	void DrawBlend( const Vei2& pos, const Uint8 alpha ) const;
 	void Update( float dt );
 	void SetRenderer( SDL_Renderer* newRenderer );
 	SDL_Renderer* GetRenderer() const {

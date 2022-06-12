@@ -8,12 +8,20 @@ Entity::Entity( const Vec2& spawnPos, const Vei2& readPos, int width, int height
 	drawingBox( { 0,0 }, width, height )
 {}
 
+void Entity::HandleInput( Wrld* wrld )
+{}
+
+void Entity::Update( const float dt )
+{
+	Update( dt, { 0.0f,0.0f } );
+}
+
 void Entity::Update( const float dt, const Vec2& )
 {
 	state.Update( dt );
 
 	if (IsAlive()) {
-		if( velocity != Vec2( 0.0f, 0.0f )) {
+		if( velocity != Vec2( 0.0f, 0.0f ) ) {
 			avatar.Update( dt );
 			pos += velocity * dt;
 		}
@@ -25,15 +33,11 @@ void Entity::SetVel( const Vec2& vel )
 	velocity = vel;
 }
 
-void Entity::Draw( const Camera& cam )
+void Entity::Draw( const Camera& cam ) const
 {
 	if ( drawingBox.GetDisplaced( (Vei2)pos ).IsOverlappingWith( cam.GetFocus() ) ) {
 		if (state.Is( State::Dead )) {}
 		else if (state.Is( State::Damaged )) {
-			//const int index = avatar.CurIndex();
-			//avatar.SetAnim( index + avatar.NAnim() );
-			//avatar.Draw( (Vei2)pos - cam.GetPos() );
-			//avatar.SetAnim( index );
 			avatar.DrawColorMod( (Vei2)pos - cam.GetPos(), 0xff, 0x00, 0x00 );
 		}
 		else if (state.Is( State::Dying )) {

@@ -74,28 +74,30 @@ bool Game::UpdateGame( const float dt )
 	}
 
 	elia->Update( dt, keyStates );
-
+	//done
 	if ( keyStates[SDL_SCANCODE_SPACE] ) {
 		if ( elia->Shoot( projectiles ) )
 		{
 			Mix_PlayChannel( -1, sfxshoot, 0 );
 		}
 	}
-
+	//done
 	for (Entity* e : enemies) {
 
 		const auto projectilesNOld = projectiles.size();
 		e->Update( dt, elia->GetPos() );
-
+		//done
 		if (projectilesNOld != projectiles.size()) {
 			Mix_PlayChannel( -1, sfxshoot, 0 );
 		}
 
+		//done
 		if (elia->GetHitBox().IsOverlappingWith( e->GetHitBox() )) {
 			elia->ApplyDamage(e->GetAtk());
 			e->ApplyDamage(elia->GetAtk());
 		}
 		//collision with back and foreground
+		//done
 		{
 			auto bgobs = bg->GetObstacles();
 			auto hbx = e->GetHitBox();
@@ -119,6 +121,7 @@ bool Game::UpdateGame( const float dt )
 	}
 
 	//collision with back and foreground
+	//done
 	{
 		const auto bgobs = bg->GetObstacles();
 		auto hbx = elia->GetHitBox();

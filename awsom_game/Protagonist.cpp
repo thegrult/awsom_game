@@ -41,9 +41,51 @@ void Protagonist::HandleInput( Wrld* wrld, const Uint8 * kbd )
 	}
 	else action.Do( action::walk, 1.0f );
 
+	if (kbd[SDL_SCANCODE_SPACE]) {
+		if (action.Do( action::shoot, 0.0f, 0.5f )) {
+			float bulletSpeed = 100.0f;
+
+			const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
+
+			wrld->SpawnBullet( Projectile( entity.GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
+				sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk(), true ) );
+		}
+	}
+
 	if (kbd[SDL_SCANCODE_E]) {
 		if (action.Do( inventorytoggled, 0.0f, 0.5f )) {
 			inv.ToggleShown();
+		}
+	}
+
+	{
+		const auto entities = *(wrld->GetEntitiesConst());
+		const auto hbx = GetHitBox();
+
+		for (auto e : entities) {
+			if (hbx.IsOverlappingWith( e->GetHitBox() ))
+			{
+				ApplyDamage( e->GetAtk() );
+			}
+		}
+	}
+
+	{
+		const auto bgobs = wrld->GetBackandForeGround().first->GetObstacles();
+		auto hbx = GetHitBox();
+		for (auto ob : bgobs) {
+			if (ob.IsOverlappingWith( hbx )) {
+				CollideRect( ob );
+			}
+		}
+	}
+	{
+		const auto bgobs = wrld->GetBackandForeGround().second->GetObstacles();
+		auto hbx = GetHitBox();
+		for (auto ob : bgobs) {
+			if (ob.IsOverlappingWith( hbx )) {
+				CollideRect( ob );
+			}
 		}
 	}
 }

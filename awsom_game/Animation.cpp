@@ -34,7 +34,7 @@ void Animation::Draw( const Vei2& pos ) const
 	sprite->Draw( pos, &srcRect );
 }
 
-void Animation::DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b )
+void Animation::DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b ) const
 {
 	//Set rendering space and render to screen
 	SDL_Rect renderQuad = { pos.x, pos.y, width, height };
@@ -46,7 +46,7 @@ void Animation::DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b )
 	sprite->DrawColorMod( pos, r, g, b, &srcRect );
 }
 
-void Animation::DrawBlend( const Vei2& pos, const Uint8 alpha )
+void Animation::DrawBlend( const Vei2& pos, const Uint8 alpha ) const
 {
 	const Uint8 prevAlpha = sprite->GetAlpha();
 	sprite->SetAlpha( alpha );
