@@ -2,7 +2,7 @@
 
 Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite )
 	:
-	entity( spawnPos, {0,0}, 32, 32, 8, 9, sprite, { 12, 20, 24, 32 } ),
+	Entity( spawnPos, {0,0}, 32, 32, 8, 9, sprite, { 12, 20, 24, 32 } ),
 	sprite(sprite),
 	inv( sprite->GetRenderer() )
 {}
@@ -10,7 +10,7 @@ Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite )
 void Protagonist::HandleInput( Wrld* wrld, const Uint8 * kbd )
 {
 	if (action.IsDoing( action::dash )) {
-		entity.SetVel( dir.GetNormalized() * rollSpeed );
+		SetVel( dir.GetNormalized() * rollSpeed );
 	}
 	else if (action.IsDoing( action::walk )) {
 		Vei2 direc = { 0,0 };
@@ -28,7 +28,7 @@ void Protagonist::HandleInput( Wrld* wrld, const Uint8 * kbd )
 			direc.x += 1;
 		}
 
-		entity.SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
+		SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
 		SetDirection( (Vec2)direc );
 
 		if (direc != Vei2( 0, 0 )) {
@@ -47,7 +47,7 @@ void Protagonist::HandleInput( Wrld* wrld, const Uint8 * kbd )
 
 			const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
 
-			wrld->SpawnBullet( Projectile( entity.GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
+			wrld->SpawnBullet( Projectile( GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
 				sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk(), true ) );
 		}
 	}
@@ -93,16 +93,16 @@ void Protagonist::HandleInput( Wrld* wrld, const Uint8 * kbd )
 void Protagonist::Update( float dt )
 {
 	action.Update( dt );
-	entity.Update( dt, GetPos() );
+	Entity::Update( dt, GetPos() );
 }
 
 void Protagonist::Update( float dt, const Uint8* kbd )
 {
 	action.Update( dt );
-	entity.Update( dt, GetPos() );
+	Entity::Update( dt, GetPos() );
 
 	if (action.IsDoing( action::dash )) {
-		entity.SetVel( dir.GetNormalized() * rollSpeed );
+		SetVel( dir.GetNormalized() * rollSpeed );
 	}
 	else if (action.IsDoing( action::walk )) {
 		Vei2 direc = { 0,0 };
@@ -120,7 +120,7 @@ void Protagonist::Update( float dt, const Uint8* kbd )
 			direc.x += 1;
 		}
 
-		entity.SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
+		SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
 		SetDirection( (Vec2)direc );
 
 		if (direc != Vei2( 0, 0 )) {
@@ -164,36 +164,21 @@ void Protagonist::SetDirection( const Vec2& dir )
 	}
 
 	if (animindex != 0) {
-		entity.SetAnim( animindex );
+		SetAnim( animindex );
 	}
 }
 
 void Protagonist::Dash()
 {
 	if (action.Do( action::dash, 0.4f, 1.0f )) {
-		entity.ApplyInvincibility( 0.2f );
+		ApplyInvincibility( 0.2f );
 	}
 }
 
 void Protagonist::Draw( const Camera& camPos )
 {
-	entity.Draw( camPos );
+	Entity::Draw( camPos );
 	inv.Draw( { 0, SCREEN_WIDTH, 0, SCREEN_HEIGHT } );
-}
-
-RectF Protagonist::GetHitBox() const
-{
-	return entity.GetHitBox();
-}
-
-void Protagonist::ClampToRect( RectI rect )
-{
-	entity.ClampToRect( rect );
-}
-
-void Protagonist::ApplyDamage( int dmg )
-{
-	entity.ApplyDamage( dmg );
 }
 
 bool Protagonist::Shoot( std::vector<Projectile>& projectiles )
@@ -203,7 +188,7 @@ bool Protagonist::Shoot( std::vector<Projectile>& projectiles )
 
 		const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
 
-		projectiles.emplace_back( Projectile( entity.GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
+		projectiles.emplace_back( Projectile( GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
 			sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk(), true ) );
 		return true;
 	}

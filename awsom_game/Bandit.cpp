@@ -82,6 +82,17 @@ void Bandit::HandleInput( Wrld* wrld )
 			}
 		}
 	}
+
+	{
+		const auto proj = wrld->GetProjConst();
+		const auto hbx = GetHitBox();
+		for (const auto p : *proj)
+		{
+			if (hbx.IsOverlappingWith( p.GetHitBox() )) {
+				ApplyDamage( p.GetDmg() );
+			}
+		}
+	}
 }
 
 void Bandit::Update( const float dt )

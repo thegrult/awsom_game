@@ -1,5 +1,68 @@
 #include "World.h"
 
+World::World( SDL_Renderer* gRenderer )
+	:
+	cam( { 0,0 }, RectI( { 0,0 }, SCREEN_WIDTH, SCREEN_HEIGHT ), RectI( { 0,0 }, LEVEL_WIDTH, LEVEL_HEIGHT ) )
+{
+	spriteSheet = new Surface;
+	spriteSheet->SetRenderer( gRenderer );
+	if (!spriteSheet->LoadData( "imgs\\sprites.png" ))
+	{
+		OutputDebugStringA( "Failed to load sprite sheet texture!\n" );
+	}
+
+	backgroundsheet = new Surface;
+	backgroundsheet->SetRenderer( gRenderer );
+	if (!backgroundsheet->LoadData( "imgs\\bgtiles.png" ))
+	{
+		OutputDebugStringA( "Failed to load background sheet texture!\n" );
+	}
+
+	music = Mix_LoadMUS( "audio\\SuperMarioBros.wav" );
+	if (music == NULL)
+	{
+		OutputDebugStringA( (std::string( "Failed to load music! SDL_mixer Error: \n" ) + Mix_GetError()).c_str() );
+	}
+
+	sfxshoot = Mix_LoadWAV( "audio\\smb_fireball.wav" );
+	if (sfxshoot == NULL)
+	{
+		OutputDebugStringA( (std::string( "Failed to load shooting sfx! SDL_mixer Error: \n" ) + Mix_GetError()).c_str() );
+	}
+
+	sfxexplosion = Mix_LoadWAV( "audio\\smb_fireworks.wav" );
+	if (sfxexplosion == NULL)
+	{
+		OutputDebugStringA( (std::string( "Failed to load explosion sfx! SDL_mixer Error: \n" ) + Mix_GetError()).c_str() );
+	}
+
+	elia = new Protagonist( { float( SCREEN_WIDTH / 2 ), float( SCREEN_HEIGHT / 2 ) }, spriteSheet );
+
+	std::ifstream bgs( "resources\\bgmap.txt" );
+
+	bg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, LEVEL_WIDTH / 32, LEVEL_HEIGHT / 32, bgs );
+
+	std::ifstream fgs( "resources\\fgmap.txt" );
+
+	fg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, LEVEL_WIDTH / 32, LEVEL_HEIGHT / 32, fgs );
+
+	for (int i = 0; i < nEnemies; i++) {
+		enemies.push_back( new Bandit( { xDist( rng ), yDist( rng ) }, spriteSheet, projectiles ) );
+	}
+
+	PlaySnd( Wrld::Sounds::music );
+}
+
+World::~World()
+{
+	delete spriteSheet;
+	delete backgroundsheet;
+	Mix_FreeChunk( sfxshoot );
+	Mix_FreeChunk( sfxexplosion );
+	sfxshoot = NULL;
+	sfxexplosion = NULL;
+}
+
 void World::Update( const float dt )
 {
 	elia->Update( dt );
@@ -9,18 +72,34 @@ void World::Update( const float dt )
 	for (auto p : projectiles) {
 		p.Update( dt );
 	}
+
+	util::remove_erase_if( projectiles,
+		[]( Projectile p ) {
+			return p.ToBeRemoved();
+		} );
+
+	util::remove_erase_if( enemies,
+		[]( Entity* e ) {
+			return e->IsDead();
+		} );
 }
 
 void World::ProcessInput( const Uint8* kbd, const Uint32 mouseKeys, const Vec2 mousePos )
 {
 	elia->HandleInput( this, kbd );
+	cam.CenterOnPoint( (Vei2)elia->GetPos() );
 	for (auto e : enemies) {
 		e->HandleInput( this );
+	}
+	for (auto p : projectiles)
+	{
+		p.HandleInput( this );
 	}
 }
 
 void World::Draw() const
 {
+	bg->Draw( cam );
 	elia->Draw( cam );
 	for (const auto e : enemies)
 	{
@@ -29,6 +108,8 @@ void World::Draw() const
 	for (const auto p : projectiles) {
 		p.Draw( cam );
 	}
+
+	fg->Draw( cam );
 }
 
 void World::PlaySnd( Sounds s )

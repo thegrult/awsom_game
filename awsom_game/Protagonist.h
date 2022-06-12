@@ -6,7 +6,7 @@
 #include "Inventory.h"
 #include "Wrld.h"
 
-class Protagonist {
+class Protagonist : public Entity{
 public:
 	Protagonist( Vec2 spawnPos, Surface* Sprite );
 
@@ -15,16 +15,7 @@ public:
 
 	void Update( float dt, const Uint8* kbdStates );
 	void Draw( const Camera& camPos );
-
-	RectF GetHitBox() const;
-	void ClampToRect( RectI rect );
-
-	int GetAtk() const { return entity.GetAtk(); }
-	
-	void ApplyDamage( int dmg );
 	bool Shoot( std::vector<Projectile>& projectiles );
-
-	void CollideRect( RectF rect ) { entity.CollideRect( rect ); }
 
 	Vec2 GetPos() const;
 private:
@@ -43,7 +34,6 @@ private:
 	float rollSpeed = 200.0f;
 private:
 	Surface* sprite;
-	Entity entity;
 	Inventory inv;
 public:
 	enum action{

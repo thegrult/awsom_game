@@ -1,6 +1,8 @@
 #pragma once
 #include "Avatar.h"
+#include "Background.h"
 #include "Camera.h"
+#include "Entity.h"
 #include "Wrld.h"
 
 class Projectile {

@@ -3,6 +3,7 @@
 #include "Protagonist.h"
 #include "Background.h"
 #include "Bandit.h"
+#include <random>
 #include "Vec2.h"
 #include <Windows.h>
 #include <SDL.h>
@@ -11,6 +12,8 @@
 
 class World : public Wrld{
 public:
+	World( SDL_Renderer* gRenderer );
+	~World();
 	void Update( const float dt );
 	void ProcessInput( const Uint8* kbd, const Uint32 mouseKeys, const Vec2 mousePos );
 	void Draw() const;
@@ -23,6 +26,7 @@ public:
 	const Protagonist* GetProtagonistConst() const override;
 	const std::pair<const Background*,const Background*> GetBackandForeGround() const override;
 private:
+	const int nEnemies = 10;
 	//entities
 	Protagonist* elia = nullptr;
 
@@ -45,4 +49,9 @@ private:
 
 	Mix_Chunk* sfxshoot = NULL;
 	Mix_Chunk* sfxexplosion = NULL;
+
+	//rnd int generator
+	mutable std::mt19937 rng{ std::random_device()() };
+	mutable std::uniform_real_distribution<float> xDist = std::uniform_real_distribution<float>( 0.0f, float( LEVEL_WIDTH ) );
+	mutable std::uniform_real_distribution<float> yDist = std::uniform_real_distribution<float>( 0.0f, float( LEVEL_HEIGHT ) );
 };

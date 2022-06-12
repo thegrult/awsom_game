@@ -28,9 +28,22 @@ void Projectile::HandleInput( Wrld* wrld )
 		}
 	}
 	else {
-		if (GetHitBox().IsOverlappingWith( wrld->GetProtagonistConst()->GetHitBox() )) {
+		//MAY BE VERY DANGEROUS AND GO TEERRIBLY WRONGGG
+		const auto prot = reinterpret_cast<const Entity*>(wrld->GetProtagonistConst());
+		if (GetHitBox().IsOverlappingWith( prot->GetHitBox() )) {
 			Hits();
 			wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
+		}
+	}
+
+	{
+		auto bgobs = wrld->GetBackandForeGround().second->GetObstacles();
+		auto hbx = GetHitBox();
+
+		for (auto ob : bgobs) {
+			if (ob.IsOverlappingWith( hbx )) {
+				Hits();
+			}
 		}
 	}
 }
