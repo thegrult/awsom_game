@@ -33,9 +33,6 @@ public:
 	bool ToBeRemoved()const;
 
 	bool IsFriend() const { return isFriend; }
-
-	static Projectile Null();
-	static bool IsNull( Projectile p );
 private:
 	bool isFriend = true;
 	int dmg;

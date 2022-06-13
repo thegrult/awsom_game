@@ -50,6 +50,7 @@ void Protagonist::HandleInput( Wrld* wrld )
 
 			wrld->SpawnBullet( new Projectile( GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
 				sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk(), true ) );
+			wrld->PlaySnd( Wrld::Sounds::sfxshoot );
 		}
 	}
 

@@ -104,7 +104,7 @@ RectF Projectile::GetHitBox() const
 	}
 	else
 	{
-		return RectF( -1.0f, +1.0f, 1.0f, -1.0f );
+		return RectF( +1.0f, -1.0f, +1.0f, -1.0f );
 	}
 }
 
@@ -128,14 +128,4 @@ bool Projectile::operator==( const Projectile& rhs ) const
  bool Projectile::ToBeRemoved() const
 {
 	return toRemove;
-}
-
- Projectile Projectile::Null()
- {
-	 return Projectile( Vec2( -1.0f,-1.0f ), Vei2( -1,-1 ), -1, -1, -1, -1, -1.0f, nullptr, nullptr, {-1,-1,-1,-1}, -1.0f, {0.0f, 0.0f}, -1, false);
- }
-
- bool Projectile::IsNull( Projectile p )
- {
-	 return p == Null();
 }
