@@ -8,20 +8,12 @@ Entity::Entity( const Vec2& spawnPos, const Vei2& readPos, int width, int height
 	drawingBox( { 0,0 }, width, height )
 {}
 
-void Entity::HandleInput( Wrld* wrld )
-{}
-
 void Entity::Update( const float dt )
-{
-	Update( dt, { 0.0f,0.0f } );
-}
-
-void Entity::Update( const float dt, const Vec2& )
 {
 	state.Update( dt );
 
 	if (IsAlive()) {
-		if( velocity != Vec2( 0.0f, 0.0f ) ) {
+		if (velocity != Vec2( 0.0f, 0.0f )) {
 			avatar.Update( dt );
 			pos += velocity * dt;
 		}

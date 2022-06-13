@@ -1,8 +1,11 @@
 #include "World.h"
 
-World::World( SDL_Renderer* gRenderer )
+World::World( SDL_Renderer* gRenderer, const Uint8* kbd, const Uint32& mouseKeys, const Vec2& mousePos )
 	:
-	cam( { 0,0 }, RectI( { 0,0 }, SCREEN_WIDTH, SCREEN_HEIGHT ), RectI( { 0,0 }, LEVEL_WIDTH, LEVEL_HEIGHT ) )
+	cam( { 0,0 }, RectI( { 0,0 }, SCREEN_WIDTH, SCREEN_HEIGHT ), RectI( { 0,0 }, LEVEL_WIDTH, LEVEL_HEIGHT ) ),
+	kbd(kbd),
+	mouseKeys(mouseKeys),
+	mousePos(mousePos)
 {
 	spriteSheet = new Surface;
 	spriteSheet->SetRenderer( gRenderer );
@@ -47,7 +50,7 @@ World::World( SDL_Renderer* gRenderer )
 	fg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, LEVEL_WIDTH / 32, LEVEL_HEIGHT / 32, fgs );
 
 	for (int i = 0; i < nEnemies; i++) {
-		enemies.push_back( new Bandit( { xDist( rng ), yDist( rng ) }, spriteSheet, projectiles ) );
+		enemies.push_back( new Bandit( { xDist( rng ), yDist( rng ) }, spriteSheet ) );
 	}
 
 	PlaySnd( Wrld::Sounds::music );
@@ -67,15 +70,15 @@ void World::Update( const float dt )
 {
 	elia->Update( dt );
 	for (Entity* e : enemies) {
-		e->Update( dt, elia->GetPos() );
+		e->Update( dt );
 	}
 	for (auto p : projectiles) {
-		p.Update( dt );
+		p->Update( dt );
 	}
 
 	util::remove_erase_if( projectiles,
-		[]( Projectile p ) {
-			return p.ToBeRemoved();
+		[]( Projectile* p ) {
+			return p->ToBeRemoved();
 		} );
 
 	util::remove_erase_if( enemies,
@@ -84,16 +87,16 @@ void World::Update( const float dt )
 		} );
 }
 
-void World::ProcessInput( const Uint8* kbd, const Uint32 mouseKeys, const Vec2 mousePos )
+void World::ProcessInput()
 {
-	elia->HandleInput( this, kbd );
+	elia->HandleInput( this );
 	cam.CenterOnPoint( (Vei2)elia->GetPos() );
 	for (auto e : enemies) {
 		e->HandleInput( this );
 	}
 	for (auto p : projectiles)
 	{
-		p.HandleInput( this );
+		p->HandleInput( this );
 	}
 }
 
@@ -106,7 +109,7 @@ void World::Draw() const
 		e->Draw( cam );
 	}
 	for (const auto p : projectiles) {
-		p.Draw( cam );
+		p->Draw( cam );
 	}
 
 	fg->Draw( cam );
@@ -131,12 +134,12 @@ void World::PlaySnd( Sounds s )
 	}
 }
 
-void World::SpawnBullet( Projectile&& p )
+void World::SpawnBullet( Projectile* p )
 {
 	projectiles.push_back( std::move( p ) );
 }
 
-const std::vector<Projectile>* World::GetProjConst() const
+const std::vector<Projectile*>* World::GetProjConst() const
 {
 	return &projectiles;
 }
@@ -154,4 +157,19 @@ const Protagonist* World::GetProtagonistConst() const
 const std::pair<const Background*,const Background*> World::GetBackandForeGround() const
 {
 	return { bg, fg };
+}
+
+const Uint8* World::GetKbd() const
+{
+	return kbd;
+}
+
+const Uint32& World::GetMouseKeys() const
+{
+	return mouseKeys;
+}
+
+const Vec2& World::GetMousePos() const
+{
+	return mousePos;
 }

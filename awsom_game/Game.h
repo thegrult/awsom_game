@@ -10,6 +10,7 @@
 #include "Background.h"
 #include "Camera.h"
 #include <random>
+#include "World.h"
 
 class Game {
 public:
@@ -34,37 +35,17 @@ private:
 	//The window renderer
 	SDL_Renderer* gRenderer = NULL;
 
-	//sounds and music
-	Mix_Music* music = NULL;
-
-	Mix_Chunk* sfxshoot = NULL;
-	Mix_Chunk* sfxexplosion = NULL;
 	//Event handler
 	SDL_Event e;
-
-	//rnd int generator
-	std::mt19937 rng{ std::random_device()() };
-	std::uniform_real_distribution<float> xDist = std::uniform_real_distribution<float>(0.0f, float(LEVEL_WIDTH));
-	std::uniform_real_distribution<float> yDist = std::uniform_real_distribution<float>(0.0f, float(LEVEL_HEIGHT));
 
 	//utilities
 	SDL_Cursor* cursor = nullptr;
 
 	FrameTimer ft;
-	Surface* spriteSheet = nullptr;
-	Surface* backgroundsheet = nullptr;
+
+	const Uint8* kbd = SDL_GetKeyboardState( NULL );
+	Uint32 mouseKeys;
+	Vec2 mousePos;
 private:
-	Background* bg = nullptr;
-	Background* fg = nullptr;
-
-	Camera cam;
-
-	//actual game stuff
-	Protagonist* elia = nullptr;
-
-	std::vector<Entity*> enemies;
-
-	std::vector<Projectile> projectiles;
-
-	const int nEnemies = 5;
+	World* world;
 };

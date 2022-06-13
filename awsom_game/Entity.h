@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Wrld.h"
 #include "Utilities.h"
+#include "Vec2.h"
 
 class Entity {
 public:
@@ -11,10 +12,15 @@ public:
 
 	void Draw( const Camera& cam ) const;
 
-	virtual void HandleInput( Wrld* wrld );
+	virtual void HandleInput( Wrld* wrld ) = 0;
 	virtual void Update( const float dt );
-	virtual void Update( const float dt, const Vec2& );
 
+	RectF GetHitBox() const;
+	Vec2 GetPos() const;
+	int GetAtk() const { return atk; }
+	bool IsDead() const { return state.Is( State::Dead ); }
+	bool IsAlive() const { return !IsDead() && !state.Is( State::Dying ); }
+protected:
 	//does not perform normalization
 	void SetVel( const Vec2& vel );
 	void SetAnim( int animIndex );
@@ -23,12 +29,6 @@ public:
 	void CollideRect( RectF rect );
 	void ApplyDamage( int dmg );
 	void ApplyInvincibility( float dur );
-
-	RectF GetHitBox() const;
-	Vec2 GetPos() const;
-	int GetAtk() const { return atk; }
-	bool IsDead() const { return state.Is( State::Dead ); }
-	bool IsAlive() const { return !IsDead() && !state.Is( State::Dying ); }
 private:
 	void SetPos( const Vec2& nPos );
 

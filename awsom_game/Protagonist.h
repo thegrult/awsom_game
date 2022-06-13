@@ -10,14 +10,10 @@ class Protagonist : public Entity{
 public:
 	Protagonist( Vec2 spawnPos, Surface* Sprite );
 
-	void HandleInput( Wrld* wrld, const Uint8* kbd );
+	void HandleInput( Wrld* wrld ) override;
 	void Update( float dt );
 
-	void Update( float dt, const Uint8* kbdStates );
 	void Draw( const Camera& camPos );
-	bool Shoot( std::vector<Projectile>& projectiles );
-
-	Vec2 GetPos() const;
 private:
 	void SetDirection( const Vec2& dir );
 

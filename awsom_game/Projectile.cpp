@@ -21,7 +21,7 @@ void Projectile::HandleInput( Wrld* wrld )
 		RectF phitbox = GetHitBox();
 		const auto enemies = wrld->GetEntitiesConst();
 		for (auto e : *enemies) {
-			if (GetHitBox().IsOverlappingWith( phitbox )) {
+			if (e->GetHitBox().IsOverlappingWith( phitbox )) {
 				Hits();
 				wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
 			}
@@ -37,12 +37,24 @@ void Projectile::HandleInput( Wrld* wrld )
 	}
 
 	{
-		auto bgobs = wrld->GetBackandForeGround().second->GetObstacles();
+		auto bgobs = wrld->GetBackandForeGround().first->GetObstacles();
 		auto hbx = GetHitBox();
 
 		for (auto ob : bgobs) {
 			if (ob.IsOverlappingWith( hbx )) {
 				Hits();
+				wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
+			}
+		}
+	}
+	{
+		auto fgobs = wrld->GetBackandForeGround().second->GetObstacles();
+		auto hbx = GetHitBox();
+
+		for (auto ob : fgobs) {
+			if (ob.IsOverlappingWith( hbx )) {
+				Hits();
+				wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
 			}
 		}
 	}

@@ -1,8 +1,6 @@
 #include "Game.h"
 
 Game::Game()
-	:
-	cam( GetScreenRect().GetCenter(), RectI({0,0}, SCREEN_WIDTH, SCREEN_HEIGHT), RectI( {0,0}, LEVEL_WIDTH, LEVEL_HEIGHT) )
 {
 	assert( SCREEN_WIDTH < LEVEL_WIDTH );
 	assert( SCREEN_HEIGHT < LEVEL_HEIGHT );
@@ -10,22 +8,7 @@ Game::Game()
 	//BEWARE! gRenderer is null before the call to loadMedia!
 	loadMedia();
 
-	elia = new Protagonist( { float( SCREEN_WIDTH / 2), float(SCREEN_HEIGHT / 2 )}, spriteSheet );
-
-	std::ifstream bgs( "resources\\bgmap.txt" );
-
-	bg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, LEVEL_WIDTH/32, LEVEL_HEIGHT/32, bgs );
-
-	std::ifstream fgs( "resources\\fgmap.txt" );
-
-	fg = new Background( backgroundsheet, 32, 32, { 0,0 }, { 0,0 }, LEVEL_WIDTH/32, LEVEL_HEIGHT/32, fgs );
-
-	for (int i = 0; i < nEnemies; i++) {
-		enemies.push_back( new Bandit({ xDist( rng ), yDist( rng ) }, spriteSheet, projectiles ) );
-	}
-
-	//starts music with indefinite loops
-	Mix_PlayMusic( music, -1 );
+	world = new World( gRenderer, kbd, mouseKeys, mousePos );
 }
 
 Game::~Game()
@@ -51,7 +34,7 @@ bool Game::UpdateGame( const float dt )
 {
 	bool quit = false;
 
-	const Uint8* keyStates = SDL_GetKeyboardState( NULL );
+	const Uint8* kbd = SDL_GetKeyboardState( NULL );
 
 	//Handle events on queue
 	while (SDL_PollEvent( &e ) != 0)
@@ -70,113 +53,11 @@ bool Game::UpdateGame( const float dt )
 			break;
 		}
 		if (window.handleEvent( e ))
-			cam.AdaptToWnd( window );
+			world->AdaptCam( window );
 	}
 
-	elia->Update( dt, keyStates );
-	//done
-	if ( keyStates[SDL_SCANCODE_SPACE] ) {
-		if ( elia->Shoot( projectiles ) )
-		{
-			Mix_PlayChannel( -1, sfxshoot, 0 );
-		}
-	}
-	//done
-	for (Entity* e : enemies) {
-
-		const auto projectilesNOld = projectiles.size();
-		e->Update( dt, elia->GetPos() );
-		//done
-		if (projectilesNOld != projectiles.size()) {
-			Mix_PlayChannel( -1, sfxshoot, 0 );
-		}
-
-		//done
-		if (elia->GetHitBox().IsOverlappingWith( e->GetHitBox() )) {
-			elia->ApplyDamage(e->GetAtk());
-			e->ApplyDamage(elia->GetAtk());
-		}
-		//collision with back and foreground
-		//done
-		{
-			auto bgobs = bg->GetObstacles();
-			auto hbx = e->GetHitBox();
-
-			for (auto ob : bgobs) {
-				if (ob.IsOverlappingWith( hbx )) {
-					e->CollideRect( ob );
-				}
-			}
-		}
-		{
-			auto bgobs = fg->GetObstacles();
-			auto hbx = e->GetHitBox();
-
-			for (auto ob : bgobs) {
-				if (ob.IsOverlappingWith( hbx )) {
-					e->CollideRect( ob );
-				}
-			}
-		}
-	}
-
-	//collision with back and foreground
-	//done
-	{
-		const auto bgobs = bg->GetObstacles();
-		auto hbx = elia->GetHitBox();
-		for (auto ob : bgobs) {
-			if (ob.IsOverlappingWith( hbx )) {
-				elia->CollideRect( ob );
-			}
-		}
-	}
-	{
-		const auto bgobs = fg->GetObstacles();
-		auto hbx = elia->GetHitBox();
-		for (auto ob : bgobs) {
-			if (ob.IsOverlappingWith( hbx )) {
-				elia->CollideRect( ob );
-			}
-		}
-	}
-
-	//done
-	for (auto p = projectiles.begin(); p != projectiles.end(); p++)
-	{
-		p->Update(dt);
-
-		if (p->IsFriend()) {
-			RectF phitbox = p->GetHitBox();
-
-			for (Entity* e : enemies) {
-				if (e->GetHitBox().IsOverlappingWith( phitbox )) {
-					p->Hits();
-					e->ApplyDamage( p->GetDmg() );
-					Mix_PlayChannel( -1, sfxexplosion, 0 );
-				}
-			}
-		}
-		else {
-			if (p->GetHitBox().IsOverlappingWith( elia->GetHitBox() )) {
-				p->Hits();
-				elia->ApplyDamage( p->GetDmg() );
-				Mix_PlayChannel( -1, sfxexplosion, 0 );
-			}
-		}
-	}
-
-	util::remove_erase_if( projectiles, 
-		[]( Projectile p ) {
-		return p.ToBeRemoved();
-		} );
-
-	util::remove_erase_if( enemies,
-		[]( Entity* e ) {
-			return e->IsDead();
-		} );
-
-	cam.CenterOnPoint( (Vei2)elia->GetHitBox().GetCenter() );
+	world->ProcessInput();
+	world->Update( dt );
 
 	return quit;
 }
@@ -187,19 +68,8 @@ void Game::Draw()
 	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xff );
 	SDL_RenderClear( gRenderer );
 
-	bg->Draw( cam );
+	world->Draw();
 
-	for (Entity* e : enemies) {
-		e->Draw( cam );
-	}
-
-	elia->Draw( cam );
-
-	for (const Projectile& p : projectiles) {
-		p.Draw( cam );
-	}
-
-	fg->Draw( cam );
 	//Update screen
 	SDL_RenderPresent( gRenderer );
 }
@@ -261,7 +131,6 @@ bool Game::init()
 			}
 		}
 	}
-	
 
 	return success;
 }
@@ -271,26 +140,10 @@ bool Game::loadMedia()
 	//Loading success flag
 	bool success = true;
 
-	//Load sprite sheet texture
-	spriteSheet = new Surface;
-	spriteSheet->SetRenderer( gRenderer );
-	if (!spriteSheet->LoadData( "imgs\\sprites.png" ))
-	{
-		OutputDebugStringA( "Failed to load sprite sheet texture!\n" );
-		success = false;
-	}
-
-	backgroundsheet = new Surface;
-	backgroundsheet->SetRenderer( gRenderer );
-	if (!backgroundsheet->LoadData( "imgs\\bgtiles.png" ))
-	{
-		OutputDebugStringA( "Failed to load background sheet texture!\n" );
-		success = false;
-	}
-
 	auto cursorSprite = IMG_Load( "imgs\\roundcursor.png" );
 	if (cursorSprite == NULL) {
 		OutputDebugStringA( "Failed to load cursor texture" );
+		success = false;
 	}
 	else
 	{
@@ -302,40 +155,11 @@ bool Game::loadMedia()
 		SDL_SetCursor( cursor );
 	}
 
-	music = Mix_LoadMUS( "audio\\SuperMarioBros.wav" );
-	if (music == NULL)
-	{
-		OutputDebugStringA( (std::string( "Failed to load music! SDL_mixer Error: \n") + Mix_GetError()).c_str() );
-		success = false;
-	}
-
-	sfxshoot = Mix_LoadWAV( "audio\\smb_fireball.wav" );
-	if (sfxshoot == NULL)
-	{
-		OutputDebugStringA( (std::string( "Failed to load shooting sfx! SDL_mixer Error: \n") + Mix_GetError()).c_str() );
-		success = false;
-	}
-
-	sfxexplosion = Mix_LoadWAV( "audio\\smb_fireworks.wav" );
-	if (sfxexplosion == NULL)
-	{
-		OutputDebugStringA( (std::string( "Failed to load explosion sfx! SDL_mixer Error: \n") + Mix_GetError()).c_str() );
-		success = false;
-	}
-
 	return success;
 }
 
 void Game::close()
 {
-	//Free loaded images
-	delete spriteSheet;
-	delete backgroundsheet;
-	Mix_FreeChunk( sfxshoot );
-	Mix_FreeChunk( sfxexplosion );
-	sfxshoot = NULL;
-	sfxexplosion = NULL;
-
 	//Destroy window
 	window.free();
 

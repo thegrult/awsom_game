@@ -12,27 +12,38 @@
 
 class World : public Wrld{
 public:
-	World( SDL_Renderer* gRenderer );
+	World( SDL_Renderer* gRenderer, const Uint8* kbd, const Uint32& mouseKeys, const Vec2& mousePos );
 	~World();
 	void Update( const float dt );
-	void ProcessInput( const Uint8* kbd, const Uint32 mouseKeys, const Vec2 mousePos );
+	void ProcessInput();
 	void Draw() const;
+
+	void AdaptCam( Window w ) { cam.AdaptToWnd( w ); }
 public:
 	void PlaySnd( Sounds s ) override;
-	void SpawnBullet( class Projectile&& p ) override;
+	void SpawnBullet( Projectile* p ) override;
 
-	const std::vector<Projectile>* GetProjConst() const override;
+	const std::vector<Projectile*>* GetProjConst() const override;
 	const std::vector<Entity*>* GetEntitiesConst() const override;
 	const Protagonist* GetProtagonistConst() const override;
 	const std::pair<const Background*,const Background*> GetBackandForeGround() const override;
+
+	const Uint8* GetKbd() const override;
+	const Uint32& GetMouseKeys() const override;
+	const Vec2& GetMousePos() const override;
 private:
+	//references to kbd, mouse and its pos
+	const Uint8* kbd;
+	const Uint32& mouseKeys;
+	const Vec2& mousePos;
+
 	const int nEnemies = 10;
 	//entities
 	Protagonist* elia = nullptr;
 
 	std::vector<Entity*> enemies;
 
-	std::vector<Projectile> projectiles;
+	std::vector<Projectile*> projectiles;
 
 	//other game stuff
 	Background* bg = nullptr;
