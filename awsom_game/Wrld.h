@@ -21,5 +21,5 @@ public:
 
 	virtual const uint8_t* GetKbd() const = 0;
 	virtual const uint32_t& GetMouseKeys() const = 0;
-	virtual const Vec2& GetMousePos() const = 0;
+	virtual const Vei2& GetMousePos() const = 0;
 };

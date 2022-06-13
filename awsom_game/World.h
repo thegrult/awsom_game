@@ -12,7 +12,7 @@
 
 class World : public Wrld{
 public:
-	World( SDL_Renderer* gRenderer, const Uint8* kbd, const Uint32& mouseKeys, const Vec2& mousePos );
+	World( SDL_Renderer* gRenderer, const Uint8* kbd, const Uint32& mouseKeys, const Vei2& mousePos );
 	~World();
 	void Update( const float dt );
 	void ProcessInput();
@@ -30,12 +30,12 @@ public:
 
 	const Uint8* GetKbd() const override;
 	const Uint32& GetMouseKeys() const override;
-	const Vec2& GetMousePos() const override;
+	const Vei2& GetMousePos() const override;
 private:
 	//references to kbd, mouse and its pos
 	const Uint8* kbd;
 	const Uint32& mouseKeys;
-	const Vec2& mousePos;
+	const Vei2& mousePos;
 
 	const int nEnemies = 10;
 	//entities

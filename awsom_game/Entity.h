@@ -17,7 +17,7 @@ public:
 
 	RectF GetHitBox() const;
 	Vec2 GetPos() const;
-	int GetAtk() const { return atk; }
+	virtual float GetAtk() const { return atk; }
 	bool IsDead() const { return state.Is( State::Dead ); }
 	bool IsAlive() const { return !IsDead() && !state.Is( State::Dying ); }
 protected:
@@ -27,7 +27,7 @@ protected:
 
 	void ClampToRect( RectF rect );
 	void CollideRect( RectF rect );
-	void ApplyDamage( int dmg );
+	void ApplyDamage( float dmg );
 	void ApplyInvincibility( float dur );
 private:
 	void SetPos( const Vec2& nPos );
@@ -68,6 +68,6 @@ protected:
 	Vec2 pos;
 	Vec2 velocity = { 0,0 };
 
-	int hp = 10;
-	int atk = 2;
+	float hp = 10.0f;
+	float atk = 2.0f;
 };

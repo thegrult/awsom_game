@@ -78,7 +78,7 @@ void Entity::CollideRect( RectF rect )
 	SetPos( hbx.TopLeft() );
 }
 
-void Entity::ApplyDamage( int dmg )
+void Entity::ApplyDamage( float dmg )
 {
 	if (!state.Is( State::Invincible ) && !state.Is( State::Damaged ) && IsAlive()) {
 		hp -= dmg;

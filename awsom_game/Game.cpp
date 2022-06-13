@@ -35,6 +35,7 @@ bool Game::UpdateGame( const float dt )
 	bool quit = false;
 
 	const Uint8* kbd = SDL_GetKeyboardState( NULL );
+	mouseKeys = SDL_GetMouseState( &mousePos.x, &mousePos.y );
 
 	//Handle events on queue
 	while (SDL_PollEvent( &e ) != 0)

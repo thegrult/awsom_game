@@ -1,7 +1,7 @@
 #include "Projectile.h"
 
 Projectile::Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int normalFramesCount, int explosionFrameCount,
-	float holdTime, Surface* sprite, SDL_Renderer* renderer, const RectI& hitBox, float range, const Vec2& velocity, int dmg, bool isFriend )
+	float holdTime, Surface* sprite, SDL_Renderer* renderer, const RectI& hitBox, float range, const Vec2& velocity, float dmg, bool isFriend )
 	:
 	hitBox( hitBox ),
 	range( range ),

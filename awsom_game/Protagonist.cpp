@@ -4,14 +4,15 @@ Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite )
 	:
 	Entity( spawnPos, {0,0}, 32, 32, 8, 9, sprite, { 12, 20, 24, 32 } ),
 	sprite(sprite),
-	inv( sprite->GetRenderer() )
+	inv( sprite->GetRenderer(), mode )
 {}
 
 void Protagonist::HandleInput( Wrld* wrld )
 {
+	inv.HandleInput( wrld );
 	const auto kbd = wrld->GetKbd();
 	if (action.IsDoing( action::dash )) {
-		SetVel( dir.GetNormalized() * rollSpeed );
+		SetVel( dir.GetNormalized() * rollSpeed * mode.DiscernMode( McMode::Modes::ranged, 0.8f, 1.0f ));
 	}
 	else if (action.IsDoing( action::walk )) {
 		Vei2 direc = { 0,0 };
@@ -49,7 +50,7 @@ void Protagonist::HandleInput( Wrld* wrld )
 			const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
 
 			wrld->SpawnBullet( new Projectile( GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
-				sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk(), true ) );
+				sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f * mode.DiscernMode( McMode::Modes::ranged, 1.5f, 1.0f ), bullVel, Entity::GetAtk() * mode.DiscernMode( McMode::Modes::ranged, 2.0f, 1.0f), true ) );
 			wrld->PlaySnd( Wrld::Sounds::sfxshoot );
 		}
 	}
@@ -107,6 +108,7 @@ void Protagonist::Update( float dt )
 {
 	action.Update( dt );
 	Entity::Update( dt );
+	inv.Update( dt );
 }
 
 void Protagonist::SetDirection( const Vec2& dir )
@@ -143,4 +145,9 @@ void Protagonist::Draw( const Camera& camPos )
 {
 	Entity::Draw( camPos );
 	inv.Draw( { 0, SCREEN_WIDTH, 0, SCREEN_HEIGHT } );
+}
+
+float Protagonist::GetAtk() const
+{
+	return Entity::GetAtk() * mode.DiscernMode(McMode::Modes::melee, 5, 1 );
 }

@@ -1,6 +1,6 @@
 #include "World.h"
 
-World::World( SDL_Renderer* gRenderer, const Uint8* kbd, const Uint32& mouseKeys, const Vec2& mousePos )
+World::World( SDL_Renderer* gRenderer, const Uint8* kbd, const Uint32& mouseKeys, const Vei2& mousePos )
 	:
 	cam( { 0,0 }, RectI( { 0,0 }, SCREEN_WIDTH, SCREEN_HEIGHT ), RectI( { 0,0 }, LEVEL_WIDTH, LEVEL_HEIGHT ) ),
 	kbd(kbd),
@@ -169,7 +169,7 @@ const Uint32& World::GetMouseKeys() const
 	return mouseKeys;
 }
 
-const Vec2& World::GetMousePos() const
+const Vei2& World::GetMousePos() const
 {
 	return mousePos;
 }

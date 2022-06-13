@@ -33,6 +33,7 @@ public:
 		:
 		Rect( {rect.x, rect.y}, rect.w, rect.h )
 	{}
+	Rect() = default;
 
 	bool IsOverlappingWith( const Rect& other ) const
 	{

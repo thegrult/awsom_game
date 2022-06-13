@@ -14,6 +14,8 @@ public:
 	void Update( float dt );
 
 	void Draw( const Camera& camPos );
+
+	float GetAtk() const override;
 private:
 	void SetDirection( const Vec2& dir );
 
@@ -31,6 +33,8 @@ private:
 private:
 	Surface* sprite;
 	Inventory inv;
+
+	McMode mode;
 public:
 	enum action{
 		walk,

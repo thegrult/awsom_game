@@ -45,7 +45,7 @@ private:
 
 	const Uint8* kbd = SDL_GetKeyboardState( NULL );
 	Uint32 mouseKeys;
-	Vec2 mousePos;
+	Vei2 mousePos;
 private:
 	World* world;
 };

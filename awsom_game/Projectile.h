@@ -12,7 +12,7 @@ public:
 	//hitBox: the actual size of the projectile (not the sprite, the actual thing); range: the max distance the projectile can travel before exploding, animation is based on this.
 	//velocity: movement speed and direction per second
 	Projectile( const Vec2& spawnPos, const Vei2& readPos, int spritewidth, int spriteheight, int normalFramesCount, int explosionFramesCount, float holdTime, Surface* sprite,
-				SDL_Renderer* renderer, const RectI& hitBox, float range, const Vec2& velocity, int dmg, bool isFriend );
+				SDL_Renderer* renderer, const RectI& hitBox, float range, const Vec2& velocity, float dmg, bool isFriend );
 
 	void HandleInput( Wrld* wrld );
 	void Draw( const Camera& camPos ) const;
@@ -20,7 +20,7 @@ public:
 	void Update( float dt );
 	RectF GetHitBox() const;
 
-	int GetDmg() const { return dmg; }
+	float GetDmg() const { return dmg; }
 
 	//activates exploding sequence (damage to other entities is applied at the start of the explosion)
 	void Hits();
@@ -35,7 +35,7 @@ public:
 	bool IsFriend() const { return isFriend; }
 private:
 	bool isFriend = true;
-	int dmg;
+	float dmg;
 	bool isExploding = false;
 	bool toRemove = false;
 	float expldur;
