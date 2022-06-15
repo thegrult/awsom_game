@@ -191,9 +191,11 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="imgs\bgtiles.png" />
+    <Image Include="imgs\bow_small.png" />
     <Image Include="imgs\inventorystolen.png" />
     <Image Include="imgs\roundcursor.png" />
     <Image Include="imgs\sprites.png" />
+    <Image Include="imgs\sword_small.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="resources\bgmap.txt" />

@@ -142,6 +142,12 @@
     <Image Include="imgs\inventorystolen.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="imgs\sword_small.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="imgs\bow_small.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="resources\bgmap.txt">

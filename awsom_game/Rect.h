@@ -98,6 +98,12 @@ public:
 		return left > right || top > bottom;
 	}
 
+	Rect<T> GetSquare() const
+	{
+		const auto shortside = GetHalfWidth() > GetHalfHeight() ? GetHalfHeight() : GetHalfWidth();
+		return FromCenter( GetCenter(), shortside, shortside );
+	}
+
 	explicit operator SDL_Rect() const{
 		return SDL_Rect{ int( left ), int( top ), int( right - left ), int( bottom - top ) };
 	}

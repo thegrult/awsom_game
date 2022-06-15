@@ -7,12 +7,13 @@
 #include <SDL_mouse.h>
 
 struct McMode {
-	enum class Modes {
+	enum Modes {
 		ranged,
 		melee
 	};
-	Modes mode = Modes::ranged;
+	int mode = Modes::ranged;
 	void SetMode( Modes newMode ) { mode = newMode; }
+	void SetMode( int newMode ) { mode = newMode; }
 	template <typename T>
 	T DiscernMode( Modes m, T yes, T no ) const{
 		return m == mode ? yes : no;
@@ -34,6 +35,8 @@ private:
 private:
 	Surface sprite;
 	bool shown = false;
+
+	std::vector<std::pair<int, std::pair<RectI, Surface*>>> imgs;
 
 	RectI box;
 

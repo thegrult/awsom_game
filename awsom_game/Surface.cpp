@@ -101,20 +101,26 @@ SDL_Texture* Surface::Data() const
 	return texture;
 }
 
-void Surface::Draw( const Vei2& pos, SDL_Rect* clip ) const
+void Surface::Draw( const Vei2& pos, const SDL_Rect* clip, const SDL_Rect* dst ) const
 {
-	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { pos.x, pos.y, width, height };
+	if (dst == NULL) {
+		//Set rendering space and render to screen
+		SDL_Rect renderQuad = { pos.x, pos.y, width, height };
 
-	//Set clip rendering dimensions
-	if (clip != NULL)
-	{
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
+		//Set clip rendering dimensions
+		if (clip != NULL)
+		{
+			renderQuad.w = clip->w;
+			renderQuad.h = clip->h;
+		}
+
+		//Render to screen
+		SDL_RenderCopy( renderer, texture, clip, &renderQuad );
 	}
-
-	//Render to screen
-	SDL_RenderCopy( renderer, texture, clip, &renderQuad );
+	else
+	{
+		SDL_RenderCopy( renderer, texture, clip, dst );
+	}
 }
 
 void Surface::SetAlpha( const Uint8& newalpha )
