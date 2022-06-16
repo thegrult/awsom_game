@@ -15,7 +15,7 @@ void Inventory::Draw( RectI screen )
 {
 	if (shown) {
 		sprite.Draw( screen.GetCenter() - (sprite.GetRect().GetDim() / 2) );
-		for (auto a : imgs) {
+		for (const auto& a : imgs) {
 			const auto dst = (SDL_Rect)a.second.first.GetSquare();
 			a.second.second->Draw( a.second.first.TopLeft(), 0, &dst );
 		}
@@ -26,7 +26,7 @@ void Inventory::HandleInput( Wrld* wrld )
 {
 	if (shown && (wrld->GetMouseKeys() && SDL_BUTTON(1)) && box.Contains( wrld->GetMousePos() )) {
 		const auto mpos = wrld->GetMousePos();
-		for (auto a : imgs) {
+		for (const auto& a : imgs) {
 			if (a.second.first.Contains( mpos )) {
 				mode.SetMode( a.first );
 				break;

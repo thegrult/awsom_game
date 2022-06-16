@@ -37,8 +37,8 @@ public:
     bool IsFullscreen();
 private:
     //Window data
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
 
     //Window dimensions
     int width;

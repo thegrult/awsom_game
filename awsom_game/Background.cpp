@@ -9,7 +9,7 @@ Background::Background( Surface* sprite, int width, int height, Vei2 readPos, Ve
 	gridh( gridh ),
 	drawStartPos( drawStartPos )
 {
-	tiles.reserve( gridw * gridh );
+	tiles.reserve( (size_t)gridw * (size_t)gridh );
 
 	char tile;
 
@@ -32,7 +32,7 @@ void Background::Draw( const Camera& cam ) const
 	const auto camPos = cam.GetPos();
 	for (int y = 0; y < gridh; y++) {
 		for (int x = 0; x < gridw; x++) {
-			const auto j = tiles[x + y * gridw];
+			const auto j = tiles[(size_t)x + (size_t)y * (size_t)gridw];
 			SDL_Rect clip = { j.TopLeft().x, j.TopLeft().y, j.GetDim().x, j.GetDim().y };
 			sprite->Draw( Vei2( x * tilew, y * tileh ) + drawStartPos - camPos, &clip );
 		}
