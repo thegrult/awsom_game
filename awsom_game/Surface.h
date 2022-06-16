@@ -20,7 +20,6 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 	RectI GetRect() const;
-	SDL_Texture* Data() const;
 	void Draw(const Vei2& pos, const SDL_Rect* clip = 0, const SDL_Rect* dst = 0) const;
 	void SetAlpha( const Uint8& alpha );
 	Uint8 GetAlpha();

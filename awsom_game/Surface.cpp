@@ -15,6 +15,7 @@ Surface::Surface( const std::string& path, SDL_Renderer* gRenderer )
 	}
 	else {
 		SDL_SetTextureBlendMode( newTexture, SDL_BLENDMODE_BLEND );
+		SDL_SetTextureScaleMode( newTexture, SDL_ScaleModeNearest );
 		SDL_SetTextureAlphaMod( newTexture, 0xff );
 		//Get image dimensions
 		SDL_QueryTexture( newTexture, NULL, NULL, &width, &height );
@@ -94,11 +95,6 @@ int Surface::GetHeight() const
 RectI Surface::GetRect() const
 {
 	return RectI( 0, width, 0, height );
-}
-
-SDL_Texture* Surface::Data() const
-{
-	return texture;
 }
 
 void Surface::Draw( const Vei2& pos, const SDL_Rect* clip, const SDL_Rect* dst ) const

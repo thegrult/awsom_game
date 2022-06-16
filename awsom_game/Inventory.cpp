@@ -6,7 +6,7 @@ Inventory::Inventory( SDL_Renderer* renderer, McMode& mode )
 	mode( mode )
 {
 	sprite.SetAlpha( 0xee );
-	box = sprite.GetRect().GetDisplaced( (Vei2(SCREEN_WIDTH, SCREEN_HEIGHT ) - sprite.GetRect().GetDim())/2 );
+	box = sprite.GetRect().GetDisplaced( (Vei2( SCREEN_WIDTH, SCREEN_HEIGHT ) - sprite.GetRect().GetDim()) / 2 );
 	imgs.push_back( { McMode::Modes::melee,{ RectI( box.left, box.GetCenter().x, box.top, box.bottom ), new Surface( "imgs\\sword_small.png", renderer )} } );
 	imgs.push_back( { McMode::Modes::ranged,{ RectI( box.GetCenter().x, box.right, box.top, box.bottom ), new Surface( "imgs\\bow_small.png", renderer )} } );
 }
