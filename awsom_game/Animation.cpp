@@ -43,17 +43,12 @@ void Animation::DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b ) const
 	const auto j = frames[iCurFrame].GetDisplaced( srcDeltaPos );
 	SDL_Rect srcRect = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
 
-	sprite->DrawColorMod( pos, r, g, b, &srcRect );
+	sprite->Draw( pos, &srcRect, 0, r, g, b );
 }
 
 void Animation::DrawBlend( const Vei2& pos, const Uint8 alpha ) const
 {
-	const Uint8 prevAlpha = sprite->GetAlpha();
-	sprite->SetAlpha( alpha );
-
-	Draw( pos );
-
-	sprite->SetAlpha( prevAlpha );
+	sprite->Draw( pos, 0, 0, 0xff, 0xff, 0xff, alpha );
 }
 
 void Animation::Update( float dt )
