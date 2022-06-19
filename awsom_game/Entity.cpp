@@ -83,7 +83,7 @@ void Entity::ApplyDamage( float dmg )
 	if (!state.Is( State::Invincible ) && !state.Is( State::Damaged ) && IsAlive()) {
 		hp -= dmg;
 		if( dmg > 0 )
-		state.ChangeState( State::Damaged, 0.5f );
+		state.ChangeState( State::Damaged, 0.1f );
 
 		if (hp <= 0) {
 			state.ChangeState( State::Dying, deathAnimTime );

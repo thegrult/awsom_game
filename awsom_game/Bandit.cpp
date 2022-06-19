@@ -62,7 +62,7 @@ void Bandit::HandleInput( Wrld* wrld )
 		const auto hbx = GetHitBox();
 		for (const auto p : *proj)
 		{
-			if (p->IsFriend() && hbx.IsOverlappingWith( p->GetHitBox() )) {
+			if (p->IsFriend() && !p->IsExploding() && hbx.IsOverlappingWith( p->GetHitBox() )) {
 				ApplyDamage( p->GetDmg() );
 			}
 		}

@@ -29,9 +29,8 @@ public:
 	void HandleInput( Wrld* wrld );
 	void Update( const float dt ) { action.Update( dt ); }
 private:
-	enum {
-		changeMode
-	};
+	void SetMode( McMode::Modes newMode );
+	void SetMode( int newMode );
 private:
 	Surface sprite;
 	bool shown = false;
@@ -43,4 +42,6 @@ private:
 	Action action;
 
 	McMode& mode;
+
+	friend class Protagonist;
 };

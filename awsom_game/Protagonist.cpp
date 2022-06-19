@@ -9,96 +9,90 @@ Protagonist::Protagonist( Vec2 spawnPos, Surface* sprite )
 
 void Protagonist::HandleInput( Wrld* wrld )
 {
-	inv.HandleInput( wrld );
-	const auto kbd = wrld->GetKbd();
-	if (action.IsDoing( action::dash )) {
-		SetVel( dir.GetNormalized() * rollSpeed * mode.DiscernMode( McMode::Modes::ranged, 0.8f, 1.0f ));
-	}
-	else if (action.IsDoing( action::walk )) {
-		Vei2 direc = { 0,0 };
+	if (IsAlive()) {
+		this->wrld = wrld;
+		inv.HandleInput( wrld );
+		const auto kbd = wrld->GetKbd();
+		if (action.IsDoing( action::walk ) && !action.IsDoing( action::dash )) {
+			Vei2 direc = { 0,0 };
 
-		if (kbd[SDL_SCANCODE_W]) {
-			direc.y -= 1;
-		}
-		if (kbd[SDL_SCANCODE_S]) {
-			direc.y += 1;
-		}
-		if (kbd[SDL_SCANCODE_A]) {
-			direc.x -= 1;
-		}
-		if (kbd[SDL_SCANCODE_D]) {
-			direc.x += 1;
-		}
+			if (kbd[SDL_SCANCODE_W]) {
+				direc.y -= 1;
+			}
+			if (kbd[SDL_SCANCODE_S]) {
+				direc.y += 1;
+			}
+			if (kbd[SDL_SCANCODE_A]) {
+				direc.x -= 1;
+			}
+			if (kbd[SDL_SCANCODE_D]) {
+				direc.x += 1;
+			}
 
-		SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
-		SetDirection( (Vec2)direc );
+			SetVel( Vec2( direc ).GetNormalized() * walkingSpeed );
+			SetDirection( (Vec2)direc );
 
-		if (direc != Vei2( 0, 0 )) {
-			dir = (Vec2)direc;
-		}
+			if (direc != Vei2( 0, 0 )) {
+				dir = (Vec2)direc;
+			}
 
-		if (kbd[SDL_SCANCODE_LSHIFT]) {
-			Dash();
-		}
-	}
-	else action.Do( action::walk, 1.0f );
-
-	if (kbd[SDL_SCANCODE_SPACE]) {
-		if (action.Do( action::shoot, 0.0f, 0.5f )) {
-			float bulletSpeed = 100.0f;
-
-			const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
-
-			wrld->SpawnBullet( new Projectile( GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
-				sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f * mode.DiscernMode( McMode::Modes::ranged, 1.5f, 1.0f ), bullVel, Entity::GetAtk() * mode.DiscernMode( McMode::Modes::ranged, 2.0f, 1.0f), true ) );
-			wrld->PlaySnd( Wrld::Sounds::sfxshoot );
-		}
-	}
-
-	if (kbd[SDL_SCANCODE_E]) {
-		if (action.Do( inventorytoggled, 0.0f, 0.5f )) {
-			inv.ToggleShown();
-		}
-	}
-
-	{
-		const auto entities = *(wrld->GetEntitiesConst());
-		const auto hbx = GetHitBox();
-
-		for (auto e : entities) {
-			if (hbx.IsOverlappingWith( e->GetHitBox() ))
-			{
-				ApplyDamage( e->GetAtk() );
+			if (kbd[SDL_SCANCODE_LSHIFT]) {
+				Do( dash );
 			}
 		}
-	}
+		else action.Do( action::walk, 1.0f );
 
-	{
-		const auto bgobs = wrld->GetBackandForeGround().first->GetObstacles();
-		auto hbx = GetHitBox();
-		for (auto ob : bgobs) {
-			if (ob.IsOverlappingWith( hbx )) {
-				CollideRect( ob );
-			}
+		if (kbd[SDL_SCANCODE_SPACE]) {
+			Do( shoot );
 		}
-	}
-	{
-		const auto bgobs = wrld->GetBackandForeGround().second->GetObstacles();
-		auto hbx = GetHitBox();
-		for (auto ob : bgobs) {
-			if (ob.IsOverlappingWith( hbx )) {
-				CollideRect( ob );
-			}
-		}
-	}
 
-	{
-		const auto proj = wrld->GetProjConst();
-		const auto hbx = GetHitBox();
-		for (const auto p : *proj)
+		if (kbd[SDL_SCANCODE_E]) {
+			Do( inventorytoggled );
+		}
+
+		if (kbd[SDL_SCANCODE_C]) {
+			combo.Start();
+		}
+
 		{
-			if (!p->IsFriend() && hbx.IsOverlappingWith( p->GetHitBox() )) {
-				ApplyDamage( p->GetDmg() );
+			const auto entities = *(wrld->GetEntitiesConst());
+			const auto hbx = GetHitBox();
+
+			for (auto e : entities) {
+				if (hbx.IsOverlappingWith( e->GetHitBox() ))
+				{
+					ApplyDamage( e->GetAtk() );
+				}
+			}
+		}
+
+		{
+			const auto bgobs = wrld->GetBackandForeGround().first->GetObstacles();
+			auto hbx = GetHitBox();
+			for (auto ob : bgobs) {
+				if (ob.IsOverlappingWith( hbx )) {
+					CollideRect( ob );
+				}
+			}
+		}
+		{
+			const auto bgobs = wrld->GetBackandForeGround().second->GetObstacles();
+			auto hbx = GetHitBox();
+			for (auto ob : bgobs) {
+				if (ob.IsOverlappingWith( hbx )) {
+					CollideRect( ob );
+				}
+			}
+		}
+
+		{
+			const auto proj = wrld->GetProjConst();
+			const auto hbx = GetHitBox();
+			for (const auto p : *proj)
+			{
+				if (!p->IsFriend() && !p->IsExploding() && hbx.IsOverlappingWith( p->GetHitBox() )) {
+					ApplyDamage( p->GetDmg() );
+				}
 			}
 		}
 	}
@@ -109,6 +103,33 @@ void Protagonist::Update( float dt )
 	action.Update( dt );
 	Entity::Update( dt );
 	inv.Update( dt );
+	combo.Update( dt, *this );
+}
+
+void Protagonist::Do( int a )
+{
+	switch (a)
+	{
+	case setModeMelee:
+		ChangeMode( McMode::Modes::melee );
+		break;
+	case setModeRanged:
+		ChangeMode( McMode::Modes::ranged );
+		break;
+	case walk:
+		action.Do( walk, 0.01f, coolDowns[walk] );
+		break;
+	case dash:
+		Dash();
+		break;
+	case shoot:
+		Shoot( wrld );
+		break;
+	case inventorytoggled:
+		if( action.Do( action::inventorytoggled, 0.0f, 0.5f ))
+		inv.ToggleShown();
+		break;
+	}
 }
 
 void Protagonist::SetDirection( const Vec2& dir )
@@ -136,9 +157,28 @@ void Protagonist::SetDirection( const Vec2& dir )
 
 void Protagonist::Dash()
 {
-	if (action.Do( action::dash, 0.4f, 1.0f )) {
+	if (action.Do( action::dash, 0.4f, coolDowns[action::dash] )) {
 		ApplyInvincibility( 0.2f );
+		SetVel( dir.GetNormalized() * rollSpeed * mode.DiscernMode( McMode::Modes::ranged, 0.8f, 1.0f ) );
 	}
+}
+
+void Protagonist::Shoot( Wrld* wrld )
+{
+	if (action.Do( action::shoot, 0.0f, coolDowns[action::shoot] )) {
+		float bulletSpeed = 100.0f;
+
+		const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
+
+		wrld->SpawnBullet( new Projectile( GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
+			sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f * mode.DiscernMode( McMode::Modes::ranged, 1.5f, 1.0f ), bullVel, Entity::GetAtk() * mode.DiscernMode( McMode::Modes::ranged, 2.0f, 1.0f ), true ) );
+		wrld->PlaySnd( Wrld::Sounds::sfxshoot );
+	}
+}
+
+void Protagonist::ChangeMode( McMode::Modes mode )
+{
+	inv.SetMode( mode );
 }
 
 void Protagonist::Draw( const Camera& camPos )
@@ -149,5 +189,37 @@ void Protagonist::Draw( const Camera& camPos )
 
 float Protagonist::GetAtk() const
 {
-	return Entity::GetAtk() * mode.DiscernMode(McMode::Modes::melee, 5, 1 );
+	return Entity::GetAtk() * mode.DiscernMode(McMode::Modes::melee, 4, 1 );
+}
+
+Protagonist::Combo::Combo( const std::vector<std::pair<int, float>>& moves )
+	:
+	moves(moves)
+{}
+
+void Protagonist::Combo::AddMove( int move, float waitTime )
+{
+	moves.push_back( { move, waitTime } );
+}
+
+void Protagonist::Combo::Update( float dt, Protagonist& mc )
+{
+	if (active) {
+		queue[0].second -= dt;
+		if (queue[0].second <= 0.0f) {
+			queue.erase( queue.begin() );
+			if (queue.size() > 0) {
+				mc.Do( queue[0].first );
+			}
+			else active = false;
+		}
+	}
+}
+
+void Protagonist::Combo::Start()
+{
+	if (!active) {
+		active = true;
+		queue = moves;
+	}
 }

@@ -28,9 +28,19 @@ void Inventory::HandleInput( Wrld* wrld )
 		const auto mpos = wrld->GetMousePos();
 		for (const auto& a : imgs) {
 			if (a.second.first.Contains( mpos )) {
-				mode.SetMode( a.first );
+				SetMode( a.first );
 				break;
 			}
 		}
 	}
+}
+
+void Inventory::SetMode( McMode::Modes newMode )
+{
+	mode.SetMode( newMode );
+}
+
+void Inventory::SetMode( int newMode )
+{
+	mode.SetMode( newMode );
 }
