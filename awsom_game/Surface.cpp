@@ -2,7 +2,6 @@
 #include <Windows.h>
 #include <cassert>
 #include <fstream>
-#include <algorithm>
 
 Surface::Surface( const std::string& path, SDL_Renderer* gRenderer )
 	:
@@ -100,10 +99,10 @@ void Surface::SetRenderer( SDL_Renderer* newrenderer )
 	renderer = newrenderer;
 }
 
-void Surface::Draw( const Vei2& pos, SDL_Rect* clip, const SDL_Rect* dst, Uint8 r, Uint8 g, Uint8 b, Uint8 a ) const
+void Surface::Draw( const Vei2& pos, const SDL_Rect* clip, const SDL_Rect* dst, Uint32 dword ) const
 {
-	SDL_SetTextureColorMod( texture, r, g, b );
-	SDL_SetTextureAlphaMod( texture, a );
+	SDL_SetTextureColorMod( texture, dword >> 24, (dword >> 16) & 0x000000ff, (dword >> 8) & 0x000000ff );
+	SDL_SetTextureAlphaMod( texture, dword & 0x000000ff );
 	if (dst == NULL) {
 		//Set rendering space and render to screen
 		SDL_Rect renderQuad = { pos.x, pos.y, width, height };

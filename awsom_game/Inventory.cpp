@@ -13,7 +13,7 @@ Inventory::Inventory( SDL_Renderer* renderer, McMode& mode )
 void Inventory::Draw( RectI screen )
 {
 	if (shown) {
-		sprite.Draw( screen.GetCenter() - (sprite.GetRect().GetDim() / 2), 0, 0, 0xff, 0xff, 0xff, 0xd9 );
+		sprite.Draw( screen.GetCenter() - (sprite.GetRect().GetDim() / 2), 0, 0, 0xffffffd9 );
 		for (const auto& a : imgs) {
 			const auto dst = (SDL_Rect)a.second.first.GetSquare();
 			a.second.second->Draw( a.second.first.TopLeft(), 0, &dst );

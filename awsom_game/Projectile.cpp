@@ -36,27 +36,19 @@ void Projectile::HandleInput( Wrld* wrld )
 		}
 	}
 
-	{
-		auto bgobs = wrld->GetBackandForeGround().first->GetObstacles();
-		auto hbx = GetHitBox();
+	auto bg = wrld->GetBackandForeGround().first;
 
-		for (auto ob : bgobs) {
-			if (ob.IsOverlappingWith( hbx )) {
-				Hits();
-				wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
-			}
-		}
+	if (bg->IsColliding( GetHitBox() ))
+	{
+		Hits();
+		wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
 	}
-	{
-		auto fgobs = wrld->GetBackandForeGround().second->GetObstacles();
-		auto hbx = GetHitBox();
+	auto fg = wrld->GetBackandForeGround().second;
 
-		for (auto ob : fgobs) {
-			if (ob.IsOverlappingWith( hbx )) {
-				Hits();
-				wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
-			}
-		}
+	if (fg->IsColliding( GetHitBox() ))
+	{
+		Hits();
+		wrld->PlaySnd( Wrld::Sounds::sfxexplosion );
 	}
 }
 
@@ -75,6 +67,15 @@ void Projectile::Draw( const Camera& cam ) const
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
 	SDL_RenderDrawRect( renderer, &HitBox );
 #endif
+}
+
+Drawable Projectile::GetDrawable( const Camera& cam ) const
+{
+	const auto camPos = cam.GetPos();
+	if (IsExploding())
+		return explanim.CreateDrawable( (Vei2)pos - camPos, 0xffffffff );
+	else
+		return animation.CreateDrawable( (Vei2)pos - camPos, 0xffffffff );
 }
 
 void Projectile::Update( float dt )

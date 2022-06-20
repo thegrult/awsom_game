@@ -8,7 +8,7 @@ public:
 	void Draw() const;
 private:
 	const Surface* pSurf;
-	const RectI srcRect;
-	const RectI dstRect;
+	const SDL_Rect srcRect;
+	const SDL_Rect dstRect;
 	const Uint32 dword;
 };

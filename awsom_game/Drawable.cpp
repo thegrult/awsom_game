@@ -10,5 +10,5 @@ Drawable::Drawable( const Surface* pSurf, const RectI& srcRect, const RectI& dst
 
 void Drawable::Draw() const
 {
-
+	pSurf->Draw( { dstRect.x, dstRect.y }, &srcRect, &dstRect, dword );
 }

@@ -25,30 +25,36 @@ void Animation::operator=( const Animation& rhs )
 	width = rhs.width;
 }
 
-void Animation::Draw( const Vei2& pos ) const
+void Animation::Draw( const Vei2& pos, const Uint32 dword ) const
 {
-	//Render to screen
 	const auto j = frames[iCurFrame].GetDisplaced( srcDeltaPos );
 	SDL_Rect srcRect = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
 
-	sprite->Draw( pos, &srcRect );
+	sprite->Draw( pos, &srcRect, 0, dword );
 }
 
 void Animation::DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b ) const
 {
-	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { pos.x, pos.y, width, height };
-
-	//Render to screen
 	const auto j = frames[iCurFrame].GetDisplaced( srcDeltaPos );
 	SDL_Rect srcRect = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
 
-	sprite->Draw( pos, &srcRect, 0, r, g, b );
+	Draw( pos, (r << 24) | (g << 16) | (b << 8) );
 }
 
 void Animation::DrawBlend( const Vei2& pos, const Uint8 alpha ) const
 {
-	sprite->Draw( pos, 0, 0, 0xff, 0xff, 0xff, alpha );
+	const auto j = frames[iCurFrame].GetDisplaced( srcDeltaPos );
+	SDL_Rect srcRect = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
+
+	sprite->Draw( pos, &srcRect, 0, 0xffffff00 | alpha );
+}
+
+Drawable Animation::CreateDrawable( const Vei2& pos, const Uint32 dword ) const
+{
+	const auto j = frames[iCurFrame].GetDisplaced( srcDeltaPos );
+	SDL_Rect srcRect = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
+
+	return Drawable( sprite, srcRect, RectI( pos, pos + j.GetDim() ), dword );
 }
 
 void Animation::Update( float dt )

@@ -12,7 +12,7 @@ public:
 
 	void Draw( const Camera& cam ) const;
 
-	bool IsColliding( RectI hitBox );
+	bool IsColliding( RectI hitBox ) const;
 
 	const std::vector<RectI>& GetObstacles() const {
 		return obstacles;

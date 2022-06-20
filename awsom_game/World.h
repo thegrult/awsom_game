@@ -16,7 +16,7 @@ public:
 	~World();
 	void Update( const float dt );
 	void ProcessInput();
-	void Draw() const;
+	void Render() const;
 
 	void AdaptCam( Window w ) { cam.AdaptToWnd( w ); }
 public:

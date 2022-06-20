@@ -69,7 +69,7 @@ void Game::Draw()
 	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xff );
 	SDL_RenderClear( gRenderer );
 
-	world->Draw();
+	world->Render();
 
 	//Update screen
 	SDL_RenderPresent( gRenderer );

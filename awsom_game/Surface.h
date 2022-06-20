@@ -20,7 +20,7 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 	RectI GetRect() const;
-	void Draw( const Vei2& pos, SDL_Rect* clip = 0, const SDL_Rect* dst = 0, Uint8 r = 0xff, Uint8 g = 0xff, Uint8 b = 0xff, Uint8 a = 0xff ) const;
+	void Draw( const Vei2& pos, const SDL_Rect* clip = 0, const SDL_Rect* dst = 0, Uint32 dword = 0xffffffff ) const;
 	void FreeData();
 	bool LoadData( const std::string& filename );
 	void SetRenderer( SDL_Renderer* renderer );

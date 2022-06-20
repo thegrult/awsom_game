@@ -46,7 +46,7 @@ void Background::Draw( const Camera& cam ) const
 #endif
 }
 
-bool Background::IsColliding( RectI hitBox )
+bool Background::IsColliding( RectI hitBox ) const
 {
 	return std::any_of( obstacles.begin(), obstacles.end(), 
 		[&hitBox]( RectI ob )

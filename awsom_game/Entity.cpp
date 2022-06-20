@@ -51,6 +51,25 @@ void Entity::Draw( const Camera& cam ) const
 	}
 }
 
+Drawable Entity::GetDrawable( const Camera& cam ) const
+{
+	if (drawingBox.GetDisplaced( (Vei2)pos ).IsOverlappingWith( cam.GetFocus() )) {
+		if (state.Is( State::Dead )) {}
+		else if (state.Is( State::Damaged )) {
+			return avatar.GetDrawable( (Vei2)pos - cam.GetPos(), 0xff000000 );
+		}
+		else if (state.Is( State::Dying )) {
+			Uint32 alpha = 0xff;
+			alpha *= Uint32( state.StateTimeLeft() * 1000 );
+			alpha /= Uint32( deathAnimTime * 1000 );
+			return avatar.GetDrawable( (Vei2)pos - cam.GetPos(), 0xffffff00 | Uint8( alpha ) );
+		}
+		else {
+			return avatar.GetDrawable( (Vei2)pos - cam.GetPos() );
+		}
+	}
+}
+
 void Entity::ClampToRect( RectF rect )
 {
 	RectF hbx = GetHitBox();

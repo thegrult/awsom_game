@@ -12,6 +12,8 @@ public:
 
 	void Draw( const Camera& cam ) const;
 
+	Drawable GetDrawable( const Camera& cam ) const;
+
 	virtual void HandleInput( Wrld* wrld ) = 0;
 	virtual void Update( const float dt );
 
