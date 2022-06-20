@@ -13,7 +13,7 @@ public:
 	void HandleInput( Wrld* wrld ) override;
 	void Update( float dt );
 
-	void Draw( const Camera& camPos );
+	void DrawInv();
 
 	float GetAtk() const override;
 public:

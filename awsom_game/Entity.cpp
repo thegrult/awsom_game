@@ -25,38 +25,14 @@ void Entity::SetVel( const Vec2& vel )
 	velocity = vel;
 }
 
-void Entity::Draw( const Camera& cam ) const
-{
-	if ( drawingBox.GetDisplaced( (Vei2)pos ).IsOverlappingWith( cam.GetFocus() ) ) {
-		if (state.Is( State::Dead )) {}
-		else if (state.Is( State::Damaged )) {
-			avatar.DrawColorMod( (Vei2)pos - cam.GetPos(), 0xff, 0x00, 0x00 );
-		}
-		else if (state.Is( State::Dying )) {
-			Uint32 alpha = 0xff;
-			alpha *= Uint32( state.StateTimeLeft() * 1000 );
-			alpha /= Uint32( deathAnimTime * 1000 );
-			avatar.DrawBlend( (Vei2)pos - cam.GetPos(), Uint8( alpha ) );
-		}
-		else {
-			avatar.Draw( (Vei2)pos - cam.GetPos() );
-		}
-#ifdef _DEBUG
-		const auto j = GetHitBox().GetDisplaced( (Vec2)-cam.GetPos() );
-		SDL_Rect HitBox = { int( j.TopLeft().x ), (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
-		SDL_Renderer* renderer = avatar.GetRenderer();
-		SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
-		SDL_RenderDrawRect( renderer, &HitBox );
-#endif // DEBUG
-	}
-}
-
 Drawable Entity::GetDrawable( const Camera& cam ) const
 {
 	if (drawingBox.GetDisplaced( (Vei2)pos ).IsOverlappingWith( cam.GetFocus() )) {
-		if (state.Is( State::Dead )) {}
+		if (state.Is( State::Dead )) {
+			return Drawable( nullptr, RectI(), RectI(), 0 );
+		}
 		else if (state.Is( State::Damaged )) {
-			return avatar.GetDrawable( (Vei2)pos - cam.GetPos(), 0xff000000 );
+			return avatar.GetDrawable( (Vei2)pos - cam.GetPos(), 0xff0000ff );
 		}
 		else if (state.Is( State::Dying )) {
 			Uint32 alpha = 0xff;
@@ -67,6 +43,10 @@ Drawable Entity::GetDrawable( const Camera& cam ) const
 		else {
 			return avatar.GetDrawable( (Vei2)pos - cam.GetPos() );
 		}
+	}
+	else
+	{ 
+		return Drawable( nullptr, RectI(), RectI(), 0 );
 	}
 }
 

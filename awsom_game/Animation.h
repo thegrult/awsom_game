@@ -14,9 +14,6 @@ public:
 	}
 
 	void operator=( const Animation& rhs );
-	void Draw( const Vei2& pos, const Uint32 dword = 0xffffffff ) const;
-	void DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b ) const;
-	void DrawBlend( const Vei2& pos, const Uint8 alpha ) const;
 
 	Drawable CreateDrawable( const Vei2& pos, const Uint32 dword ) const;
 

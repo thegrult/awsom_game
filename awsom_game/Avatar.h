@@ -13,9 +13,6 @@ public:
 		return animCount;
 	}
 	void SetAnim( int animNum );
-	void Draw( const Vei2& drawPos, Uint32 dword = 0xffffffff ) const;
-	void DrawColorMod( const Vei2& pos, Uint8 r, Uint8 g, Uint8 b ) const;
-	void DrawBlend( const Vei2& drawPos, const Uint8 alpha ) const;
 
 	Drawable GetDrawable( const Vei2& pos, Uint32 dword = 0xffffffff ) const;
 

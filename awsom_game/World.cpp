@@ -100,19 +100,31 @@ void World::ProcessInput()
 	}
 }
 
-void World::Draw() const
+void World::Render() const
 {
+	std::vector<Drawable> drawables;
 	bg->Draw( cam );
-	elia->Draw( cam );
+	drawables.push_back( elia->GetDrawable( cam ) );
 	for (const auto e : enemies)
 	{
-		e->Draw( cam );
+		drawables.push_back( e->GetDrawable( cam ) );
 	}
 	for (const auto p : projectiles) {
-		p->Draw( cam );
+		drawables.push_back( p->GetDrawable( cam ) );
+	}
+
+	std::sort( drawables.begin(), drawables.end(),
+		[]( const Drawable& d1, const Drawable& d2 ) {
+			return d2.GetY() > d1.GetY();
+		} );
+
+	for (const auto& d : drawables) {
+		d.Draw();
 	}
 
 	fg->Draw( cam );
+
+	elia->DrawInv();
 }
 
 void World::PlaySnd( Sounds s )

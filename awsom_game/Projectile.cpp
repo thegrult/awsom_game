@@ -52,23 +52,6 @@ void Projectile::HandleInput( Wrld* wrld )
 	}
 }
 
-void Projectile::Draw( const Camera& cam ) const
-{
-	const auto camPos = cam.GetPos();
-	if (IsExploding())
-		explanim.Draw( (Vei2)pos - camPos );
-	else
-		animation.Draw( (Vei2)pos - camPos );
-
-#ifdef _DEBUG
-	const auto j = GetHitBox().GetDisplaced( (Vec2)-camPos );
-	SDL_Rect HitBox = { (int)j.TopLeft().x, (int)j.TopLeft().y, (int)j.GetDim().x, (int)j.GetDim().y };
-	SDL_Renderer* renderer = animation.GetRenderer();
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
-	SDL_RenderDrawRect( renderer, &HitBox );
-#endif
-}
-
 Drawable Projectile::GetDrawable( const Camera& cam ) const
 {
 	const auto camPos = cam.GetPos();

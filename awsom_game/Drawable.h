@@ -6,9 +6,10 @@ public:
 	//dword is in rgba format
 	Drawable( const Surface* pSurf, const RectI& srcRect, const RectI& dstRect, const Uint32 dword );
 	void Draw() const;
+	int GetY() const { return dstRect.y + dstRect.h; }
 private:
 	const Surface* pSurf;
-	const SDL_Rect srcRect;
-	const SDL_Rect dstRect;
-	const Uint32 dword;
+	SDL_Rect srcRect;
+	SDL_Rect dstRect;
+	Uint32 dword;
 };

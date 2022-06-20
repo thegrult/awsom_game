@@ -15,7 +15,6 @@ public:
 				SDL_Renderer* renderer, const RectI& hitBox, float range, const Vec2& velocity, float dmg, bool isFriend );
 
 	void HandleInput( Wrld* wrld );
-	void Draw( const Camera& cam ) const;
 
 	Drawable GetDrawable( const Camera& cam ) const;
 
