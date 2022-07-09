@@ -98,6 +98,11 @@ void World::ProcessInput()
 	{
 		p->HandleInput( this );
 	}
+
+	if (enemies.size() < nEnemies)
+	{
+		enemies.push_back( new Bandit( { xDist( rng ), yDist( rng ) }, spriteSheet ) );
+	}
 }
 
 void World::Render() const

@@ -170,7 +170,7 @@ void Protagonist::Shoot( Wrld* wrld )
 
 		const Vec2 bullVel = dir.GetNormalized() * bulletSpeed;
 
-		wrld->SpawnBullet( new Projectile( GetHitBox().GetCenter() + Vec2( 0.0f, -2.41f ), { 256, 224 }, 32, 32, 4, 3, 0.1f,
+		wrld->SpawnBullet( new Projectile( GetHitBox().GetCenter() + Vec2( 0.0f, -2.41f ), { 0, 288 }, 32, 32, 4, 3, 0.1f,
 			sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f * mode.DiscernMode( McMode::Modes::ranged, 1.5f, 1.0f ), bullVel, Entity::GetAtk() * mode.DiscernMode( McMode::Modes::ranged, 2.0f, 1.0f ), true ) );
 		wrld->PlaySnd( Wrld::Sounds::sfxshoot );
 	}

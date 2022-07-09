@@ -15,7 +15,9 @@ void Bandit::HandleInput( Wrld* wrld )
 	else isAngry = false;
 
 	if (isAngry) {
-		SetVel( (protagonist->GetPos() - GetPos()).GetNormalized() * speed );
+		const auto dir = (protagonist->GetPos() - GetPos()).GetNormalized();
+		SetVel( dir * speed );
+		SetDirection( dir );
 
 		if (IsAlive() && action.Do( action::shoot, 0.0f, 2.0f )) {
 			float bulletSpeed = 100.0f;
@@ -23,7 +25,7 @@ void Bandit::HandleInput( Wrld* wrld )
 			//dividing by speed instead of normalizing because we just set the velocity and we're sure it's normal, may have to change later
 			const Vec2 bullVel = velocity/speed * bulletSpeed;
 
-			wrld->SpawnBullet( new Projectile( GetHitBox().GetCenter(), { 256, 224 }, 32, 32, 4, 3, 0.1f,
+			wrld->SpawnBullet( new Projectile( GetHitBox().GetCenter(), { 0, 288 }, 32, 32, 4, 3, 0.1f,
 				sprite, sprite->GetRenderer(), { 12, 21, 21, 31 }, 200.0f, bullVel, GetAtk(), false ) );
 			wrld->PlaySnd( Wrld::Sounds::sfxshoot );
 		}
@@ -73,4 +75,27 @@ void Bandit::Update( const float dt )
 {
 	action.Update( dt );
 	Entity::Update( dt );
+}
+
+void Bandit::SetDirection( const Vec2& dir )
+{
+	//selects the animation based on direction (right = +1, left = +2, down = +3, up = +6), when dmged +9 
+	int animindex = 0;
+
+	if (dir.y < -0.05f) {
+		animindex += 6;
+	}
+	else if (dir.y > 0.05f) {
+		animindex += 3;
+	}
+	if (dir.x < -0.05f) {
+		animindex += 2;
+	}
+	else if (dir.x > 0.05f) {
+		animindex += 1;
+	}
+
+	if (animindex != 0) {
+		SetAnim( animindex );
+	}
 }

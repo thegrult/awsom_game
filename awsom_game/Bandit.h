@@ -17,6 +17,8 @@ public:
 	void HandleInput( Wrld* wrld ) override;
 	void Update( const float dt ) override;
 private:
+	void SetDirection( const Vec2& dir );
+private:
 	static constexpr float speed = 50.0f;
 	static constexpr float detectionRadius = 150.0f;
 	bool isAngry = false;
